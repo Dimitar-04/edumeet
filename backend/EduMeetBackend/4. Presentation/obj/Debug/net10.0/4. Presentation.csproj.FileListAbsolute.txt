@@ -1,0 +1,211 @@
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\bin\Debug\net10.0\appsettings.Development.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\bin\Debug\net10.0\appsettings.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.staticwebassets.runtime.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.staticwebassets.endpoints.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.exe
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.deps.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.runtimeconfig.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.dll
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.pdb
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.AssemblyInfoInputs.cache
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.AssemblyInfo.cs
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.csproj.CoreCompileInputs.cache
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.RazorAssemblyInfo.cache
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.RazorAssemblyInfo.cs
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\rjimswa.dswa.cache.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\scopedcss\bundle\4. Presentation.styles.css
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\scopedcss\projectbundle\4. Presentation.bundle.scp.css
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\vsfknemzdk-{0}-b9sayid5wm-b9sayid5wm.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\yagmzdn3fj-{0}-61n19gt1b8-61n19gt1b8.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ag2g4umg65-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\waqpboyj0w-{0}-t1cqhe9u97-t1cqhe9u97.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\0epmlhpdx2-{0}-c2jlpeoesf-c2jlpeoesf.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\31m0mz617q-{0}-sejl45xvog-sejl45xvog.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\f2pm5ltwcd-{0}-aexeepp0ev-aexeepp0ev.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\18buxzrss5-{0}-xvp3kq03qx-xvp3kq03qx.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\0kfasohlev-{0}-ausgxo2sd3-ausgxo2sd3.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\fhi9ofrj3v-{0}-22vffe00uq-22vffe00uq.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\t9xd4dxqxy-{0}-cosvhxvwiu-cosvhxvwiu.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\nouv3pzn2n-{0}-qesaa3a1fm-qesaa3a1fm.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\8gg8ubw4fy-{0}-fvhpjtyr6v-fvhpjtyr6v.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\7f992zcql5-{0}-tmc1g35s3z-tmc1g35s3z.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\yqp05omojb-{0}-fsbi9cje9m-fsbi9cje9m.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\3g5a0k1mef-{0}-rxsg74s51o-rxsg74s51o.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\vdeofn30ru-{0}-ee0r1s7dh0-ee0r1s7dh0.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\56qsinniwf-{0}-q9ht133ko3-q9ht133ko3.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\wo5azao4pt-{0}-jd9uben2k1-jd9uben2k1.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\k6tor9urhc-{0}-gye83jo8yx-gye83jo8yx.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\4lmf751rnt-{0}-r4e9w2rdcm-r4e9w2rdcm.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\lhnsy44qeh-{0}-wl58j5mj3v-wl58j5mj3v.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\t13vf558ea-{0}-c2oey78nd0-c2oey78nd0.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\r76r9pky7w-{0}-d4r6k3f320-d4r6k3f320.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\y0geg3rp08-{0}-j5mq2jizvt-j5mq2jizvt.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\4tghjitay8-{0}-keugtjm085-keugtjm085.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\meym32hw05-{0}-nvvlpmu67g-nvvlpmu67g.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\vzie5es9pc-{0}-zub09dkrxp-zub09dkrxp.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ett3epu3of-{0}-pj5nd1wqec-pj5nd1wqec.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\bfzqp8o1r7-{0}-43atpzeawx-43atpzeawx.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\1q9nwumgui-{0}-v0zj4ognzu-v0zj4ognzu.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\idgu31m1fh-{0}-ynyaa8k90p-ynyaa8k90p.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\bhsffvkvmj-{0}-hrwsygsryq-hrwsygsryq.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\qgwl98cu05-{0}-c63t5i9ira-c63t5i9ira.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ckx3ft07h3-{0}-ft3s53vfgj-ft3s53vfgj.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ninsqopw3s-{0}-4094rpi4f9-4094rpi4f9.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\evtfhqt3sr-{0}-6pdc2jztkx-6pdc2jztkx.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\df2qhluij4-{0}-hd3gran6i8-hd3gran6i8.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\wgdl00inku-{0}-iovd86k7lj-iovd86k7lj.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\k00clbfpzx-{0}-ltid2c489k-ltid2c489k.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\0kzts1q0ky-{0}-kbrnm935zg-kbrnm935zg.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\0acj1f9li9-{0}-8vyfqsqgz1-8vyfqsqgz1.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\cf8yeey6rd-{0}-y7v9cxd14o-y7v9cxd14o.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\9ml5trmybk-{0}-u9q1upor1n-u9q1upor1n.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\fn6ndctc5w-{0}-h1s4sie4z3-h1s4sie4z3.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\z5saz0zufn-{0}-4d85u1mtcx-4d85u1mtcx.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\9hu9s6f74n-{0}-0j3bgjxly4-0j3bgjxly4.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\m16ful4fha-{0}-03hjc8e09r-03hjc8e09r.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\kylmrdia7v-{0}-48y08845bh-48y08845bh.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\l9w852i844-{0}-356vix0kms-356vix0kms.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\01tozeelua-{0}-83jwlth58m-83jwlth58m.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\jub51vtp6c-{0}-mrlpezrjn3-mrlpezrjn3.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\gn5gzomnfb-{0}-worgj0nhwm-worgj0nhwm.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\vto0a8qzio-{0}-gk0pw8i4co-gk0pw8i4co.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\am69z5q1n7-{0}-x0q3zqp4vz-x0q3zqp4vz.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\g8gy64hdys-{0}-d6nrnj6jjx-d6nrnj6jjx.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\4n48q2uir8-{0}-m9qm4tazc0-m9qm4tazc0.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ci8f9004ud-{0}-ttgo8qnofa-ttgo8qnofa.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\mzyqfvgr2e-{0}-jjsuc0puko-jjsuc0puko.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ebeqvgri7w-{0}-9vr69e8ynj-9vr69e8ynj.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ernv728mn8-{0}-87fc7y1x7t-87fc7y1x7t.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\0ejl11ywnt-{0}-mlv21k5csn-mlv21k5csn.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\dc3sj1dqxo-{0}-otsp7y47c0-otsp7y47c0.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\dc6vnhrhrx-{0}-otsp7y47c0-otsp7y47c0.gz
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\staticwebassets.build.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\staticwebassets.build.json.cache
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\staticwebassets.development.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\swae.build.ex.cache
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.dll
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\refint\4. Presentation.dll
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.pdb
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.genruntimeconfig.cache
+C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\ref\4. Presentation.dll
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\appsettings.Development.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\appsettings.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.staticwebassets.endpoints.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\1. Domain.deps.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\1. Domain.runtimeconfig.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\1. Domain.exe
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\2. Application.deps.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\2. Application.runtimeconfig.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\2. Application.exe
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\3. Infrastracture.deps.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\3. Infrastracture.runtimeconfig.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\3. Infrastracture.exe
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.staticwebassets.runtime.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.exe
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.deps.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.runtimeconfig.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.dll
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.pdb
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\1. Domain.dll
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\2. Application.dll
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\3. Infrastracture.dll
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\1. Domain.pdb
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\2. Application.pdb
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\3. Infrastracture.pdb
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.csproj.AssemblyReference.cache
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.AssemblyInfoInputs.cache
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.AssemblyInfo.cs
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.csproj.CoreCompileInputs.cache
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.RazorAssemblyInfo.cache
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.RazorAssemblyInfo.cs
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\rjimswa.dswa.cache.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\scopedcss\bundle\4. Presentation.styles.css
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\scopedcss\projectbundle\4. Presentation.bundle.scp.css
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\vsfknemzdk-{0}-b9sayid5wm-b9sayid5wm.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\yagmzdn3fj-{0}-61n19gt1b8-61n19gt1b8.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ag2g4umg65-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\waqpboyj0w-{0}-t1cqhe9u97-t1cqhe9u97.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\0epmlhpdx2-{0}-c2jlpeoesf-c2jlpeoesf.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\31m0mz617q-{0}-sejl45xvog-sejl45xvog.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\f2pm5ltwcd-{0}-aexeepp0ev-aexeepp0ev.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\18buxzrss5-{0}-xvp3kq03qx-xvp3kq03qx.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\0kfasohlev-{0}-ausgxo2sd3-ausgxo2sd3.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\fhi9ofrj3v-{0}-22vffe00uq-22vffe00uq.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\t9xd4dxqxy-{0}-cosvhxvwiu-cosvhxvwiu.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\nouv3pzn2n-{0}-qesaa3a1fm-qesaa3a1fm.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\8gg8ubw4fy-{0}-fvhpjtyr6v-fvhpjtyr6v.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\7f992zcql5-{0}-tmc1g35s3z-tmc1g35s3z.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\yqp05omojb-{0}-fsbi9cje9m-fsbi9cje9m.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\3g5a0k1mef-{0}-rxsg74s51o-rxsg74s51o.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\vdeofn30ru-{0}-ee0r1s7dh0-ee0r1s7dh0.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\56qsinniwf-{0}-q9ht133ko3-q9ht133ko3.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\wo5azao4pt-{0}-jd9uben2k1-jd9uben2k1.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\k6tor9urhc-{0}-gye83jo8yx-gye83jo8yx.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\4lmf751rnt-{0}-r4e9w2rdcm-r4e9w2rdcm.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\lhnsy44qeh-{0}-wl58j5mj3v-wl58j5mj3v.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\t13vf558ea-{0}-c2oey78nd0-c2oey78nd0.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\r76r9pky7w-{0}-d4r6k3f320-d4r6k3f320.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\y0geg3rp08-{0}-j5mq2jizvt-j5mq2jizvt.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\4tghjitay8-{0}-keugtjm085-keugtjm085.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\meym32hw05-{0}-nvvlpmu67g-nvvlpmu67g.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\vzie5es9pc-{0}-zub09dkrxp-zub09dkrxp.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ett3epu3of-{0}-pj5nd1wqec-pj5nd1wqec.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\bfzqp8o1r7-{0}-43atpzeawx-43atpzeawx.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\1q9nwumgui-{0}-v0zj4ognzu-v0zj4ognzu.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\idgu31m1fh-{0}-ynyaa8k90p-ynyaa8k90p.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\bhsffvkvmj-{0}-hrwsygsryq-hrwsygsryq.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\qgwl98cu05-{0}-c63t5i9ira-c63t5i9ira.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ckx3ft07h3-{0}-ft3s53vfgj-ft3s53vfgj.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ninsqopw3s-{0}-4094rpi4f9-4094rpi4f9.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\evtfhqt3sr-{0}-6pdc2jztkx-6pdc2jztkx.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\df2qhluij4-{0}-hd3gran6i8-hd3gran6i8.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\wgdl00inku-{0}-iovd86k7lj-iovd86k7lj.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\k00clbfpzx-{0}-ltid2c489k-ltid2c489k.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\0kzts1q0ky-{0}-kbrnm935zg-kbrnm935zg.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\0acj1f9li9-{0}-8vyfqsqgz1-8vyfqsqgz1.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\cf8yeey6rd-{0}-y7v9cxd14o-y7v9cxd14o.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\9ml5trmybk-{0}-u9q1upor1n-u9q1upor1n.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\fn6ndctc5w-{0}-h1s4sie4z3-h1s4sie4z3.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\z5saz0zufn-{0}-4d85u1mtcx-4d85u1mtcx.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\9hu9s6f74n-{0}-0j3bgjxly4-0j3bgjxly4.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\m16ful4fha-{0}-03hjc8e09r-03hjc8e09r.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\kylmrdia7v-{0}-48y08845bh-48y08845bh.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\l9w852i844-{0}-356vix0kms-356vix0kms.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\01tozeelua-{0}-83jwlth58m-83jwlth58m.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\jub51vtp6c-{0}-mrlpezrjn3-mrlpezrjn3.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\gn5gzomnfb-{0}-worgj0nhwm-worgj0nhwm.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\vto0a8qzio-{0}-gk0pw8i4co-gk0pw8i4co.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\am69z5q1n7-{0}-x0q3zqp4vz-x0q3zqp4vz.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\g8gy64hdys-{0}-d6nrnj6jjx-d6nrnj6jjx.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\4n48q2uir8-{0}-m9qm4tazc0-m9qm4tazc0.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ci8f9004ud-{0}-ttgo8qnofa-ttgo8qnofa.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\mzyqfvgr2e-{0}-jjsuc0puko-jjsuc0puko.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ebeqvgri7w-{0}-9vr69e8ynj-9vr69e8ynj.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\ernv728mn8-{0}-87fc7y1x7t-87fc7y1x7t.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\0ejl11ywnt-{0}-mlv21k5csn-mlv21k5csn.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\dc3sj1dqxo-{0}-otsp7y47c0-otsp7y47c0.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\compressed\dc6vnhrhrx-{0}-otsp7y47c0-otsp7y47c0.gz
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\staticwebassets.build.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\staticwebassets.build.json.cache
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\staticwebassets.development.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\swae.build.ex.cache
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Prese.96182BCB.Up2Date
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.dll
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\refint\4. Presentation.dll
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.pdb
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.genruntimeconfig.cache
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\ref\4. Presentation.dll
