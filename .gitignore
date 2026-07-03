@@ -5,6 +5,10 @@
 # Visual Studio
 .vs/
 
+
+# Local development settings
+**/appsettings.Development.json
+
 # .NET
 bin/
 obj/

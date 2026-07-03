@@ -1,12 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1. Domain", "1. Domain\1. Domain.csproj", "{5B1752D5-9AA3-432B-A215-251301F610C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{5B1752D5-9AA3-432B-A215-251301F610C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2. Application", "2. Application\2. Application.csproj", "{CA1C5289-AEA7-4D3B-8E7F-AEB0EA8F4A66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{CA1C5289-AEA7-4D3B-8E7F-AEB0EA8F4A66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3. Infrastracture", "3. Infrastracture\3. Infrastracture.csproj", "{5A2E99C3-B2F6-4F04-B744-5CBE1A6E858B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{5A2E99C3-B2F6-4F04-B744-5CBE1A6E858B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4. Presentation", "4. Presentation\4. Presentation.csproj", "{E48B29E5-5F14-4BE5-AAEC-824EA8DD36A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{E48B29E5-5F14-4BE5-AAEC-824EA8DD36A1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Domain", "1. Domain", "{36AB3158-72D9-404E-92C7-1114F01C8BE2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Application", "2. Application", "{D156CBDA-D20B-4A59-B323-5F2CEB2B0A66}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Infrastructure", "3. Infrastructure", "{7004A499-A99A-4F7B-88A5-7C607E5F2FD8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Presentation", "4. Presentation", "{7AB4CDEE-EFAA-4809-A2B3-FBE9CF255A7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +38,11 @@ Global
 		{E48B29E5-5F14-4BE5-AAEC-824EA8DD36A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E48B29E5-5F14-4BE5-AAEC-824EA8DD36A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E48B29E5-5F14-4BE5-AAEC-824EA8DD36A1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5B1752D5-9AA3-432B-A215-251301F610C9} = {36AB3158-72D9-404E-92C7-1114F01C8BE2}
+		{CA1C5289-AEA7-4D3B-8E7F-AEB0EA8F4A66} = {D156CBDA-D20B-4A59-B323-5F2CEB2B0A66}
+		{5A2E99C3-B2F6-4F04-B744-5CBE1A6E858B} = {7004A499-A99A-4F7B-88A5-7C607E5F2FD8}
+		{E48B29E5-5F14-4BE5-AAEC-824EA8DD36A1} = {7AB4CDEE-EFAA-4809-A2B3-FBE9CF255A7C}
 	EndGlobalSection
 EndGlobal
