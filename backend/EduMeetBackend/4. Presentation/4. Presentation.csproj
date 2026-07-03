@@ -13,4 +13,8 @@
       <ProjectReference Include="..\3. Infrastracture\3. Infrastracture.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.9" />
+    </ItemGroup>
+
 </Project>

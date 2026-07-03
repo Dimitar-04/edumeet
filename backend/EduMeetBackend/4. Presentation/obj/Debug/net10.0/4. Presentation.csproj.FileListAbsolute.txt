@@ -97,22 +97,17 @@ C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0
 C:\Users\dimit\OneDrive\Desktop\EduMeetBackend\4. Presentation\obj\Debug\net10.0\ref\4. Presentation.dll
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\appsettings.Development.json
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\appsettings.json
-C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.staticwebassets.endpoints.json
-C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\1. Domain.deps.json
-C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\1. Domain.runtimeconfig.json
-C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\1. Domain.exe
-C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\2. Application.deps.json
-C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\2. Application.runtimeconfig.json
-C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\2. Application.exe
-C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\3. Infrastracture.deps.json
-C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\3. Infrastracture.runtimeconfig.json
-C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\3. Infrastracture.exe
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.staticwebassets.runtime.json
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.staticwebassets.endpoints.json
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.exe
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.deps.json
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.runtimeconfig.json
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.dll
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\4. Presentation.pdb
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\1. Domain.dll
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\2. Application.dll
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\bin\Debug\net10.0\3. Infrastracture.dll
@@ -128,6 +123,7 @@ C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\o
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.RazorAssemblyInfo.cache
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.RazorAssemblyInfo.cs
+C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\4. Presentation.sourcelink.json
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\rjimswa.dswa.cache.json
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Users\dimit\OneDrive\Desktop\edumeet\backend\EduMeetBackend\4. Presentation\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
