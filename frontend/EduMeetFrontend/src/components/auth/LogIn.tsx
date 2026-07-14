@@ -1,9 +1,11 @@
 import { useState, type FormEvent } from 'react';
 import type { LogInFormProps, LogInFormValues } from '../../types/user/auth';
-import './auth.css';
+
+const inputClassName =
+  'w-full rounded-lg border border-slate-300 px-3.5 py-3 text-slate-900 outline-none transition focus:border-indigo-600 focus:ring-3 focus:ring-indigo-600/20';
 
 const initialValues: LogInFormValues = {
-  email: '',
+  emailOrUserName: '',
   password: '',
 };
 
@@ -16,26 +18,40 @@ function LogIn({ onSubmit, onSwitchMode }: LogInFormProps) {
   };
 
   return (
-    <section className="auth-card" aria-labelledby="login-title">
-      <h1 id="login-title">Welcome back</h1>
-      <p className="auth-card__intro">Log in to continue to EduMeet.</p>
+    <section
+      className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-900/10"
+      aria-labelledby="login-title"
+    >
+      <h1 id="login-title" className="text-3xl font-bold tracking-tight">
+        Welcome back
+      </h1>
+      <p className="mt-2 mb-7 text-slate-600">Log in to continue to EduMeet.</p>
 
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <label htmlFor="login-email">Email</label>
+      <form className="grid gap-2.5" onSubmit={handleSubmit}>
+        <label className="mt-1 text-sm font-semibold" htmlFor="login-identifier">
+          Email or username
+        </label>
         <input
-          id="login-email"
-          type="email"
-          name="email"
-          value={values.email}
+          className={inputClassName}
+          id="login-identifier"
+          type="text"
+          name="emailOrUserName"
+          value={values.emailOrUserName}
           onChange={(event) =>
-            setValues((current) => ({ ...current, email: event.target.value }))
+            setValues((current) => ({
+              ...current,
+              emailOrUserName: event.target.value,
+            }))
           }
-          autoComplete="email"
+          autoComplete="username"
           required
         />
 
-        <label htmlFor="login-password">Password</label>
+        <label className="mt-1 text-sm font-semibold" htmlFor="login-password">
+          Password
+        </label>
         <input
+          className={inputClassName}
           id="login-password"
           type="password"
           name="password"
@@ -47,14 +63,21 @@ function LogIn({ onSubmit, onSwitchMode }: LogInFormProps) {
           required
         />
 
-        <button className="auth-form__submit" type="submit">
+        <button
+          className="mt-4 cursor-pointer rounded-lg bg-indigo-700 px-4 py-3 font-bold text-white transition hover:bg-indigo-800 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+          type="submit"
+        >
           Log in
         </button>
       </form>
 
-      <p className="auth-card__switch">
+      <p className="mt-6 text-center text-slate-600">
         Don&apos;t have an account?{' '}
-        <button type="button" onClick={onSwitchMode}>
+        <button
+          className="cursor-pointer font-bold text-indigo-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+          type="button"
+          onClick={onSwitchMode}
+        >
           Sign up
         </button>
       </p>

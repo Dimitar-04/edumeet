@@ -1,20 +1,7 @@
-import { useState } from 'react';
-import LogIn from './components/auth/LogIn';
-import SignUp from './components/auth/SignUp';
-import type { AuthMode } from './types/user/auth';
+import AuthPage from './components/auth/AuthPage';
 
 function App() {
-  const [authMode, setAuthMode] = useState<AuthMode>('login');
-
-  return (
-    <main>
-      {authMode === 'login' ? (
-        <LogIn onSwitchMode={() => setAuthMode('signup')} />
-      ) : (
-        <SignUp onSwitchMode={() => setAuthMode('login')} />
-      )}
-    </main>
-  );
+  return <AuthPage />;
 }
 
 export default App;
