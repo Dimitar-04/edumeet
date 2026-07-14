@@ -1,17 +1,20 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
+import LogIn from './components/auth/LogIn';
+import SignUp from './components/auth/SignUp';
+import type { AuthMode } from './types/user/auth';
 
 function App() {
-  const [message, setMessage] = useState('');
+  const [authMode, setAuthMode] = useState<AuthMode>('login');
 
-  useEffect(() => {
-    axios
-      .get('http://localhost:5062/api/home')
-      .then((res) => setMessage(res.data.message))
-      .catch((err) => console.error(err));
-  }, []);
-
-  return <h1>{message}</h1>;
+  return (
+    <main>
+      {authMode === 'login' ? (
+        <LogIn onSwitchMode={() => setAuthMode('signup')} />
+      ) : (
+        <SignUp onSwitchMode={() => setAuthMode('login')} />
+      )}
+    </main>
+  );
 }
 
 export default App;
