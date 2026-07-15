@@ -37,7 +37,12 @@ const initialValues: SignUpFormState = {
   confirmPassword: '',
 };
 
-function SignUp({ onSubmit, onSwitchMode }: SignUpFormProps) {
+function SignUp({
+  onSubmit,
+  onSwitchMode,
+  isSubmitting = false,
+  submitError,
+}: SignUpFormProps) {
   const [values, setValues] = useState<SignUpFormState>(initialValues);
   const [passwordError, setPasswordError] = useState('');
 
@@ -74,7 +79,7 @@ function SignUp({ onSubmit, onSwitchMode }: SignUpFormProps) {
             logoUrl: values.logoUrl,
           };
 
-    void onSubmit?.(formValues);
+    void onSubmit(formValues);
   };
 
   return (
@@ -339,11 +344,18 @@ function SignUp({ onSubmit, onSwitchMode }: SignUpFormProps) {
           </p>
         )}
 
+        {submitError && (
+          <p className="m-0 text-sm text-red-700" role="alert">
+            {submitError}
+          </p>
+        )}
+
         <button
-          className="mt-4 cursor-pointer rounded-lg bg-indigo-700 px-4 py-3 font-bold text-white transition hover:bg-indigo-800 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+          className="mt-4 cursor-pointer rounded-lg bg-indigo-700 px-4 py-3 font-bold text-white transition hover:bg-indigo-800 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-400"
           type="submit"
+          disabled={isSubmitting}
         >
-          Sign up
+          {isSubmitting ? 'Creating account…' : 'Sign up'}
         </button>
       </form>
 

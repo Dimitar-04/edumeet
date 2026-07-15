@@ -43,6 +43,8 @@ export interface LogInFormProps {
 }
 
 export interface SignUpFormProps {
-  onSubmit?: (values: SignUpFormValues) => void | Promise<void>;
+  onSubmit: (values: SignUpFormValues) => void | Promise<void>;
   onSwitchMode: () => void;
+  isSubmitting?: boolean;
+  submitError?: string | null;
 }

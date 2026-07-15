@@ -1,0 +1,11 @@
+using _1._Domain.Models;
+using _2._Application.Auth.Results;
+
+namespace _2._Application.Interfaces.Repositories;
+
+public interface IAppUserRepository
+{
+    Task<UserCreationResult> AddAsync(
+        AppUser user,
+        string password);
+}
