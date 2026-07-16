@@ -8,4 +8,8 @@ public interface IAppUserRepository
     Task<UserCreationResult> AddAsync(
         AppUser user,
         string password);
+    
+    Task<AppUser?> FindByLoginAsync(
+        string login,
+        CancellationToken cancellationToken = default);
 }

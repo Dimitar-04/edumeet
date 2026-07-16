@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -6,7 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>_4._Presentation</RootNamespace>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    </PropertyGroup>
+      <UserSecretsId>0224a2ab-a2d3-48a1-8e28-f860f8a9ebc1</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Domain\Domain.csproj" />
@@ -15,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.9" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

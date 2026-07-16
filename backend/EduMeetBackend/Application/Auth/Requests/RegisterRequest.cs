@@ -18,7 +18,7 @@ public sealed class RegisterRequest
     public string? PhoneNumber { get; init; }
 
     [Required]
-    [MinLength(8)]
+  
     public string Password { get; init; } = string.Empty;
 
     [Required]

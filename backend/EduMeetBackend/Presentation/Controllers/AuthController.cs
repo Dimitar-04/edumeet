@@ -1,5 +1,8 @@
 using _2._Application.Interfaces;
 using _2._Application.Auth.Requests;
+using _2._Application.Auth.Responses;
+using _4._Presentation.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _4._Presentation.Controllers;
@@ -9,10 +12,12 @@ namespace _4._Presentation.Controllers;
 public class AuthController:ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly IWebHostEnvironment _environment;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, IWebHostEnvironment environment)
     {
         _authService = authService;
+        _environment = environment;
     }
 
 
@@ -34,8 +39,46 @@ public class AuthController:ControllerBase
             return BadRequest(
                 new ValidationProblemDetails(validationErrors));
         }
+        
+        AuthCookieWriter.Append(Response,
+            result.Tokens!,
+            _environment.IsDevelopment());
+        
+        
         return StatusCode(
             StatusCodes.Status201Created,
-            result.User);
+            new AuthenticationResponse(
+                result.User!,
+                result.Tokens!
+                    .AccessTokenExpiresAtUtc));
+    }
+    
+    
+    
+    [HttpPost("login")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _authService.LoginAsync(
+            request,
+            cancellationToken);
+
+        if (!result.Succeeded)
+        {
+            return Unauthorized(new
+            {
+                errors = result.Errors
+            });
+        }
+
+        AuthCookieWriter.Append(
+            Response,
+            result.Tokens!,
+            _environment.IsDevelopment());
+
+        return Ok(new AuthenticationResponse(
+            result.User!,
+            result.Tokens!
+                .AccessTokenExpiresAtUtc));
     }
 }

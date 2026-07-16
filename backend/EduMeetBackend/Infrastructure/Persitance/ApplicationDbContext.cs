@@ -13,6 +13,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<OrganizationProfile> OrganizationProfiles => Set<OrganizationProfile>();
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<EventParticipant> EventParticipants => Set<EventParticipant>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -1,15 +1,20 @@
+using System.IdentityModel.Tokens.Jwt;
 using _1._Domain.Models;
 using _2._Application.Auth.Mappings;
 using _2._Application.Interfaces;
 using _2._Application.Interfaces.Repositories;
 using _2._Application.Interfaces.UnitOfWork;
+using _2._Application.Services.Configurations;
 using _3._Infrastracture.Persitance;
 using _3._Infrastracture.Persitance.Identity;
 using _3._Infrastracture.Persitance.Repositories;
 using _3._Infrastracture.Persitance.UnitOfWork;
 using _3._Infrastracture.Services;
+using _4._Presentation.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,15 +50,101 @@ builder.Services
 
 
 
+
+
+// Add services to the container.
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
 builder.Services.AddScoped<IIndividualProfileRepository, IndividualProfileRepository>();
 builder.Services.AddScoped<IOrganizationProfileRepository, OrganizationProfileRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-// Add services to the container.
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddControllersWithViews();
 
+
+// Explain!!!
+var jwtSection = builder.Configuration.GetRequiredSection(JwtOptions.SectionName);
+
+builder.Services
+    .AddOptions<JwtOptions>()
+    .Bind(jwtSection)
+    .Validate(options =>
+    {
+        try
+        {
+            return Convert.FromBase64String(
+                options.SigningKey).Length >= 32;
+        }
+        catch (FormatException)
+        {
+            return false;
+        }
+    }, "JWT signing key must be a Base64-encoded key of at least 32 bytes.")
+    .ValidateOnStart();
+
+
+var jwtOptions =
+    jwtSection.Get<JwtOptions>()
+    ?? throw new InvalidOperationException(
+        "JWT configuration is missing.");
+
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme =
+            JwtBearerDefaults.AuthenticationScheme;
+
+        options.DefaultChallengeScheme =
+            JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.MapInboundClaims = false;
+
+        options.TokenValidationParameters =
+            new TokenValidationParameters
+            {
+                RequireSignedTokens = true,
+                RequireExpirationTime = true,
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey =
+                    new SymmetricSecurityKey(
+                        Convert.FromBase64String(
+                            jwtOptions.SigningKey)),
+
+                ValidateIssuer = true,
+                ValidIssuer = jwtOptions.Issuer,
+
+                ValidateAudience = true,
+                ValidAudience = jwtOptions.Audience,
+
+                ValidateLifetime = true,
+
+                ClockSkew = TimeSpan.FromSeconds(30),
+
+                NameClaimType =
+                    JwtRegisteredClaimNames.Sub
+            };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                if (context.Request.Cookies.TryGetValue(
+                        AuthCookieNames.AccessToken,
+                        out var token))
+                {
+                    context.Token = token;
+                }
+
+                return Task.CompletedTask;
+            }
+        };
+    });
 
 builder.Services.AddCors(options =>
 {
@@ -70,7 +161,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.UseCors("ReactFrontend");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -83,6 +173,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseCors("ReactFrontend");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

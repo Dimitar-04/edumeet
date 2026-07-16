@@ -7,6 +7,7 @@ using _2._Application.Interfaces;
 using _2._Application.Interfaces.Repositories;
 using _2._Application.Interfaces.UnitOfWork;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace _3._Infrastracture.Services;
@@ -15,9 +16,13 @@ public sealed class AuthService(
     IAppUserRepository appUserRepository,
     IIndividualProfileRepository individualProfileRepository,
     IOrganizationProfileRepository organizationProfileRepository,
+    IRefreshTokenRepository refreshTokenRepository,
     IUnitOfWork unitOfWork,
+    ITokenService tokenService,
+    TimeProvider timeProvider,
     IMapper mapper,
-    ILogger<AuthService> logger) : IAuthService
+    ILogger<AuthService> logger,
+    SignInManager<AppUser> signInManager) : IAuthService
 {
     public async Task<RegistrationResult> RegisterAsync(
         RegisterRequest request,
@@ -70,8 +75,31 @@ public sealed class AuthService(
                     break;
                 }
             }
+
+
+            var refreshToken = tokenService.CreateRefreshToken();
+
+            var refreshTokenEntity = new RefreshToken
+            {
+                AppUserId = user.Id,
+                AppUser = user,
+                TokenHash = refreshToken.Hash,
+                CreatedAtUtc = timeProvider.GetUtcNow(),
+                ExpiresAtUtc = refreshToken.ExpiresAtUtc
+            };
+
+            refreshTokenRepository.Add(refreshTokenEntity);
+            
             
             await unitOfWork.SaveChangesAsync(cancellationToken);
+
+            var accessToken = tokenService.CreateAccessToken(user);
+            
+            var issuedTokens = new IssuedTokens(
+                accessToken.Value,
+                accessToken.ExpiresAtUtc,
+                refreshToken.Value,
+                refreshToken.ExpiresAtUtc);
 
             var response = new RegisteredUserResponse(
                 user.Id,
@@ -93,7 +121,7 @@ public sealed class AuthService(
                         organizationProfile.Website,
                         organizationProfile.LogoUrl));
 
-            return RegistrationResult.Success(response);
+            return RegistrationResult.Success(response, issuedTokens);
         }
         catch (Exception exception)
         {
@@ -104,6 +132,87 @@ public sealed class AuthService(
 
             throw;
         }
+    }
+    
+    
+    public async Task<LoginResult> LoginAsync(
+        LoginRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await appUserRepository.FindByLoginAsync(
+            request.Login.Trim(),
+            cancellationToken);
+
+        if (user is null)
+        {
+            return LoginResult.Failure(
+                "Invalid username/email or password.");
+        }
+
+        var passwordResult =
+            await signInManager.CheckPasswordSignInAsync(
+                user,
+                request.Password,
+                lockoutOnFailure: true);
+
+        if (!passwordResult.Succeeded)
+        {
+            return LoginResult.Failure(
+                "Invalid username/email or password.");
+        }
+
+        var refreshToken =
+            tokenService.CreateRefreshToken();
+
+        refreshTokenRepository.Add(
+            new RefreshToken
+            {
+                AppUserId = user.Id,
+                TokenHash = refreshToken.Hash,
+                CreatedAtUtc =
+                    timeProvider.GetUtcNow(),
+                ExpiresAtUtc =
+                    refreshToken.ExpiresAtUtc
+            });
+
+        await unitOfWork.SaveChangesAsync(
+            cancellationToken);
+
+        var accessToken =
+            tokenService.CreateAccessToken(user);
+
+        var tokens = new IssuedTokens(
+            accessToken.Value,
+            accessToken.ExpiresAtUtc,
+            refreshToken.Value,
+            refreshToken.ExpiresAtUtc);
+
+        return LoginResult.Success(
+            CreateUserResponse(user),
+            tokens);
+    }
+
+    private static RegisteredUserResponse CreateUserResponse(AppUser user)
+    {
+        return new RegisteredUserResponse(
+            user.Id,
+            user.UserName!,
+            user.Email!,
+            user.PhoneNumber,
+            user.AccountType,
+            user.IndividualProfile is null
+                ? null
+                : new IndividualProfileResponse(
+                    user.IndividualProfile.Id,
+                    user.IndividualProfile.FirstName,
+                    user.IndividualProfile.LastName),
+            user.OrganizationProfile is null
+                ? null
+                : new OrganizationProfileResponse(
+                    user.OrganizationProfile.Id,
+                    user.OrganizationProfile.Name,
+                    user.OrganizationProfile.Website,
+                    user.OrganizationProfile.LogoUrl));
     }
 
     private static List<string> ValidateRequest(RegisterRequest request)

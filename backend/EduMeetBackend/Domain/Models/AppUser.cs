@@ -12,4 +12,6 @@ public class AppUser : IdentityUser<Guid>
     public OrganizationProfile? OrganizationProfile { get; set; }
 
     public ICollection<EducationalEvent> OrganizedEvents { get; set; } = [];
+
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
 }

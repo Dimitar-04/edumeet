@@ -351,6 +351,41 @@ namespace _3._Infrastracture.Migrations
                     b.ToTable("OrganizationProfiles");
                 });
 
+            modelBuilder.Entity("_1._Domain.Models.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("RevokedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("ExpiresAtUtc");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("_1._Domain.Models.Review", b =>
                 {
                     b.Property<Guid>("Id")
@@ -481,6 +516,17 @@ namespace _3._Infrastracture.Migrations
                     b.Navigation("AppUser");
                 });
 
+            modelBuilder.Entity("_1._Domain.Models.RefreshToken", b =>
+                {
+                    b.HasOne("_1._Domain.Models.AppUser", "AppUser")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("_1._Domain.Models.Review", b =>
                 {
                     b.HasOne("_1._Domain.Models.EducationalEvent", "EducationalEvent")
@@ -499,6 +545,8 @@ namespace _3._Infrastracture.Migrations
                     b.Navigation("OrganizationProfile");
 
                     b.Navigation("OrganizedEvents");
+
+                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("_1._Domain.Models.EducationalEvent", b =>
