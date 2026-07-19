@@ -192,6 +192,17 @@ public sealed class AuthService(
             tokens);
     }
 
+    public async Task<RegisteredUserResponse?> GetCurrentUserAsync(string username, CancellationToken ct = default)
+    {
+        var user = await appUserRepository.FindByUsernameAsync(username, ct);
+        if (user is null)
+        {
+            return null;
+        }
+
+        return CreateUserResponse(user);
+    }
+
     private static RegisteredUserResponse CreateUserResponse(AppUser user)
     {
         return new RegisteredUserResponse(

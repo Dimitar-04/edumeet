@@ -3,10 +3,7 @@ import type {
   RegisterRequest,
   RegisteredUserResponse,
 } from '../types/user/registration';
-import type {
-  AuthenticationResponse,
-  LoginRequest,
-} from '../types/user/auth';
+import type { AuthenticationResponse, LoginRequest } from '../types/user/auth';
 import axiosInstance from './axiosInstance';
 
 interface ValidationProblemDetails {
@@ -34,6 +31,12 @@ export async function loginUser(
   );
 
   return response.data.user;
+}
+
+export async function getCurrentUser(): Promise<RegisteredUserResponse> {
+  const response = await axiosInstance.get<RegisteredUserResponse>('/auth/me');
+
+  return response.data;
 }
 
 export function getAuthErrorMessage(error: unknown): string {

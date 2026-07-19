@@ -12,4 +12,6 @@ public interface IAppUserRepository
     Task<AppUser?> FindByLoginAsync(
         string login,
         CancellationToken cancellationToken = default);
+
+    Task<AppUser?> FindByUsernameAsync(string username, CancellationToken ct = default);
 }

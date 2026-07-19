@@ -64,7 +64,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddControllersWithViews();
 
 
-// Explain!!!
+
 var jwtSection = builder.Configuration.GetRequiredSection(JwtOptions.SectionName);
 
 builder.Services

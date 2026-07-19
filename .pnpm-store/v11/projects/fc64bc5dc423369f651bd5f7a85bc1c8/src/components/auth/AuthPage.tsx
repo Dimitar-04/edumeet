@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { getAuthErrorMessage, loginUser, registerUser } from '../../api/authApi';
+import {
+  getAuthErrorMessage,
+  loginUser,
+  registerUser,
+} from '../../api/authApi';
 import type {
   AuthMode,
   LogInFormValues,
@@ -9,9 +13,11 @@ import type {
 import { toRegisterRequest } from '../../types/user/registration';
 import LogIn from './LogIn';
 import SignUp from './SignUp';
+import { useAuth } from '../../contexts/AuthContext';
 
 function AuthPage() {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
+  const { setUser } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -23,9 +29,10 @@ function AuthPage() {
     try {
       const user = await registerUser(toRegisterRequest(values));
 
+      setUser(user);
+
       navigate('/home', {
         replace: true,
-        state: { userName: user.userName },
       });
     } catch (error) {
       setAuthError(getAuthErrorMessage(error));
@@ -44,9 +51,10 @@ function AuthPage() {
         password: values.password,
       });
 
+      setUser(user);
+
       navigate('/home', {
         replace: true,
-        state: { userName: user.userName },
       });
     } catch (error) {
       setAuthError(getAuthErrorMessage(error));

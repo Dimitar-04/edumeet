@@ -1,24 +1,14 @@
-import { Navigate, useLocation } from 'react-router';
-
-interface HomeLocationState {
-  userName?: string;
-}
+import { Navigate } from 'react-router';
+import { useAuth } from '../contexts/AuthContext';
 
 function HomePage() {
-  const location = useLocation();
-  const { userName } = (location.state as HomeLocationState | null) ?? {};
+  const { user, isAuthLoading } = useAuth();
 
-  if (!userName) {
-    return <Navigate to="/" replace />;
+  if (isAuthLoading) {
+    return <p>Loading...</p>;
   }
 
-  return (
-    <main className="grid min-h-screen place-items-center bg-slate-100 px-6 font-sans text-slate-900">
-      <h1 className="text-center text-4xl font-bold tracking-tight sm:text-5xl">
-        Hello {userName}!
-      </h1>
-    </main>
-  );
+  return <h1>Hello {user ? user.userName : 'Guest'}!</h1>;
 }
 
 export default HomePage;

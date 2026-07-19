@@ -81,4 +81,29 @@ public class AuthController:ControllerBase
             result.Tokens!
                 .AccessTokenExpiresAtUtc));
     }
+
+
+    [Authorize]
+    [HttpGet("me")]
+    [ProducesResponseType<RegisteredUserResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Me(CancellationToken ct)
+    {
+        var username = User.Identity?.Name;
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return Unauthorized();
+        }
+
+        var user =
+            await _authService.GetCurrentUserAsync(
+                username, ct);
+
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
+        return Ok(user);
+    }
 }
