@@ -55,13 +55,17 @@ public class AuthController:ControllerBase
     
     
     
-    [HttpPost("login")]
     [AllowAnonymous]
+    [HttpPost("login")]
+    [ProducesResponseType<AuthenticationResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
-        var result = await _authService.LoginAsync(
-            request,
-            cancellationToken);
+        var result =
+            await _authService.LoginAsync(
+                request,
+                cancellationToken);
 
         if (!result.Succeeded)
         {
@@ -76,10 +80,11 @@ public class AuthController:ControllerBase
             result.Tokens!,
             _environment.IsDevelopment());
 
-        return Ok(new AuthenticationResponse(
-            result.User!,
-            result.Tokens!
-                .AccessTokenExpiresAtUtc));
+        return Ok(
+            new AuthenticationResponse(
+                result.User!,
+                result.Tokens!
+                    .AccessTokenExpiresAtUtc));
     }
 
 
@@ -105,5 +110,25 @@ public class AuthController:ControllerBase
         }
 
         return Ok(user);
+    }
+    
+    [AllowAnonymous]
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Logout(CancellationToken cancellationToken)
+    {
+        Request.Cookies.TryGetValue(
+            AuthCookieNames.RefreshToken,
+            out var rawRefreshToken);
+
+        await _authService.LogoutAsync(
+            rawRefreshToken,
+            cancellationToken);
+
+        AuthCookieWriter.Delete(
+            Response,
+            _environment.IsDevelopment());
+
+        return NoContent();
     }
 }

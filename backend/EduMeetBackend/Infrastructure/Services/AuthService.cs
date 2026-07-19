@@ -157,6 +157,9 @@ public sealed class AuthService(
 
         if (!passwordResult.Succeeded)
         {
+            await unitOfWork.SaveChangesAsync(
+                cancellationToken);
+
             return LoginResult.Failure(
                 "Invalid username/email or password.");
         }
@@ -201,6 +204,25 @@ public sealed class AuthService(
         }
 
         return CreateUserResponse(user);
+    }
+
+    public async Task LogoutAsync(string refreshToken, CancellationToken ct = default)
+    {
+        var tokenHash = tokenService.HashRefreshToken(refreshToken);
+        var storedToken = await refreshTokenRepository
+                .GetByHashWithUserAsync(
+                    tokenHash,
+                    ct);
+        
+        if (storedToken is null ||
+            storedToken.RevokedAtUtc is not null)
+        {
+            return;
+        }
+        
+        storedToken.RevokedAtUtc = timeProvider.GetUtcNow();
+
+        await unitOfWork.SaveChangesAsync(ct);
     }
 
     private static RegisteredUserResponse CreateUserResponse(AppUser user)

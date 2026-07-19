@@ -33,6 +33,10 @@ export async function loginUser(
   return response.data.user;
 }
 
+export async function logoutUser(): Promise<void> {
+  await axiosInstance.post('/auth/logout');
+}
+
 export async function getCurrentUser(): Promise<RegisteredUserResponse> {
   const response = await axiosInstance.get<RegisteredUserResponse>('/auth/me');
 

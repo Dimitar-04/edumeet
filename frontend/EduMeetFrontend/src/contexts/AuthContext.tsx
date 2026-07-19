@@ -5,13 +5,14 @@ import {
   useState,
   type PropsWithChildren,
 } from 'react';
-import { getCurrentUser } from '../api/authApi';
+import { getCurrentUser, logoutUser } from '../api/authApi';
 import type { RegisteredUserResponse } from '../types/user/registration';
 
 interface AuthContextValue {
   user: RegisteredUserResponse | null;
   isAuthLoading: boolean;
   setUser: (user: RegisteredUserResponse | null) => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -37,12 +38,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
     void restoreUser();
   }, []);
 
+  const logout = async () => {
+    await logoutUser();
+    setUser(null);
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         isAuthLoading,
         setUser,
+        logout,
       }}
     >
       {children}
