@@ -38,6 +38,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
     void restoreUser();
   }, []);
 
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      setUser(null);
+    };
+
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+
+    return () => {
+      window.removeEventListener('auth:unauthorized', handleUnauthorized);
+    };
+  }, []);
+
   const logout = async () => {
     await logoutUser();
     setUser(null);

@@ -1,9 +1,8 @@
 import { Navigate, useNavigate } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
-import { logoutUser } from '../api/authApi';
 
 function HomePage() {
-  const { user, isAuthLoading } = useAuth();
+  const { user, isAuthLoading, logout } = useAuth();
   const navigate = useNavigate();
 
   if (isAuthLoading) {
@@ -12,7 +11,8 @@ function HomePage() {
 
   const handleLogout = async () => {
     try {
-      await logoutUser();
+      await logout();
+
       navigate('/', {
         replace: true,
       });
@@ -24,12 +24,8 @@ function HomePage() {
   return (
     <>
       <h1>Hello {user ? user.userName : 'Guest'}!</h1>
-      <button
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
-        onClick={handleLogout}
-      >
-        Logout
-      </button>
+
+      <button onClick={handleLogout}>Logout</button>
     </>
   );
 }

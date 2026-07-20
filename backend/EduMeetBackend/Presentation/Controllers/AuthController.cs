@@ -112,6 +112,45 @@ public class AuthController:ControllerBase
         return Ok(user);
     }
     
+    
+    [AllowAnonymous]
+    [HttpPost("refresh")]
+    [ProducesResponseType<RefreshResponse>(
+        StatusCodes.Status200OK)]
+    [ProducesResponseType(
+        StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Refresh(
+        CancellationToken cancellationToken)
+    {
+        Request.Cookies.TryGetValue(
+            AuthCookieNames.RefreshToken,
+            out var rawRefreshToken);
+
+        var result =
+            await _authService.RefreshTokenAsync(
+                rawRefreshToken,
+                cancellationToken);
+
+        if (!result.Succeeded)
+        {
+            AuthCookieWriter.Delete(
+                Response,
+                _environment.IsDevelopment());
+
+            return Unauthorized();
+        }
+
+        AuthCookieWriter.Append(
+            Response,
+            result.Tokens!,
+            _environment.IsDevelopment());
+
+        return Ok(
+            new RefreshResponse(
+                result.Tokens!
+                    .AccessTokenExpiresAtUtc));
+    }
+    
     [AllowAnonymous]
     [HttpPost("logout")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

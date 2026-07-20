@@ -17,4 +17,6 @@ public interface IAuthService
     Task<RegisteredUserResponse?> GetCurrentUserAsync(string username, CancellationToken ct = default);
 
     Task LogoutAsync(string refreshToken, CancellationToken ct = default);
+
+    Task<RefreshResult> RefreshTokenAsync(string refreshToken, CancellationToken ct = default);
 }

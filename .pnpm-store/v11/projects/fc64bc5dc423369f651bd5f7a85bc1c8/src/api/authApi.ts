@@ -43,6 +43,16 @@ export async function getCurrentUser(): Promise<RegisteredUserResponse> {
   return response.data;
 }
 
+export interface RefreshResponse {
+  accessTokenExpiresAtUtc: string;
+}
+
+export async function refreshAccessToken(): Promise<RefreshResponse> {
+  const response = await axiosInstance.post<RefreshResponse>('/auth/refresh');
+
+  return response.data;
+}
+
 export function getAuthErrorMessage(error: unknown): string {
   if (!axios.isAxiosError<ValidationProblemDetails>(error)) {
     return 'Something went wrong. Please try again.';

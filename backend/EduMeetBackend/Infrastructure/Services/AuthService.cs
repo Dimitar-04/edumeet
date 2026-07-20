@@ -225,6 +225,56 @@ public sealed class AuthService(
         await unitOfWork.SaveChangesAsync(ct);
     }
 
+    public async Task<RefreshResult> RefreshTokenAsync(string refreshToken, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(
+                refreshToken))
+        {
+            return RefreshResult.Failure();
+        }
+
+        var tokenHash = tokenService.HashRefreshToken(refreshToken);
+
+        var storedToken = await refreshTokenRepository.GetByHashWithUserAsync(tokenHash);
+        
+        var now = timeProvider.GetUtcNow();
+
+        if (storedToken is null ||
+            !storedToken.IsActive(now))
+        {
+            return RefreshResult.Failure();
+        }
+        
+        storedToken.RevokedAtUtc = now;
+
+        var replacement = tokenService.CreateRefreshToken(storedToken.ExpiresAtUtc); //why pass this
+        
+        refreshTokenRepository.Add(new RefreshToken
+        {
+            AppUserId = storedToken.AppUserId,
+            TokenHash = replacement.Hash,
+            CreatedAtUtc = now,
+            ExpiresAtUtc = replacement.ExpiresAtUtc
+        });
+        
+        await unitOfWork.SaveChangesAsync(
+            ct);
+
+        var accessToken =
+            tokenService.CreateAccessToken(
+                storedToken.AppUser);
+
+        var issuedTokens =
+            new IssuedTokens(
+                accessToken.Value,
+                accessToken.ExpiresAtUtc,
+                replacement.Value,
+                replacement.ExpiresAtUtc);
+
+        return RefreshResult.Success(
+            issuedTokens);
+    }
+
     private static RegisteredUserResponse CreateUserResponse(AppUser user)
     {
         return new RegisteredUserResponse(
