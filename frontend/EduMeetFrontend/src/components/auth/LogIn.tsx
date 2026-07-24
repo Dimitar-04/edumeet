@@ -33,7 +33,10 @@ function LogIn({
       <p className="mt-2 mb-7 text-slate-600">Log in to continue to EduMeet.</p>
 
       <form className="grid gap-2.5" onSubmit={handleSubmit}>
-        <label className="mt-1 text-sm font-semibold" htmlFor="login-identifier">
+        <label
+          className="mt-1 text-sm font-semibold"
+          htmlFor="login-identifier"
+        >
           Email or username
         </label>
         <input
@@ -62,7 +65,10 @@ function LogIn({
           name="password"
           value={values.password}
           onChange={(event) =>
-            setValues((current) => ({ ...current, password: event.target.value }))
+            setValues((current) => ({
+              ...current,
+              password: event.target.value,
+            }))
           }
           autoComplete="current-password"
           required

@@ -3,7 +3,7 @@ using _2._Application.Auth.Results;
 
 namespace _2._Application.Interfaces.Repositories;
 
-public interface IAppUserRepository
+public interface IAppUserRepository:IBaseRepository<AppUser>
 {
     Task<UserCreationResult> AddAsync(
         AppUser user,

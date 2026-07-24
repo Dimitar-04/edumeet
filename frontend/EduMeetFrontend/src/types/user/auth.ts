@@ -28,6 +28,7 @@ interface SignUpCredentials {
   userName: string;
   email: string;
   phoneNumber: string;
+  image: File | null;
   password: string;
   confirmPassword: string;
 }
@@ -42,7 +43,6 @@ export interface OrganizationSignUpFormValues extends SignUpCredentials {
   accountType: (typeof AccountType)['Organization'];
   name: string;
   website: string;
-  logoUrl: string;
 }
 
 export type SignUpFormValues =

@@ -16,10 +16,7 @@ public class OrganizationProfileModelTypeConfiguration:IEntityTypeConfiguration<
 
         builder.Property(o => o.Website)
             .HasMaxLength(300);
-
-        builder.Property(o => o.LogoUrl)
-            .HasMaxLength(500);
-
+        
         builder.HasOne(o => o.AppUser)
             .WithOne(u => u.OrganizationProfile)
             .HasForeignKey<OrganizationProfile>(o => o.AppUserId)

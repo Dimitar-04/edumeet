@@ -1,23 +1,16 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios';
-
-const baseURL = 'http://localhost:5062/api';
+import { apiBaseUrl } from './apiConfig';
 
 const axiosInstance = axios.create({
-  baseURL,
+  baseURL: apiBaseUrl,
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 // Separate client without the interceptor.
 // This avoids refresh recursively intercepting itself.
 const refreshClient = axios.create({
-  baseURL,
+  baseURL: apiBaseUrl,
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 interface RetryableRequestConfig extends InternalAxiosRequestConfig {

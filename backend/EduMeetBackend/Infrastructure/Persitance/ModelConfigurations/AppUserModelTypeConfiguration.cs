@@ -10,6 +10,9 @@ public class AppUserModelTypeConfiguration:IEntityTypeConfiguration<AppUser>
     {
         builder.Property(u => u.AccountType)
             .IsRequired();
-        
+
+        builder.Property(p => p.ImageUrl)
+            .HasMaxLength(500);
+
     }
 }

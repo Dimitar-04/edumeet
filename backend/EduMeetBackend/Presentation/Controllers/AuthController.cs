@@ -22,12 +22,34 @@ public class AuthController:ControllerBase
 
 
     [HttpPost("register")]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType<ValidationProblemDetails>(
         StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken ct)
+    public async Task<IActionResult> Register(
+        [FromForm] RegisterRequest request,
+        [FromForm] IFormFile? image,
+        CancellationToken ct)
     {
-        var result = await _authService.RegisterAsync(request, ct);
+        UploadedFileData? uploadedImage = null;
+
+        if (image is { Length: > 0 })
+        {
+            await using var memoryStream = new MemoryStream();
+
+            await image.CopyToAsync(memoryStream, ct);
+
+            uploadedImage = new UploadedFileData(
+                memoryStream.ToArray(),
+                Path.GetFileName(image.FileName),
+                image.ContentType);
+        }
+
+        var result = await _authService.RegisterAsync(
+            request,
+            uploadedImage,
+            ct);
+
 
         if (!result.Succeeded)
         {

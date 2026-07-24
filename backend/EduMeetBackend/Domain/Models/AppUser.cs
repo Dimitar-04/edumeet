@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 public class AppUser : IdentityUser<Guid>
 {
     public AccountType AccountType { get; set; }
+    
+    public string? ImageUrl { get; set; }
 
     public IndividualProfile? IndividualProfile { get; set; }
     public OrganizationProfile? OrganizationProfile { get; set; }

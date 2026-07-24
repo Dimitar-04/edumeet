@@ -12,6 +12,8 @@ public sealed class AuthMappingProfile : Profile
             .ForMember(
                 destination => destination.UserName,
                 options => options.MapFrom(source => source.UserName.Trim()))
+            .ForMember(destination=>destination.ImageUrl,
+                options=>options.Ignore())
             .ForMember(
                 destination => destination.Email,
                 options => options.MapFrom(source => source.Email.Trim()))
@@ -41,12 +43,6 @@ public sealed class AuthMappingProfile : Profile
                 options => options.MapFrom(source =>
                     string.IsNullOrWhiteSpace(source.Website)
                         ? null
-                        : source.Website.Trim()))
-            .ForMember(
-                destination => destination.LogoUrl,
-                options => options.MapFrom(source =>
-                    string.IsNullOrWhiteSpace(source.LogoUrl)
-                        ? null
-                        : source.LogoUrl.Trim()));
+                        : source.Website.Trim()));
     }
 }

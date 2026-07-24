@@ -52,7 +52,7 @@ function AuthPage() {
       });
 
       setUser(user);
-
+      console.log(user);
       navigate('/home', {
         replace: true,
       });

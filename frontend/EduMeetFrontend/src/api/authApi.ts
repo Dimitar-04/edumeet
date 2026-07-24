@@ -3,7 +3,11 @@ import type {
   RegisterRequest,
   RegisteredUserResponse,
 } from '../types/user/registration';
-import type { AuthenticationResponse, LoginRequest } from '../types/user/auth';
+import {
+  AccountType,
+  type AuthenticationResponse,
+  type LoginRequest,
+} from '../types/user/auth';
 import axiosInstance from './axiosInstance';
 
 interface ValidationProblemDetails {
@@ -14,9 +18,36 @@ interface ValidationProblemDetails {
 export async function registerUser(
   request: RegisterRequest,
 ): Promise<RegisteredUserResponse> {
+  const formData = new FormData();
+
+  formData.append('UserName', request.userName);
+  formData.append('Email', request.email);
+  formData.append('Password', request.password);
+  formData.append('ConfirmPassword', request.confirmPassword);
+  formData.append('AccountType', String(request.accountType));
+
+  if (request.phoneNumber) {
+    formData.append('PhoneNumber', request.phoneNumber);
+  }
+
+  if (request.image) {
+    formData.append('image', request.image);
+  }
+
+  if (request.accountType === AccountType.Individual) {
+    formData.append('Individual.FirstName', request.individual.firstName);
+    formData.append('Individual.LastName', request.individual.lastName);
+  } else {
+    formData.append('Organization.Name', request.organization.name);
+
+    if (request.organization.website) {
+      formData.append('Organization.Website', request.organization.website);
+    }
+  }
+
   const response = await axiosInstance.post<AuthenticationResponse>(
     '/auth/register',
-    request,
+    formData,
   );
 
   return response.data.user;

@@ -7,6 +7,7 @@ interface RegisterCredentials {
   userName: string;
   email: string;
   phoneNumber: string | null;
+  image: File | null;
   password: string;
   confirmPassword: string;
 }
@@ -26,7 +27,6 @@ export interface OrganizationRegisterRequest extends RegisterCredentials {
   organization: {
     name: string;
     website: string | null;
-    logoUrl: string | null;
   };
 }
 
@@ -40,6 +40,7 @@ export interface RegisteredUserResponse {
   email: string;
   phoneNumber: string | null;
   accountType: AccountType;
+  imageUrl: string | null;
   individual: {
     id: string;
     firstName: string;
@@ -49,7 +50,6 @@ export interface RegisteredUserResponse {
     id: string;
     name: string;
     website: string | null;
-    logoUrl: string | null;
   } | null;
 }
 
@@ -60,6 +60,7 @@ export function toRegisterRequest(
     userName: values.userName.trim(),
     email: values.email.trim(),
     phoneNumber: values.phoneNumber.trim() || null,
+    image: values.image,
     password: values.password,
     confirmPassword: values.confirmPassword,
   };
@@ -83,7 +84,6 @@ export function toRegisterRequest(
     organization: {
       name: values.name.trim(),
       website: values.website.trim() || null,
-      logoUrl: values.logoUrl.trim() || null,
     },
   };
 }

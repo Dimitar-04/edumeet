@@ -14,11 +14,11 @@ interface SignUpFormState {
   userName: string;
   email: string;
   phoneNumber: string;
+  image: File | null;
   firstName: string;
   lastName: string;
   name: string;
   website: string;
-  logoUrl: string;
   password: string;
   confirmPassword: string;
 }
@@ -28,11 +28,11 @@ const initialValues: SignUpFormState = {
   userName: '',
   email: '',
   phoneNumber: '',
+  image: null,
   firstName: '',
   lastName: '',
   name: '',
   website: '',
-  logoUrl: '',
   password: '',
   confirmPassword: '',
 };
@@ -45,6 +45,7 @@ function SignUp({
 }: SignUpFormProps) {
   const [values, setValues] = useState<SignUpFormState>(initialValues);
   const [passwordError, setPasswordError] = useState('');
+  const [imageError, setImageError] = useState('');
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -60,6 +61,7 @@ function SignUp({
       userName: values.userName,
       email: values.email,
       phoneNumber: values.phoneNumber,
+      image: values.image,
       password: values.password,
       confirmPassword: values.confirmPassword,
     };
@@ -76,7 +78,6 @@ function SignUp({
             accountType: AccountType.Organization,
             name: values.name,
             website: values.website,
-            logoUrl: values.logoUrl,
           };
 
     void onSubmit(formValues);
@@ -202,6 +203,52 @@ function SignUp({
           autoComplete="tel"
         />
 
+        <label className={labelClassName} htmlFor="signup-image">
+          Profile picture{' '}
+          <span className="font-normal text-slate-500">(optional)</span>
+        </label>
+        <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4">
+          <input
+            className="block w-full cursor-pointer text-sm text-slate-600 file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-slate-900 file:px-4 file:py-2.5 file:font-semibold file:text-white hover:file:bg-slate-700"
+            id="signup-image"
+            type="file"
+            name="image"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={(event) => {
+              const file = event.target.files?.[0] ?? null;
+
+              if (file && file.size > 5 * 1024 * 1024) {
+                setImageError('The profile picture cannot exceed 5 MB.');
+                setValues((current) => ({ ...current, image: null }));
+                event.target.value = '';
+                return;
+              }
+
+              setImageError('');
+              setValues((current) => ({ ...current, image: file }));
+            }}
+            aria-describedby={imageError ? 'image-error' : 'image-help'}
+            aria-invalid={Boolean(imageError)}
+          />
+          <p className="mt-2 text-xs text-slate-500" id="image-help">
+            JPEG, PNG or WebP, up to 5 MB.
+          </p>
+          {values.image && (
+            <p className="mt-2 truncate text-sm font-medium text-slate-700">
+              Selected: {values.image.name}
+            </p>
+          )}
+          {imageError && (
+            <p
+              id="image-error"
+              className="mt-2 text-sm text-red-700"
+              role="alert"
+            >
+              {imageError}
+            </p>
+          )}
+        </div>
+
         {values.accountType === AccountType.Individual ? (
           <>
             <label className={labelClassName} htmlFor="signup-first-name">
@@ -288,23 +335,6 @@ function SignUp({
               maxLength={300}
             />
 
-            <label className={labelClassName} htmlFor="signup-logo-url">
-              Logo URL
-            </label>
-            <input
-              className={inputClassName}
-              id="signup-logo-url"
-              type="url"
-              name="logoUrl"
-              value={values.logoUrl}
-              onChange={(event) =>
-                setValues((current) => ({
-                  ...current,
-                  logoUrl: event.target.value,
-                }))
-              }
-              maxLength={500}
-            />
           </>
         )}
 

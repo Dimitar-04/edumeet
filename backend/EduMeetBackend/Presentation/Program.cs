@@ -5,6 +5,7 @@ using _2._Application.Interfaces;
 using _2._Application.Interfaces.Repositories;
 using _2._Application.Interfaces.UnitOfWork;
 using _2._Application.Services.Configurations;
+using _2._Application.Services.Implementations;
 using _3._Infrastracture.Persitance;
 using _3._Infrastracture.Persitance.Identity;
 using _3._Infrastracture.Persitance.Repositories;
@@ -54,6 +55,8 @@ builder.Services
 
 // Add services to the container.
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
 builder.Services.AddScoped<IIndividualProfileRepository, IndividualProfileRepository>();
 builder.Services.AddScoped<IOrganizationProfileRepository, OrganizationProfileRepository>();
@@ -171,6 +174,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseCors("ReactFrontend");

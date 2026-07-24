@@ -14,6 +14,7 @@ namespace _3._Infrastracture.Services;
 
 public sealed class AuthService(
     IAppUserRepository appUserRepository,
+    IFileUploadService fileUploadService,
     IIndividualProfileRepository individualProfileRepository,
     IOrganizationProfileRepository organizationProfileRepository,
     IRefreshTokenRepository refreshTokenRepository,
@@ -26,6 +27,7 @@ public sealed class AuthService(
 {
     public async Task<RegistrationResult> RegisterAsync(
         RegisterRequest request,
+        UploadedFileData? image,
         CancellationToken cancellationToken = default)
     {
         var requestErrors = ValidateRequest(request);
@@ -49,6 +51,19 @@ public sealed class AuthService(
                 return RegistrationResult.Failure(
                     userCreationResult.Errors);
             }
+            
+            
+            if (image is not null)
+            {
+                var imageUrl = await fileUploadService.UploadFileAsync(
+                    image.Bytes,
+                    image.OriginalFileName,
+                    "profile-images");
+
+                user.ImageUrl = imageUrl;
+                
+            }
+
 
             IndividualProfile? individualProfile = null;
             OrganizationProfile? organizationProfile = null;
@@ -107,6 +122,7 @@ public sealed class AuthService(
                 user.Email!,
                 user.PhoneNumber,
                 user.AccountType,
+                user.ImageUrl,
                 individualProfile is null
                     ? null
                     : new IndividualProfileResponse(
@@ -118,8 +134,7 @@ public sealed class AuthService(
                     : new OrganizationProfileResponse(
                         organizationProfile.Id,
                         organizationProfile.Name,
-                        organizationProfile.Website,
-                        organizationProfile.LogoUrl));
+                        organizationProfile.Website));
 
             return RegistrationResult.Success(response, issuedTokens);
         }
@@ -206,8 +221,12 @@ public sealed class AuthService(
         return CreateUserResponse(user);
     }
 
-    public async Task LogoutAsync(string refreshToken, CancellationToken ct = default)
+    public async Task LogoutAsync(string? refreshToken, CancellationToken ct = default)
     {
+        if (string.IsNullOrWhiteSpace(refreshToken))
+        {
+            return;
+        }
         var tokenHash = tokenService.HashRefreshToken(refreshToken);
         var storedToken = await refreshTokenRepository
                 .GetByHashWithUserAsync(
@@ -225,10 +244,14 @@ public sealed class AuthService(
         await unitOfWork.SaveChangesAsync(ct);
     }
 
-    public async Task<RefreshResult> RefreshTokenAsync(string refreshToken, CancellationToken ct = default)
+    public async Task<RefreshResult> RefreshTokenAsync(string? refreshToken, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(
                 refreshToken))
+        {
+            return RefreshResult.Failure();
+        }
+        if (string.IsNullOrWhiteSpace(refreshToken))
         {
             return RefreshResult.Failure();
         }
@@ -283,6 +306,7 @@ public sealed class AuthService(
             user.Email!,
             user.PhoneNumber,
             user.AccountType,
+            user.ImageUrl,
             user.IndividualProfile is null
                 ? null
                 : new IndividualProfileResponse(
@@ -294,8 +318,7 @@ public sealed class AuthService(
                 : new OrganizationProfileResponse(
                     user.OrganizationProfile.Id,
                     user.OrganizationProfile.Name,
-                    user.OrganizationProfile.Website,
-                    user.OrganizationProfile.LogoUrl));
+                    user.OrganizationProfile.Website));
     }
 
     private static List<string> ValidateRequest(RegisterRequest request)

@@ -8,6 +8,7 @@ public interface IAuthService
 {
     Task<RegistrationResult> RegisterAsync(
         RegisterRequest request,
+        UploadedFileData? image,
         CancellationToken cancellationToken = default);
 
     Task<LoginResult> LoginAsync(
@@ -16,7 +17,7 @@ public interface IAuthService
 
     Task<RegisteredUserResponse?> GetCurrentUserAsync(string username, CancellationToken ct = default);
 
-    Task LogoutAsync(string refreshToken, CancellationToken ct = default);
+    Task LogoutAsync(string? refreshToken, CancellationToken ct = default);
 
-    Task<RefreshResult> RefreshTokenAsync(string refreshToken, CancellationToken ct = default);
+    Task<RefreshResult> RefreshTokenAsync(string? refreshToken, CancellationToken ct = default);
 }

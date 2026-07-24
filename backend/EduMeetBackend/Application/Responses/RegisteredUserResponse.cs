@@ -8,5 +8,6 @@ public sealed record RegisteredUserResponse(
     string Email,
     string? PhoneNumber,
     AccountType AccountType,
+    string? ImageUrl,
     IndividualProfileResponse? Individual,
     OrganizationProfileResponse? Organization);
