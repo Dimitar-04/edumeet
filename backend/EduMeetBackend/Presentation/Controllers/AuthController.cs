@@ -11,6 +11,8 @@ namespace _4._Presentation.Controllers;
 [Route("api/[controller]")]
 public class AuthController:ControllerBase
 {
+    private const long MaxProfileImageSizeBytes = 5 * 1024 * 1024;
+
     private readonly IAuthService _authService;
     private readonly IWebHostEnvironment _environment;
 
@@ -32,6 +34,17 @@ public class AuthController:ControllerBase
         CancellationToken ct)
     {
         UploadedFileData? uploadedImage = null;
+
+        if (image is { Length: > MaxProfileImageSizeBytes })
+        {
+            var validationErrors = new Dictionary<string, string[]>
+            {
+                ["image"] = ["Profile picture size cannot exceed 5 MB."]
+            };
+
+            return BadRequest(
+                new ValidationProblemDetails(validationErrors));
+        }
 
         if (image is { Length: > 0 })
         {

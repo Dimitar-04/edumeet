@@ -11,8 +11,5 @@ public sealed class OrganizationRegistrationRequest
     [Url]
     [StringLength(300)]
     public string? Website { get; init; }
-
-    [Url]
-    [StringLength(500)]
-    public string? LogoUrl { get; init; }
+    
 }

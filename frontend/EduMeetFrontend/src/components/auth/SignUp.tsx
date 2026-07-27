@@ -56,7 +56,6 @@ function SignUp({
     }
 
     setPasswordError('');
-
     const credentials = {
       userName: values.userName,
       email: values.email,
@@ -186,7 +185,8 @@ function SignUp({
         />
 
         <label className={labelClassName} htmlFor="signup-phone">
-          Phone number
+          Phone number{' '}
+          <span className="font-normal text-slate-500">(optional)</span>
         </label>
         <input
           className={inputClassName}
@@ -317,7 +317,8 @@ function SignUp({
             />
 
             <label className={labelClassName} htmlFor="signup-website">
-              Website
+              Website{' '}
+              <span className="font-normal text-slate-500">(optional)</span>
             </label>
             <input
               className={inputClassName}
@@ -334,7 +335,6 @@ function SignUp({
               autoComplete="url"
               maxLength={300}
             />
-
           </>
         )}
 
