@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
 import {
   getAuthErrorMessage,
   loginUser,
   registerUser,
-} from '../../api/authApi';
+} from "../../api/authApi";
 import type {
   AuthMode,
   LogInFormValues,
   SignUpFormValues,
-} from '../../types/user/auth';
-import { toRegisterRequest } from '../../types/user/registration';
-import LogIn from './LogIn';
-import SignUp from './SignUp';
-import { useAuth } from '../../contexts/AuthContext';
+} from "../../types/user/auth";
+import { toRegisterRequest } from "../../types/user/registration";
+import LogIn from "./LogIn";
+import SignUp from "./SignUp";
+import { useAuth } from "../../contexts/AuthContext";
 
 function AuthPage() {
-  const [authMode, setAuthMode] = useState<AuthMode>('login');
+  const [authMode, setAuthMode] = useState<AuthMode>("login");
   const { setUser } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -31,7 +31,7 @@ function AuthPage() {
 
       setUser(user);
 
-      navigate('/home', {
+      navigate("/", {
         replace: true,
       });
     } catch (error) {
@@ -52,8 +52,7 @@ function AuthPage() {
       });
 
       setUser(user);
-      console.log(user);
-      navigate('/home', {
+      navigate("/", {
         replace: true,
       });
     } catch (error) {
@@ -69,22 +68,38 @@ function AuthPage() {
   };
 
   return (
-    <main className="grid min-h-screen place-items-center bg-slate-100 px-6 py-8 font-sans text-slate-900">
-      {authMode === 'login' ? (
-        <LogIn
-          onSubmit={handleLogin}
-          onSwitchMode={() => switchMode('signup')}
-          isSubmitting={isSubmitting}
-          submitError={authError}
-        />
-      ) : (
-        <SignUp
-          onSubmit={handleRegister}
-          onSwitchMode={() => switchMode('login')}
-          isSubmitting={isSubmitting}
-          submitError={authError}
-        />
-      )}
+    <main className="auth-page">
+      <header className="auth-topbar">
+        <Link className="brand" to="/" aria-label="EduMeet home">
+          <span className="brand-logo-crop" aria-hidden="true">
+            <img src="/edumeet-logo.png" alt="" />
+          </span>
+          <span className="brand-wordmark">EduMeet</span>
+        </Link>
+        <Link className="auth-home-link" to="/">
+          Back to events
+        </Link>
+      </header>
+
+      <div className="auth-layout">
+        <div className="auth-form-shell">
+          {authMode === "login" ? (
+            <LogIn
+              onSubmit={handleLogin}
+              onSwitchMode={() => switchMode("signup")}
+              isSubmitting={isSubmitting}
+              submitError={authError}
+            />
+          ) : (
+            <SignUp
+              onSubmit={handleRegister}
+              onSwitchMode={() => switchMode("login")}
+              isSubmitting={isSubmitting}
+              submitError={authError}
+            />
+          )}
+        </div>
+      </div>
     </main>
   );
 }

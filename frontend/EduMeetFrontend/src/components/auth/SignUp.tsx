@@ -5,9 +5,8 @@ import {
   type SignUpFormValues,
 } from '../../types/user/auth';
 
-const inputClassName =
-  'w-full rounded-lg border border-slate-300 px-3.5 py-3 text-slate-900 outline-none transition focus:border-indigo-600 focus:ring-3 focus:ring-indigo-600/20';
-const labelClassName = 'mt-1 text-sm font-semibold';
+const inputClassName = 'auth-input';
+const labelClassName = 'auth-label';
 
 interface SignUpFormState {
   accountType: AccountType;
@@ -84,27 +83,28 @@ function SignUp({
 
   return (
     <section
-      className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-900/10"
+      className="auth-card auth-card-signup"
       aria-labelledby="signup-title"
     >
-      <h1 id="signup-title" className="text-3xl font-bold tracking-tight">
+      <p className="auth-kicker">Join the community</p>
+      <h1 id="signup-title" className="auth-title">
         Create your account
       </h1>
-      <p className="mt-2 mb-7 text-slate-600">
+      <p className="auth-subtitle">
         Join EduMeet and start learning together.
       </p>
 
-      <form className="grid gap-2.5" onSubmit={handleSubmit}>
+      <form className="auth-form" onSubmit={handleSubmit}>
         <span className={labelClassName} id="account-type-label">
           Account type
         </span>
         <div
-          className="relative isolate grid grid-cols-2 overflow-hidden rounded-xl border border-slate-200 bg-slate-100 p-1 shadow-inner shadow-slate-300/50"
+          className="auth-account-toggle"
           role="group"
           aria-labelledby="account-type-label"
         >
           <span
-            className={`absolute inset-y-1 left-1 z-0 w-[calc(50%-0.25rem)] rounded-lg bg-slate-900 shadow-md shadow-slate-900/15 ring-1 ring-white/10 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:duration-0 ${
+            className={`auth-account-pill ${
               values.accountType === AccountType.Organization
                 ? 'translate-x-full'
                 : 'translate-x-0'
@@ -113,7 +113,7 @@ function SignUp({
           />
 
           <button
-            className={`relative z-10 cursor-pointer rounded-lg px-3 py-3 text-sm font-semibold tracking-tight transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 ${
+            className={`auth-account-option ${
               values.accountType === AccountType.Individual
                 ? 'text-white'
                 : 'text-slate-600 hover:text-slate-950'
@@ -131,7 +131,7 @@ function SignUp({
           </button>
 
           <button
-            className={`relative z-10 cursor-pointer rounded-lg px-3 py-3 text-sm font-semibold tracking-tight transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 ${
+            className={`auth-account-option ${
               values.accountType === AccountType.Organization
                 ? 'text-white'
                 : 'text-slate-600 hover:text-slate-950'
@@ -207,9 +207,9 @@ function SignUp({
           Profile picture{' '}
           <span className="font-normal text-slate-500">(optional)</span>
         </label>
-        <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4">
+        <div className="auth-file-field">
           <input
-            className="block w-full cursor-pointer text-sm text-slate-600 file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-slate-900 file:px-4 file:py-2.5 file:font-semibold file:text-white hover:file:bg-slate-700"
+            className="auth-file-input"
             id="signup-image"
             type="file"
             name="image"
@@ -395,7 +395,7 @@ function SignUp({
         )}
 
         <button
-          className="mt-4 cursor-pointer rounded-lg bg-indigo-700 px-4 py-3 font-bold text-white transition hover:bg-indigo-800 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+          className="auth-submit"
           type="submit"
           disabled={isSubmitting}
         >
@@ -403,10 +403,10 @@ function SignUp({
         </button>
       </form>
 
-      <p className="mt-6 text-center text-slate-600">
+      <p className="auth-switch">
         Already have an account?{' '}
         <button
-          className="cursor-pointer font-bold text-indigo-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+          className="auth-switch-button"
           type="button"
           onClick={onSwitchMode}
         >

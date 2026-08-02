@@ -1,5 +1,5 @@
-import axios, { type InternalAxiosRequestConfig } from 'axios';
-import { apiBaseUrl } from './apiConfig';
+import axios, { type InternalAxiosRequestConfig } from "axios";
+import { apiBaseUrl } from "./apiConfig";
 
 const axiosInstance = axios.create({
   baseURL: apiBaseUrl,
@@ -21,9 +21,9 @@ let refreshPromise: Promise<void> | null = null;
 
 function isAuthenticationEndpoint(url?: string): boolean {
   return (
-    url?.includes('/auth/login') === true ||
-    url?.includes('/auth/register') === true ||
-    url?.includes('/auth/refresh') === true
+    url?.includes("/auth/login") === true ||
+    url?.includes("/auth/register") === true ||
+    url?.includes("/auth/refresh") === true
   );
 }
 
@@ -49,7 +49,7 @@ axiosInstance.interceptors.response.use(
     originalRequest._retry = true;
 
     refreshPromise ??= refreshClient
-      .post('/auth/refresh')
+      .post("/auth/refresh")
       .then(() => undefined)
       .finally(() => {
         refreshPromise = null;
@@ -60,7 +60,7 @@ axiosInstance.interceptors.response.use(
 
       return axiosInstance(originalRequest);
     } catch {
-      window.dispatchEvent(new Event('auth:unauthorized'));
+      window.dispatchEvent(new Event("auth:unauthorized"));
 
       return Promise.reject(error);
     }

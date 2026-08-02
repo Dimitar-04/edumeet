@@ -270,7 +270,7 @@ public sealed class AuthService(
         
         storedToken.RevokedAtUtc = now;
 
-        var replacement = tokenService.CreateRefreshToken(storedToken.ExpiresAtUtc); //why pass this
+        var replacement = tokenService.CreateRefreshToken(storedToken.ExpiresAtUtc);
         
         refreshTokenRepository.Add(new RefreshToken
         {

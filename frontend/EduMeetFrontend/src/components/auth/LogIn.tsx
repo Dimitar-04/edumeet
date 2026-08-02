@@ -1,8 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import type { LogInFormProps, LogInFormValues } from '../../types/user/auth';
 
-const inputClassName =
-  'w-full rounded-lg border border-slate-300 px-3.5 py-3 text-slate-900 outline-none transition focus:border-indigo-600 focus:ring-3 focus:ring-indigo-600/20';
+const inputClassName = 'auth-input';
 
 const initialValues: LogInFormValues = {
   emailOrUserName: '',
@@ -24,17 +23,18 @@ function LogIn({
 
   return (
     <section
-      className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-900/10"
+      className="auth-card auth-card-login"
       aria-labelledby="login-title"
     >
-      <h1 id="login-title" className="text-3xl font-bold tracking-tight">
-        Welcome back
+      <p className="auth-kicker">Welcome back</p>
+      <h1 id="login-title" className="auth-title">
+        Log in to EduMeet
       </h1>
-      <p className="mt-2 mb-7 text-slate-600">Log in to continue to EduMeet.</p>
+      <p className="auth-subtitle">Continue discovering and hosting events.</p>
 
-      <form className="grid gap-2.5" onSubmit={handleSubmit}>
+      <form className="auth-form" onSubmit={handleSubmit}>
         <label
-          className="mt-1 text-sm font-semibold"
+          className="auth-label"
           htmlFor="login-identifier"
         >
           Email or username
@@ -55,7 +55,7 @@ function LogIn({
           required
         />
 
-        <label className="mt-1 text-sm font-semibold" htmlFor="login-password">
+        <label className="auth-label" htmlFor="login-password">
           Password
         </label>
         <input
@@ -75,7 +75,7 @@ function LogIn({
         />
 
         <button
-          className="mt-4 cursor-pointer rounded-lg bg-indigo-700 px-4 py-3 font-bold text-white transition hover:bg-indigo-800 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+          className="auth-submit"
           type="submit"
           disabled={isSubmitting}
         >
@@ -89,10 +89,10 @@ function LogIn({
         ) : null}
       </form>
 
-      <p className="mt-6 text-center text-slate-600">
+      <p className="auth-switch">
         Don&apos;t have an account?{' '}
         <button
-          className="cursor-pointer font-bold text-indigo-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+          className="auth-switch-button"
           type="button"
           onClick={onSwitchMode}
         >

@@ -4,9 +4,9 @@ import {
   useEffect,
   useState,
   type PropsWithChildren,
-} from 'react';
-import { getCurrentUser, logoutUser } from '../api/authApi';
-import type { RegisteredUserResponse } from '../types/user/registration';
+} from "react";
+import { getCurrentUser, logoutUser } from "../api/authApi";
+import type { RegisteredUserResponse } from "../types/user/registration";
 
 interface AuthContextValue {
   user: RegisteredUserResponse | null;
@@ -43,10 +43,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
       setUser(null);
     };
 
-    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    window.addEventListener("auth:unauthorized", handleUnauthorized);
 
     return () => {
-      window.removeEventListener('auth:unauthorized', handleUnauthorized);
+      window.removeEventListener("auth:unauthorized", handleUnauthorized);
     };
   }, []);
 
@@ -73,7 +73,7 @@ export function useAuth() {
   const context = useContext(AuthContext);
 
   if (context == null) {
-    throw new Error('useAuth must be used inside AuthProvider.');
+    throw new Error("useAuth must be used inside AuthProvider.");
   }
 
   return context;
