@@ -1,21 +1,9 @@
-import { Link, NavLink, useNavigate } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
 import UserAvatar from '../user/UserAvatar';
 
 function AppHeader() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    if (!user) return;
-
-    try {
-      await logout();
-      navigate('/', { replace: true });
-    } catch {
-      // The visual prototype keeps the current page in place on API failure.
-    }
-  };
+  const { user } = useAuth();
 
   return (
     <header className="site-header">
@@ -39,11 +27,10 @@ function AppHeader() {
           </Link>
 
           {user ? (
-            <button
+            <Link
               className="profile-button"
-              type="button"
-              onClick={handleLogout}
-              title="Log out"
+              to="/profile"
+              aria-label={`Open ${user.userName}'s profile`}
             >
               <UserAvatar
                 className="header-avatar"
@@ -52,21 +39,24 @@ function AppHeader() {
               />
               <span className="profile-copy">
                 <strong>{user.userName}</strong>
-                <small>Log out</small>
-              </span>
-            </button>
-          ) : (
-            <Link className="profile-button guest-profile" to="/login">
-              <UserAvatar
-                className="header-avatar"
-                userName="Guest"
-                imageUrl={null}
-              />
-              <span className="profile-copy">
-                <strong>Guest</strong>
-                <small>Log in</small>
               </span>
             </Link>
+          ) : (
+            <div className="guest-account">
+              <div className="profile-button guest-identity">
+                <UserAvatar
+                  className="header-avatar"
+                  userName="Guest"
+                  imageUrl={null}
+                />
+                <span className="profile-copy">
+                  <strong>Guest</strong>
+                </span>
+              </div>
+              <Link className="button button-secondary header-login" to="/login">
+                Log in
+              </Link>
+            </div>
           )}
         </div>
       </div>

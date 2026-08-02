@@ -18,6 +18,14 @@ public class EducationalEventModelTypeConfiguration:IEntityTypeConfiguration<Edu
             .IsRequired()
             .HasMaxLength(2000);
 
+        builder.Property(e => e.Category)
+            .IsRequired()
+            .HasMaxLength(50);
+
+        builder.Property(e => e.Format)
+            .IsRequired()
+            .HasMaxLength(50);
+
         builder.Property(e => e.ImageUrl)
             .HasMaxLength(500);
 

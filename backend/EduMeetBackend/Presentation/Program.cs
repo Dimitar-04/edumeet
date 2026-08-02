@@ -57,6 +57,8 @@ builder.Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 builder.Services.AddScoped<IAppUserService, AppUserService>();
+builder.Services.AddScoped<IEducationalEventRepository, EducationalEventRepository>();
+builder.Services.AddScoped<IEducationalEventService, EducationalEventService>();
 builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
 builder.Services.AddScoped<IIndividualProfileRepository, IndividualProfileRepository>();
 builder.Services.AddScoped<IOrganizationProfileRepository, OrganizationProfileRepository>();

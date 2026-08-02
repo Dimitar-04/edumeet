@@ -1,0 +1,21 @@
+﻿using _1._Domain.Models;
+using _2._Application.Interfaces.Repositories;
+using _3._Infrastracture.Persitance.Repositories.Base;
+using Microsoft.EntityFrameworkCore;
+
+namespace _3._Infrastracture.Persitance.Repositories;
+
+public class EducationalEventRepository(ApplicationDbContext context) :BaseRepository<EducationalEvent>(context), IEducationalEventRepository
+{
+    public async Task<IReadOnlyList<EducationalEvent>> GetUpcomingAsync(
+        DateTime fromUtc,
+        CancellationToken cancellationToken = default)
+    {
+        return await Context.EducationalEvents
+            .AsNoTracking()
+            .Include(educationalEvent => educationalEvent.Organizer)
+            .Where(educationalEvent => educationalEvent.Date >= fromUtc)
+            .OrderBy(educationalEvent => educationalEvent.Date)
+            .ToListAsync(cancellationToken);
+    }
+}

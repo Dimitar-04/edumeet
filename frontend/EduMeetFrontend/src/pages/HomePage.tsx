@@ -1,21 +1,38 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
+import { getUpcomingEvents } from '../api/eventsApi';
 import AppHeader from '../components/layout/AppHeader';
 import EventCard from '../components/events/EventCard';
 import EventFilters from '../components/events/EventFilters';
-import { mockEvents } from '../data/mockEvents';
-import type { EventCategory } from '../types/event';
+import type { EducationalEvent, EventCategory } from '../types/event';
 
 function HomePage() {
+  const [events, setEvents] = useState<EducationalEvent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [activeCategory, setActiveCategory] = useState<EventCategory | 'All'>(
     'All',
   );
   const [searchTerm, setSearchTerm] = useState('');
 
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        setEvents(await getUpcomingEvents());
+      } catch {
+        setLoadError('Events could not be loaded. Please try again shortly.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void loadEvents();
+  }, []);
+
   const visibleEvents = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
 
-    return mockEvents.filter((event) => {
+    return events.filter((event) => {
       const matchesCategory =
         activeCategory === 'All' || event.category === activeCategory;
       const matchesSearch =
@@ -26,7 +43,11 @@ function HomePage() {
 
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchTerm]);
+  }, [activeCategory, events, searchTerm]);
+
+  const featuredEvent = events[0];
+  const featuredDate = featuredEvent ? new Date(featuredEvent.date) : null;
+  const organizerCount = new Set(events.map((event) => event.organizerId)).size;
 
   return (
     <div className="app-shell">
@@ -53,38 +74,66 @@ function HomePage() {
               </Link>
             </div>
 
-            <dl className="hero-stats" aria-label="EduMeet community statistics">
+            <dl className="hero-stats" aria-label="EduMeet event statistics">
               <div>
-                <dt>120+</dt>
-                <dd>events this month</dd>
+                <dt>{events.length}</dt>
+                <dd>upcoming events</dd>
               </div>
               <div>
-                <dt>38</dt>
-                <dd>local organizers</dd>
+                <dt>{organizerCount}</dt>
+                <dd>active organizers</dd>
               </div>
               <div>
-                <dt>4.9</dt>
-                <dd>average rating</dd>
+                <dt>6</dt>
+                <dd>learning categories</dd>
               </div>
             </dl>
           </div>
 
-          <div className="hero-feature" aria-label="Featured event">
+          <div className="hero-feature" aria-label="Next upcoming event">
             <div className="hero-feature-art">
-              <span className="hero-feature-kicker">Featured this week</span>
+              <span className="hero-feature-kicker">
+                {featuredEvent ? 'Up next' : 'Your community, your classroom'}
+              </span>
               <div className="hero-orbit hero-orbit-one" />
               <div className="hero-orbit hero-orbit-two" />
-              <div className="hero-feature-mark">AI</div>
+              <div className="hero-feature-mark">
+                {featuredEvent
+                  ? featuredEvent.title
+                      .split(/\s+/)
+                      .slice(0, 2)
+                      .map((word) => word.charAt(0))
+                      .join('')
+                      .toUpperCase()
+                  : 'EM'}
+              </div>
             </div>
             <div className="hero-feature-details">
               <div>
-                <p>Technology · Workshop</p>
-                <h2>Practical AI for everyday work</h2>
+                <p>
+                  {featuredEvent
+                    ? `${featuredEvent.category} · ${featuredEvent.format}`
+                    : 'Create the first event'}
+                </p>
+                <h2>
+                  {featuredEvent?.title ?? 'Share what you know with EduMeet'}
+                </h2>
               </div>
-              <div className="feature-date" aria-label="August 8">
-                <strong>08</strong>
-                <span>AUG</span>
-              </div>
+              {featuredDate ? (
+                <div
+                  className="feature-date"
+                  aria-label={featuredDate.toLocaleDateString('en', {
+                    dateStyle: 'long',
+                  })}
+                >
+                  <strong>
+                    {featuredDate.toLocaleDateString('en', { day: '2-digit' })}
+                  </strong>
+                  <span>
+                    {featuredDate.toLocaleDateString('en', { month: 'short' })}
+                  </span>
+                </div>
+              ) : null}
             </div>
           </div>
         </section>
@@ -108,7 +157,17 @@ function HomePage() {
               onSearchChange={setSearchTerm}
             />
 
-            {visibleEvents.length > 0 ? (
+            {isLoading ? (
+              <div className="empty-state" role="status">
+                <h3>Gathering events…</h3>
+                <p>Your next learning experience is almost here.</p>
+              </div>
+            ) : loadError ? (
+              <div className="empty-state" role="alert">
+                <h3>We couldn&apos;t reach the event list</h3>
+                <p>{loadError}</p>
+              </div>
+            ) : visibleEvents.length > 0 ? (
               <div className="event-grid">
                 {visibleEvents.map((event) => (
                   <EventCard event={event} key={event.id} />
@@ -116,8 +175,12 @@ function HomePage() {
               </div>
             ) : (
               <div className="empty-state">
-                <h3>No events found</h3>
-                <p>Try another search or explore a different category.</p>
+                <h3>{events.length ? 'No events found' : 'The calendar is open'}</h3>
+                <p>
+                  {events.length
+                    ? 'Try another search or explore a different category.'
+                    : 'Be the first to bring a learning event to the community.'}
+                </p>
               </div>
             )}
           </div>

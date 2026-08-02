@@ -6,18 +6,20 @@ export type EventCategory =
   | 'Languages'
   | 'Community';
 
-export interface MockEvent {
+export interface EducationalEvent {
   id: string;
   title: string;
+  description: string;
   category: EventCategory;
   format: string;
-  month: string;
-  day: string;
-  fullDate: string;
-  time: string;
+  imageUrl: string | null;
+  date: string;
   locationName: string;
-  organizer: string;
-  price: string;
-  artCode: string;
-  visualTone: 'blue' | 'charcoal' | 'cream' | 'silver';
+  address: string;
+  latitude: number;
+  longitude: number;
+  googlePlaceId: string | null;
+  organizerId: string;
+  organizerName: string;
+  organizerImageUrl: string | null;
 }

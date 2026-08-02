@@ -2,6 +2,7 @@ using _2._Application.Interfaces;
 using _2._Application.Auth.Requests;
 using _2._Application.Auth.Responses;
 using _4._Presentation.Authentication;
+using _4._Presentation.FileReaders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,34 +34,20 @@ public class AuthController:ControllerBase
         [FromForm] IFormFile? image,
         CancellationToken ct)
     {
-        UploadedFileData? uploadedImage = null;
+        var imageResult = await FormFileReader.ReadImageAsync(
+            image,
+            MaxProfileImageSizeBytes,
+            ct);
 
-        if (image is { Length: > MaxProfileImageSizeBytes })
+        if (!imageResult.Succeeded)
         {
-            var validationErrors = new Dictionary<string, string[]>
-            {
-                ["image"] = ["Profile picture size cannot exceed 5 MB."]
-            };
-
-            return BadRequest(
-                new ValidationProblemDetails(validationErrors));
-        }
-
-        if (image is { Length: > 0 })
-        {
-            await using var memoryStream = new MemoryStream();
-
-            await image.CopyToAsync(memoryStream, ct);
-
-            uploadedImage = new UploadedFileData(
-                memoryStream.ToArray(),
-                Path.GetFileName(image.FileName),
-                image.ContentType);
+            ModelState.AddModelError("image", imageResult.Error!);
+            return ValidationProblem(ModelState);
         }
 
         var result = await _authService.RegisterAsync(
             request,
-            uploadedImage,
+            imageResult.File,
             ct);
 
 
