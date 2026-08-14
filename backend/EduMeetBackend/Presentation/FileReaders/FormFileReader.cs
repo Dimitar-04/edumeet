@@ -1,4 +1,4 @@
-﻿using _2._Application.Auth.Requests;
+using _2._Application.Requests;
 
 namespace _4._Presentation.FileReaders;
 
@@ -19,7 +19,7 @@ public static class FormFileReader
     {
         if (file is null || file.Length == 0)
         {
-            return new FormFileReadResult(null, null);
+            return new FormFileReadResult(null, "Please select a file.");
         }
 
         if (file.Length > maximumSizeBytes)

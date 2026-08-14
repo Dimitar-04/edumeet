@@ -10,7 +10,9 @@ import { createEvent } from '../api/eventsApi';
 import AppHeader from '../components/layout/AppHeader';
 import LocationPicker from '../components/maps/LocationPicker';
 import { useAuth } from '../contexts/AuthContext';
-import type { EventCategory } from '../types/event';
+import type { ValidationProblemDetails } from '../types/api/errors';
+import type { EventCategory } from '../types/event/common';
+import type { CreateEducationalEventRequest } from '../types/event/requests';
 import type { SelectedLocation } from '../types/location';
 
 interface EventPreview {
@@ -58,7 +60,7 @@ function CreateEventPage() {
   }, [imagePreviewUrl]);
 
   const buildSubmission = () => {
-    if (!formRef.current) return null;
+    if (!formRef.current || !selectedLocation) return null;
 
     const formData = new FormData(formRef.current);
     const date = readText(formData, 'date');
@@ -67,11 +69,23 @@ function CreateEventPage() {
 
     if (Number.isNaN(eventDate.getTime())) return null;
 
-    formData.delete('date');
-    formData.delete('time');
-    formData.set('date', eventDate.toISOString());
+    const imageValue = formData.get('image');
+    const image =
+      imageValue instanceof File && imageValue.size > 0
+        ? imageValue
+        : null;
 
-    return { formData, eventDate };
+    const request: CreateEducationalEventRequest = {
+      title: readText(formData, 'title'),
+      description: readText(formData, 'description'),
+      category: readText(formData, 'category') as EventCategory,
+      format: readText(formData, 'format'),
+      image,
+      date: eventDate.toISOString(),
+      ...selectedLocation,
+    };
+
+    return { request, eventDate };
   };
 
   const handlePreview = (event: FormEvent<HTMLFormElement>) => {
@@ -94,13 +108,13 @@ function CreateEventPage() {
       return;
     }
 
-    const formData = submission.formData;
+    const request = submission.request;
 
     setPreview({
-      title: readText(formData, 'title'),
-      description: readText(formData, 'description'),
-      category: readText(formData, 'category') as EventCategory,
-      format: readText(formData, 'format'),
+      title: request.title,
+      description: request.description,
+      category: request.category,
+      format: request.format,
       date: submission.eventDate,
       location: selectedLocation,
     });
@@ -123,15 +137,14 @@ function CreateEventPage() {
     try {
       setIsPublishing(true);
       setPublishError('');
-      await createEvent(submission.formData);
+      await createEvent(submission.request);
       setStage('success');
     } catch (error) {
       let message = 'Your event could not be published. Please try again.';
 
       if (axios.isAxiosError(error)) {
-        const errors = error.response?.data?.errors as
-          | Record<string, string[]>
-          | undefined;
+        const errors = (error.response?.data as ValidationProblemDetails | undefined)
+          ?.errors;
         const firstError = errors ? Object.values(errors).flat()[0] : undefined;
 
         if (firstError) message = firstError;
@@ -395,7 +408,6 @@ function CreateEventPage() {
       {stage === 'success' ? (
         <div className="event-created-backdrop" role="presentation">
           <div className="event-created-popup" role="status" aria-live="polite">
-            <span aria-hidden="true">✨</span>
             <strong>Your event is live!</strong>
             <p>Thank you for bringing people together. Taking you home…</p>
           </div>

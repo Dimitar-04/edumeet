@@ -1,12 +1,6 @@
-export type EventCategory =
-  | 'Technology'
-  | 'Design'
-  | 'Business'
-  | 'Science'
-  | 'Languages'
-  | 'Community';
+import type { EventCategory } from './common';
 
-export interface EducationalEvent {
+export interface EducationalEventResponse {
   id: string;
   title: string;
   description: string;

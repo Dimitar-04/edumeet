@@ -1,6 +1,6 @@
 using _2._Application.Interfaces;
-using _2._Application.Auth.Requests;
-using _2._Application.Auth.Responses;
+using _2._Application.Requests;
+using _2._Application.Responses;
 using _4._Presentation.Authentication;
 using _4._Presentation.FileReaders;
 using Microsoft.AspNetCore.Authorization;

@@ -1,19 +1,18 @@
 import axios from 'axios';
 import type {
   RegisterRequest,
+  LoginRequest,
+  UpdateProfileImageRequest,
+} from '../types/user/requests';
+import type {
+  AuthenticationResponse,
+  ProfileImageResponse,
+  RefreshResponse,
   RegisteredUserResponse,
-} from '../types/user/registration';
-import {
-  AccountType,
-  type AuthenticationResponse,
-  type LoginRequest,
-} from '../types/user/auth';
+} from '../types/user/responses';
+import type { ValidationProblemDetails } from '../types/api/errors';
+import { AccountType } from '../types/user/auth';
 import axiosInstance from './axiosInstance';
-
-interface ValidationProblemDetails {
-  title?: string;
-  errors?: Record<string, string[]>;
-}
 
 export async function registerUser(
   request: RegisterRequest,
@@ -74,12 +73,22 @@ export async function getCurrentUser(): Promise<RegisteredUserResponse> {
   return response.data;
 }
 
-export interface RefreshResponse {
-  accessTokenExpiresAtUtc: string;
-}
-
 export async function refreshAccessToken(): Promise<RefreshResponse> {
   const response = await axiosInstance.post<RefreshResponse>('/auth/refresh');
+
+  return response.data;
+}
+
+export async function updateProfileImage(
+  request: UpdateProfileImageRequest,
+): Promise<ProfileImageResponse> {
+  const formData = new FormData();
+  formData.append('image', request.image);
+
+  const response = await axiosInstance.put<ProfileImageResponse>(
+    '/profile/image',
+    formData,
+  );
 
   return response.data;
 }

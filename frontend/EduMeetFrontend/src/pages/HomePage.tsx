@@ -4,10 +4,11 @@ import { getUpcomingEvents } from '../api/eventsApi';
 import AppHeader from '../components/layout/AppHeader';
 import EventCard from '../components/events/EventCard';
 import EventFilters from '../components/events/EventFilters';
-import type { EducationalEvent, EventCategory } from '../types/event';
+import type { EventCategory } from '../types/event/common';
+import type { EducationalEventResponse } from '../types/event/responses';
 
 function HomePage() {
-  const [events, setEvents] = useState<EducationalEvent[]>([]);
+  const [events, setEvents] = useState<EducationalEventResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [activeCategory, setActiveCategory] = useState<EventCategory | 'All'>(
@@ -45,10 +46,6 @@ function HomePage() {
     });
   }, [activeCategory, events, searchTerm]);
 
-  const featuredEvent = events[0];
-  const featuredDate = featuredEvent ? new Date(featuredEvent.date) : null;
-  const organizerCount = new Set(events.map((event) => event.organizerId)).size;
-
   return (
     <div className="app-shell">
       <AppHeader />
@@ -58,11 +55,11 @@ function HomePage() {
           <div className="hero-copy">
             <p className="eyebrow">Learn nearby. Grow together.</p>
             <h1 id="hero-title">
-              Find your next <span>learning experience.</span>
+              Find a place to <span>learn something new.</span>
             </h1>
             <p className="hero-description">
-              Discover workshops, talks, and hands-on events led by educators
-              and organizations in your community.
+              Explore workshops, talks, and community events hosted by people
+              who are ready to share what they know.
             </p>
 
             <div className="hero-actions">
@@ -72,68 +69,6 @@ function HomePage() {
               <Link className="button button-secondary" to="/events/create">
                 Host an event
               </Link>
-            </div>
-
-            <dl className="hero-stats" aria-label="EduMeet event statistics">
-              <div>
-                <dt>{events.length}</dt>
-                <dd>upcoming events</dd>
-              </div>
-              <div>
-                <dt>{organizerCount}</dt>
-                <dd>active organizers</dd>
-              </div>
-              <div>
-                <dt>6</dt>
-                <dd>learning categories</dd>
-              </div>
-            </dl>
-          </div>
-
-          <div className="hero-feature" aria-label="Next upcoming event">
-            <div className="hero-feature-art">
-              <span className="hero-feature-kicker">
-                {featuredEvent ? 'Up next' : 'Your community, your classroom'}
-              </span>
-              <div className="hero-orbit hero-orbit-one" />
-              <div className="hero-orbit hero-orbit-two" />
-              <div className="hero-feature-mark">
-                {featuredEvent
-                  ? featuredEvent.title
-                      .split(/\s+/)
-                      .slice(0, 2)
-                      .map((word) => word.charAt(0))
-                      .join('')
-                      .toUpperCase()
-                  : 'EM'}
-              </div>
-            </div>
-            <div className="hero-feature-details">
-              <div>
-                <p>
-                  {featuredEvent
-                    ? `${featuredEvent.category} · ${featuredEvent.format}`
-                    : 'Create the first event'}
-                </p>
-                <h2>
-                  {featuredEvent?.title ?? 'Share what you know with EduMeet'}
-                </h2>
-              </div>
-              {featuredDate ? (
-                <div
-                  className="feature-date"
-                  aria-label={featuredDate.toLocaleDateString('en', {
-                    dateStyle: 'long',
-                  })}
-                >
-                  <strong>
-                    {featuredDate.toLocaleDateString('en', { day: '2-digit' })}
-                  </strong>
-                  <span>
-                    {featuredDate.toLocaleDateString('en', { month: 'short' })}
-                  </span>
-                </div>
-              ) : null}
             </div>
           </div>
         </section>

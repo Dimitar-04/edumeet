@@ -1,5 +1,6 @@
 import AuthPage from './components/auth/AuthPage';
 import CreateEventPage from './pages/CreateEventPage';
+import EventDetailsPage from './pages/EventDetailsPage';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import { createBrowserRouter, Navigate } from 'react-router';
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: '/events/create',
     element: <CreateEventPage />,
+  },
+  {
+    path: '/events/:eventId',
+    element: <EventDetailsPage />,
   },
   {
     path: '/profile',

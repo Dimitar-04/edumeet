@@ -1,8 +1,8 @@
 using _1._Domain.Models;
-using _2._Application.Auth.Requests;
+using _2._Application.Requests;
 using AutoMapper;
 
-namespace _2._Application.Auth.Mappings;
+namespace _2._Application.Mappings;
 
 public sealed class AuthMappingProfile : Profile
 {

@@ -1,4 +1,4 @@
-namespace _2._Application.Auth.Responses;
+namespace _2._Application.Responses;
 
 public sealed record AuthenticationResponse(
     RegisteredUserResponse User,

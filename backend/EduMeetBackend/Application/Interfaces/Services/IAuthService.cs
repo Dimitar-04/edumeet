@@ -1,6 +1,6 @@
-using _2._Application.Auth.Requests;
-using _2._Application.Auth.Responses;
-using _2._Application.Auth.Results;
+using _2._Application.Requests;
+using _2._Application.Responses;
+using _2._Application.Results;
 
 namespace _2._Application.Interfaces;
 

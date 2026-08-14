@@ -1,6 +1,6 @@
-using _2._Application.Auth.Responses;
+using _2._Application.Responses;
 
-namespace _2._Application.Auth.Results;
+namespace _2._Application.Results;
 
 public sealed record RegistrationResult
 {

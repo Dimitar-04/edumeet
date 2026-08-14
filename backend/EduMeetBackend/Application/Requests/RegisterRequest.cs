@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using _1._Domain.Enums;
 
-namespace _2._Application.Auth.Requests;
+namespace _2._Application.Requests;
 
 public sealed class RegisterRequest
 {

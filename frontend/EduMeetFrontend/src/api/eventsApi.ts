@@ -1,18 +1,27 @@
 import axiosInstance from './axiosInstance';
-import type { EducationalEvent } from '../types/event';
+import type { CreateEducationalEventRequest } from '../types/event/requests';
+import { toCreateEventFormData } from '../types/event/requests';
+import type { EducationalEventResponse } from '../types/event/responses';
 
-export async function getUpcomingEvents(): Promise<EducationalEvent[]> {
-  const response = await axiosInstance.get<EducationalEvent[]>('/events');
+export async function getUpcomingEvents(): Promise<EducationalEventResponse[]> {
+  const response = await axiosInstance.get<EducationalEventResponse[]>('/events');
   return response.data;
 }
 
 export async function createEvent(
-  formData: FormData,
-): Promise<EducationalEvent> {
-  const response = await axiosInstance.post<EducationalEvent>(
+  request: CreateEducationalEventRequest,
+): Promise<EducationalEventResponse> {
+  const response = await axiosInstance.post<EducationalEventResponse>(
     '/events',
-    formData,
+    toCreateEventFormData(request),
   );
 
   return response.data;
+}
+
+export async function getEventById(
+  eventId: string,
+): Promise<EducationalEventResponse | null> {
+  const events = await getUpcomingEvents();
+  return events.find((event) => event.id === eventId) ?? null;
 }

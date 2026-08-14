@@ -1,7 +1,7 @@
 :root {
   color: #4a4a4a;
   background: #f3f1eb;
-  font-family: Inter, Aptos, "Segoe UI", sans-serif;
+  font-family: Inter, Aptos, 'Segoe UI', sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   --charcoal: #4a4a4a;
@@ -181,7 +181,10 @@ a {
   cursor: pointer;
   font-size: 0.91rem;
   font-weight: 750;
-  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
 }
 
 .button:hover {
@@ -253,12 +256,12 @@ a {
 }
 
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(390px, 0.92fr);
-  gap: clamp(48px, 7vw, 100px);
-  align-items: center;
-  padding-top: clamp(64px, 9vw, 118px);
-  padding-bottom: clamp(76px, 10vw, 128px);
+  padding-top: clamp(70px, 10vw, 118px);
+  padding-bottom: clamp(70px, 10vw, 110px);
+}
+
+.hero-copy {
+  max-width: 820px;
 }
 
 .eyebrow {
@@ -278,6 +281,11 @@ a {
   font-weight: 520;
   letter-spacing: -0.075em;
   line-height: 0.94;
+}
+
+.hero h1 {
+  font-size: clamp(3.2rem, 6vw, 5.4rem);
+  line-height: 0.98;
 }
 
 .hero h1 span {
@@ -545,12 +553,24 @@ a {
   margin-top: 34px;
 }
 
+.event-card-link {
+  display: block;
+  border-radius: 22px;
+}
+
+.event-card-link:focus-visible {
+  outline: 3px solid rgba(109, 129, 150, 0.45);
+  outline-offset: 4px;
+}
+
 .event-card {
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 22px;
   background: var(--paper);
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .event-card:hover {
@@ -964,7 +984,9 @@ a {
   padding: 13px 14px;
   background: var(--paper);
   color: var(--charcoal);
-  transition: border-color 150ms ease, box-shadow 150ms ease;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
 }
 
 .auth-input:focus {
@@ -982,7 +1004,9 @@ a {
   color: var(--cream);
   cursor: pointer;
   font-weight: 760;
-  transition: background 150ms ease, transform 150ms ease;
+  transition:
+    background 150ms ease,
+    transform 150ms ease;
 }
 
 .auth-submit:hover:not(:disabled) {
@@ -1198,7 +1222,9 @@ a {
   padding: 13px 14px;
   background: var(--paper);
   color: var(--charcoal);
-  transition: border-color 150ms ease, box-shadow 150ms ease;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
 }
 
 .form-field textarea {
@@ -1232,7 +1258,9 @@ a {
   background: rgba(250, 249, 246, 0.62);
   cursor: pointer;
   text-align: center;
-  transition: border-color 150ms ease, background 150ms ease;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
   overflow: hidden;
 }
 
@@ -1539,12 +1567,8 @@ a {
   animation: event-popup-in 320ms ease-out both;
 }
 
-.event-created-popup > span {
-  font-size: 2rem;
-}
-
 .event-created-popup strong {
-  margin-top: 10px;
+  margin-top: 0;
   font-size: 1.25rem;
 }
 
@@ -1591,6 +1615,42 @@ a {
   font-size: 2.6rem;
 }
 
+.profile-image-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.profile-image-controls .button {
+  min-height: 40px;
+  padding: 9px 16px;
+  font-size: 0.74rem;
+}
+
+.profile-image-help {
+  margin-top: 10px;
+  color: rgba(74, 74, 74, 0.58);
+  font-size: 0.68rem;
+}
+
+.profile-message {
+  width: 100%;
+  margin-top: 18px;
+}
+
+.profile-success {
+  width: 100%;
+  margin: 18px 0 0;
+  border: 1px solid rgba(62, 113, 82, 0.26);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: rgba(62, 113, 82, 0.08);
+  color: #365f46;
+  font-size: 0.75rem;
+}
+
 .profile-card .eyebrow {
   margin-top: 27px;
 }
@@ -1607,6 +1667,144 @@ a {
 .profile-logout {
   width: 100%;
   margin-top: 32px;
+}
+
+.event-details-shell {
+  background: var(--paper);
+}
+
+.event-details-page {
+  padding-top: 32px;
+  padding-bottom: 96px;
+}
+
+.event-details-card {
+  overflow: hidden;
+  margin-top: 42px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--cream);
+  box-shadow: 0 24px 60px rgba(74, 74, 74, 0.08);
+}
+
+.event-details-cover {
+  position: relative;
+  display: grid;
+  min-height: clamp(300px, 45vw, 520px);
+  place-items: center;
+  overflow: hidden;
+  background: var(--blue);
+  color: var(--cream);
+}
+
+.event-details-cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-details-cover > span {
+  font-size: clamp(5rem, 15vw, 10rem);
+  font-weight: 850;
+  letter-spacing: -0.1em;
+}
+
+.event-details-cover > strong {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  border: 1px solid rgba(250, 249, 246, 0.75);
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: rgba(74, 74, 74, 0.68);
+  color: var(--paper);
+  font-size: 0.68rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.event-details-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.36fr);
+  gap: clamp(38px, 7vw, 90px);
+  padding: clamp(30px, 6vw, 68px);
+}
+
+.event-details-meta {
+  margin: 0;
+  color: var(--blue);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.event-details-main h1 {
+  margin: 14px 0 0;
+  font-size: clamp(2.5rem, 6vw, 5.2rem);
+  font-weight: 560;
+  letter-spacing: -0.065em;
+  line-height: 0.98;
+}
+
+.event-details-description {
+  margin: 28px 0 0;
+  color: rgba(74, 74, 74, 0.75);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.event-details-aside {
+  display: grid;
+  align-content: start;
+  gap: 28px;
+}
+
+.event-details-aside section {
+  display: grid;
+  gap: 7px;
+  border-top: 1px solid var(--line);
+  padding-top: 19px;
+}
+
+.event-details-aside section > span {
+  color: var(--blue);
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.event-details-aside p {
+  margin: 0;
+  color: rgba(74, 74, 74, 0.65);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.event-details-aside a {
+  width: fit-content;
+  margin-top: 7px;
+  border-bottom: 1px solid var(--blue);
+  color: var(--blue);
+  font-size: 0.74rem;
+  font-weight: 750;
+}
+
+.event-details-organizer > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 5px;
+}
+
+.event-details-avatar {
+  width: 38px;
+  height: 38px;
+  font-size: 0.9rem;
 }
 
 @keyframes event-popup-in {
@@ -1683,7 +1881,6 @@ a {
   .auth-story {
     padding: 38px;
   }
-
 }
 
 @media (max-width: 760px) {
@@ -1763,6 +1960,10 @@ a {
   }
 
   .event-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .event-details-content {
     grid-template-columns: 1fr;
   }
 

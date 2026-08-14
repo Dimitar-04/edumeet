@@ -1,5 +1,5 @@
 using _1._Domain.Models;
-using _2._Application.Auth.Results;
+using _2._Application.Results;
 using _2._Application.Interfaces.Repositories;
 using _3._Infrastracture.Persitance.Repositories.Base;
 using Microsoft.AspNetCore.Identity;
@@ -28,7 +28,7 @@ public sealed class AppUserRepository(UserManager<AppUser> userManager, Applicat
         CancellationToken cancellationToken = default)
     {
       
-        return dbContext.Users
+        return Context.Users
             .Include(user => user.IndividualProfile)
             .Include(user => user.OrganizationProfile)
             .SingleOrDefaultAsync(
@@ -52,6 +52,15 @@ public sealed class AppUserRepository(UserManager<AppUser> userManager, Applicat
             cancellationToken: ct
         );
 
-        return userList.First();
+        return userList.FirstOrDefault();
+    }
+
+    public Task<AppUser?> FindTrackedByUsernameAsync(
+        string username,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.Users.SingleOrDefaultAsync(
+            user => user.UserName == username,
+            cancellationToken);
     }
 }

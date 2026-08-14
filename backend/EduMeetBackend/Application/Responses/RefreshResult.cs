@@ -1,6 +1,6 @@
-using _2._Application.Auth.Results;
+using _2._Application.Results;
 
-namespace _2._Application.Auth.Responses;
+namespace _2._Application.Responses;
 
 public sealed class RefreshResult
 {

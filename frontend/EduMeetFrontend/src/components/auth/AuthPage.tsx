@@ -10,7 +10,7 @@ import type {
   LogInFormValues,
   SignUpFormValues,
 } from "../../types/user/auth";
-import { toRegisterRequest } from "../../types/user/registration";
+import { toRegisterRequest } from "../../types/user/requests";
 import LogIn from "./LogIn";
 import SignUp from "./SignUp";
 import { useAuth } from "../../contexts/AuthContext";

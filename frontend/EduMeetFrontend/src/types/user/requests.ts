@@ -3,6 +3,11 @@ import {
   type SignUpFormValues,
 } from './auth';
 
+export interface LoginRequest {
+  login: string;
+  password: string;
+}
+
 interface RegisterCredentials {
   userName: string;
   email: string;
@@ -34,23 +39,8 @@ export type RegisterRequest =
   | IndividualRegisterRequest
   | OrganizationRegisterRequest;
 
-export interface RegisteredUserResponse {
-  id: string;
-  userName: string;
-  email: string;
-  phoneNumber: string | null;
-  accountType: AccountType;
-  imageUrl: string | null;
-  individual: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  } | null;
-  organization: {
-    id: string;
-    name: string;
-    website: string | null;
-  } | null;
+export interface UpdateProfileImageRequest {
+  image: File;
 }
 
 export function toRegisterRequest(

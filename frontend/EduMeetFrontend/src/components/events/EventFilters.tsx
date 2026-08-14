@@ -1,4 +1,4 @@
-import type { EventCategory } from '../../types/event';
+import type { EventCategory } from '../../types/event/common';
 
 const categories: Array<EventCategory | 'All'> = [
   'All',

@@ -1,6 +1,6 @@
 using _1._Domain.Enums;
 
-namespace _2._Application.Auth.Responses;
+namespace _2._Application.Responses;
 
 public sealed record RegisteredUserResponse(
     Guid Id,

@@ -1,5 +1,5 @@
 using _1._Domain.Models;
-using _2._Application.Auth.Results;
+using _2._Application.Results;
 
 namespace _2._Application.Interfaces;
 

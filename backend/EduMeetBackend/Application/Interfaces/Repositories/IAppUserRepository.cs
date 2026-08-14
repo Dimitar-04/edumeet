@@ -1,5 +1,5 @@
 using _1._Domain.Models;
-using _2._Application.Auth.Results;
+using _2._Application.Results;
 
 namespace _2._Application.Interfaces.Repositories;
 
@@ -14,4 +14,8 @@ public interface IAppUserRepository:IBaseRepository<AppUser>
         CancellationToken cancellationToken = default);
 
     Task<AppUser?> FindByUsernameAsync(string username, CancellationToken ct = default);
+
+    Task<AppUser?> FindTrackedByUsernameAsync(
+        string username,
+        CancellationToken cancellationToken = default);
 }

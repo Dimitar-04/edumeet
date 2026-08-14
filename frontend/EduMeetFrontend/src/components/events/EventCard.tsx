@@ -1,9 +1,11 @@
 import { resolvePublicAssetUrl } from '../../api/apiConfig';
-import type { EducationalEvent, EventCategory } from '../../types/event';
+import { Link } from 'react-router';
+import type { EventCategory } from '../../types/event/common';
+import type { EducationalEventResponse } from '../../types/event/responses';
 import UserAvatar from '../user/UserAvatar';
 
 interface EventCardProps {
-  event: EducationalEvent;
+  event: EducationalEventResponse;
 }
 
 const categoryTones: Record<
@@ -38,6 +40,12 @@ function EventCard({ event }: EventCardProps) {
   const visualTone = categoryTones[event.category] ?? 'silver';
 
   return (
+    <Link
+      className="event-card-link"
+      to={`/events/${event.id}`}
+      state={{ event }}
+      aria-label={`View ${event.title}`}
+    >
     <article className="event-card">
       <div className={`event-card-art event-card-art-${visualTone}`}>
         {event.imageUrl ? (
@@ -76,6 +84,7 @@ function EventCard({ event }: EventCardProps) {
         <span>By {event.organizerName}</span>
       </div>
     </article>
+    </Link>
   );
 }
 

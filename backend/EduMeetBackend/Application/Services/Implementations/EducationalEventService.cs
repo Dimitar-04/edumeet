@@ -1,6 +1,6 @@
 using _1._Domain.Models;
-using _2._Application.Auth.Requests;
-using _2._Application.Auth.Responses;
+using _2._Application.Requests;
+using _2._Application.Responses;
 using _2._Application.Interfaces;
 using _2._Application.Interfaces.Repositories;
 using _2._Application.Interfaces.UnitOfWork;

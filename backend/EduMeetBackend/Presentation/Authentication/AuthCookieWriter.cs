@@ -1,4 +1,4 @@
-using _2._Application.Auth.Results;
+using _2._Application.Results;
 
 namespace _4._Presentation.Authentication;
 

@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using _1._Domain.Models;
-using _2._Application.Auth.Results;
+using _2._Application.Results;
 using _2._Application.Interfaces;
 using _2._Application.Services.Configurations;
 using Microsoft.Extensions.Options;

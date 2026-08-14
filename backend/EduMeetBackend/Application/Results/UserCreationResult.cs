@@ -1,4 +1,4 @@
-namespace _2._Application.Auth.Results;
+namespace _2._Application.Results;
 
 public sealed record UserCreationResult(
     bool Succeeded,

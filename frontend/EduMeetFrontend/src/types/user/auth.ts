@@ -1,5 +1,3 @@
-import type { RegisteredUserResponse } from './registration';
-
 export type AuthMode = 'login' | 'signup';
 
 export const AccountType = {
@@ -12,16 +10,6 @@ export type AccountType = (typeof AccountType)[keyof typeof AccountType];
 export interface LogInFormValues {
   emailOrUserName: string;
   password: string;
-}
-
-export interface LoginRequest {
-  login: string;
-  password: string;
-}
-
-export interface AuthenticationResponse {
-  user: RegisteredUserResponse;
-  accessTokenExpiresAtUtc: string;
 }
 
 interface SignUpCredentials {

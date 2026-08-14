@@ -6,7 +6,7 @@ import {
   type PropsWithChildren,
 } from "react";
 import { getCurrentUser, logoutUser } from "../api/authApi";
-import type { RegisteredUserResponse } from "../types/user/registration";
+import type { RegisteredUserResponse } from "../types/user/responses";
 
 interface AuthContextValue {
   user: RegisteredUserResponse | null;
