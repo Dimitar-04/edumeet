@@ -25,6 +25,20 @@ public sealed class EducationalEventService(
         return events.Select(ToResponse).ToList();
     }
 
+    public async Task<EducationalEventResponse?> GetByIdAsync(
+        Guid eventId,
+        CancellationToken cancellationToken = default)
+    {
+        var educationalEvent =
+            await eventRepository.GetByIdWithOrganizerAsync(
+                eventId,
+                cancellationToken);
+
+        return educationalEvent is null
+            ? null
+            : ToResponse(educationalEvent);
+    }
+
     public async Task<EducationalEventResponse?> CreateAsync(
         CreateEducationalEventRequest request,
         string organizerUsername,
@@ -78,6 +92,17 @@ public sealed class EducationalEventService(
     private static EducationalEventResponse ToResponse(
         EducationalEvent educationalEvent)
     {
+        string organizerName = "";
+        if (educationalEvent.Organizer.IndividualProfile is not null and var org)
+        {
+            organizerName = org.FirstName + " " + org.LastName;
+        }
+        else
+        {
+            organizerName = educationalEvent.Organizer.OrganizationProfile!.Name;
+            
+        }
+        
         return new EducationalEventResponse(
             educationalEvent.Id,
             educationalEvent.Title,
@@ -92,7 +117,7 @@ public sealed class EducationalEventService(
             educationalEvent.Longitude,
             educationalEvent.GooglePlaceId,
             educationalEvent.OrganizerId,
-            educationalEvent.Organizer.UserName ?? "EduMeet organizer",
+            organizerName,
             educationalEvent.Organizer.ImageUrl);
     }
 }

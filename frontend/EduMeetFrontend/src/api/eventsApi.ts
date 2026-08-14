@@ -1,3 +1,4 @@
+import axios from 'axios';
 import axiosInstance from './axiosInstance';
 import type { CreateEducationalEventRequest } from '../types/event/requests';
 import { toCreateEventFormData } from '../types/event/requests';
@@ -22,6 +23,17 @@ export async function createEvent(
 export async function getEventById(
   eventId: string,
 ): Promise<EducationalEventResponse | null> {
-  const events = await getUpcomingEvents();
-  return events.find((event) => event.id === eventId) ?? null;
+  try {
+    const response = await axiosInstance.get<EducationalEventResponse>(
+      `/events/${eventId}`,
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return null;
+    }
+
+    throw error;
+  }
 }

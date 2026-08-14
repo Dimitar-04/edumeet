@@ -34,6 +34,25 @@ public class EventsController : ControllerBase
         return Ok(events);
     }
 
+    [AllowAnonymous]
+    [HttpGet("{eventId:guid}")]
+    [ProducesResponseType<EducationalEventResponse>(
+        StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById(
+        Guid eventId,
+        CancellationToken cancellationToken)
+    {
+        var educationalEvent =
+            await _educationalEventService.GetByIdAsync(
+                eventId,
+                cancellationToken);
+
+        return educationalEvent is null
+            ? NotFound()
+            : Ok(educationalEvent);
+    }
+
     [HttpPost]
     [Consumes("multipart/form-data")]
     [ProducesResponseType<EducationalEventResponse>(StatusCodes.Status201Created)]
@@ -76,5 +95,19 @@ public class EventsController : ControllerBase
         return Created(
             $"/api/events/{createdEvent.Id}",
             createdEvent);
+    }
+
+    [HttpPut("{eventId:guid}")]
+    [ProducesResponseType<EducationalEventResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> RegisterUserForEvent(Guid eventId)
+    {
+        var username = User?.Identity?.Name;
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return Unauthorized();
+        }
+        
     }
 }

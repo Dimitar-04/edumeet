@@ -2,6 +2,7 @@ import AuthPage from './components/auth/AuthPage';
 import CreateEventPage from './pages/CreateEventPage';
 import EventDetailsPage from './pages/EventDetailsPage';
 import HomePage from './pages/HomePage';
+import LandingPage from './pages/LandingPage';
 import ProfilePage from './pages/ProfilePage';
 import { createBrowserRouter, Navigate } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
@@ -9,7 +10,7 @@ import { RouterProvider } from 'react-router/dom';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
+    element: <LandingPage />,
   },
   {
     path: '/login',
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   },
   {
     path: '/home',
+    element: <Navigate to="/events" replace />,
+  },
+  {
+    path: '/events',
     element: <HomePage />,
   },
   {

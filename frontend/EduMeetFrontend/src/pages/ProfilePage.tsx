@@ -136,7 +136,7 @@ function ProfilePage() {
       <AppHeader />
 
       <main className="profile-page section-container">
-        <Link className="breadcrumb profile-back" to="/">
+        <Link className="breadcrumb profile-back" to="/events">
           &larr; Back to events
         </Link>
 

@@ -14,8 +14,26 @@ public class EducationalEventRepository(ApplicationDbContext context) :BaseRepos
         return await Context.EducationalEvents
             .AsNoTracking()
             .Include(educationalEvent => educationalEvent.Organizer)
+                .ThenInclude(org=>org.IndividualProfile)
+            .Include(educationalEvent => educationalEvent.Organizer)
+                .ThenInclude(org => org.OrganizationProfile)
             .Where(educationalEvent => educationalEvent.Date >= fromUtc)
             .OrderBy(educationalEvent => educationalEvent.Date)
             .ToListAsync(cancellationToken);
+    }
+
+    public Task<EducationalEvent?> GetByIdWithOrganizerAsync(
+        Guid eventId,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.EducationalEvents
+            .AsNoTracking()
+            .Include(educationalEvent => educationalEvent.Organizer)
+                .ThenInclude(organizer => organizer.IndividualProfile)
+            .Include(educationalEvent => educationalEvent.Organizer)
+                .ThenInclude(organizer => organizer.OrganizationProfile)
+            .SingleOrDefaultAsync(
+                educationalEvent => educationalEvent.Id == eventId,
+                cancellationToken);
     }
 }

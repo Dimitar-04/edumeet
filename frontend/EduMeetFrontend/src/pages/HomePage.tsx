@@ -51,28 +51,6 @@ function HomePage() {
       <AppHeader />
 
       <main>
-        <section className="hero section-container" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <p className="eyebrow">Learn nearby. Grow together.</p>
-            <h1 id="hero-title">
-              Find a place to <span>learn something new.</span>
-            </h1>
-            <p className="hero-description">
-              Explore workshops, talks, and community events hosted by people
-              who are ready to share what they know.
-            </p>
-
-            <div className="hero-actions">
-              <a className="button button-primary" href="#discover">
-                Explore events
-              </a>
-              <Link className="button button-secondary" to="/events/create">
-                Host an event
-              </Link>
-            </div>
-          </div>
-        </section>
-
         <section className="discovery" id="discover" aria-labelledby="events-title">
           <div className="section-container">
             <div className="section-heading">

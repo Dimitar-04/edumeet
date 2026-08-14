@@ -1,38 +1,27 @@
 import { useEffect, useState } from 'react';
-import {
-  Link,
-  useLocation,
-  useParams,
-} from 'react-router';
+import { Link, useParams } from 'react-router';
 import { getEventById } from '../api/eventsApi';
 import { resolvePublicAssetUrl } from '../api/apiConfig';
 import AppHeader from '../components/layout/AppHeader';
 import UserAvatar from '../components/user/UserAvatar';
+import { useAuth } from '../contexts/AuthContext';
 import type { EducationalEventResponse } from '../types/event/responses';
-
-interface EventDetailsLocationState {
-  event?: EducationalEventResponse;
-}
+import { AccountType } from '../types/user/auth';
 
 function EventDetailsPage() {
   const { eventId = '' } = useParams();
-  const location = useLocation();
-  const navigationState = location.state as EventDetailsLocationState | null;
-  const navigatedEvent =
-    navigationState?.event?.id === eventId
-      ? navigationState.event
-      : null;
-  const [event, setEvent] = useState<EducationalEventResponse | null>(
-    navigatedEvent,
-  );
-  const [isLoading, setIsLoading] = useState(!navigatedEvent);
+  const { user } = useAuth();
+  const [event, setEvent] = useState<EducationalEventResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [registeredCount, setRegisteredCount] = useState(0);
 
   useEffect(() => {
-    if (navigatedEvent) return;
-
     const loadEvent = async () => {
       try {
+        setIsLoading(true);
+        setLoadError('');
         const loadedEvent = await getEventById(eventId);
 
         if (!loadedEvent) {
@@ -49,7 +38,19 @@ function EventDetailsPage() {
     };
 
     void loadEvent();
-  }, [eventId, navigatedEvent]);
+  }, [eventId]);
+
+  const toggleRegistration = () => {
+    setIsRegistered((currentlyRegistered) => {
+      setRegisteredCount((currentCount) =>
+        currentlyRegistered
+          ? Math.max(0, currentCount - 1)
+          : currentCount + 1,
+      );
+
+      return !currentlyRegistered;
+    });
+  };
 
   if (isLoading) {
     return (
@@ -67,7 +68,7 @@ function EventDetailsPage() {
       <div className="app-shell event-details-shell">
         <AppHeader />
         <main className="event-details-page section-container">
-          <Link className="breadcrumb" to="/">&larr; Back to events</Link>
+          <Link className="breadcrumb" to="/events">&larr; Back to events</Link>
           <div className="empty-state" role="alert">
             <h1>Event unavailable</h1>
             <p>{loadError}</p>
@@ -87,13 +88,16 @@ function EventDetailsPage() {
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${event.latitude},${event.longitude}`,
   )}`;
+  const isOrganizer = user?.id === event.organizerId;
+  const canRegister =
+    user?.accountType === AccountType.Individual && !isOrganizer;
 
   return (
     <div className="app-shell event-details-shell">
       <AppHeader />
 
       <main className="event-details-page section-container">
-        <Link className="breadcrumb" to="/">&larr; Back to events</Link>
+        <Link className="breadcrumb" to="/events">&larr; Back to events</Link>
 
         <article className="event-details-card">
           <div className="event-details-cover">
@@ -143,6 +147,33 @@ function EventDetailsPage() {
                   />
                   <strong>{event.organizerName}</strong>
                 </div>
+              </section>
+
+              <section className="event-registration-panel">
+                <span>Attendance</span>
+                <strong>
+                  {registeredCount}{' '}
+                  {registeredCount === 1 ? 'person is' : 'people are'} registered
+                </strong>
+                <p>Reserve your place and join this learning community.</p>
+
+                {!user ? (
+                  <Link className="button button-primary" to="/login">
+                    Log in to register
+                  </Link>
+                ) : canRegister ? (
+                  <button
+                    className={
+                      isRegistered
+                        ? 'button button-secondary'
+                        : 'button button-primary'
+                    }
+                    type="button"
+                    onClick={toggleRegistration}
+                  >
+                    {isRegistered ? 'Cancel registration' : 'Register for event'}
+                  </button>
+                ) : null}
               </section>
             </aside>
           </div>

@@ -8,9 +8,15 @@ public interface IEducationalEventService
     Task<IReadOnlyList<EducationalEventResponse>> GetUpcomingAsync(
         CancellationToken cancellationToken = default);
 
-    public Task<EducationalEventResponse?> CreateAsync(
+    Task<EducationalEventResponse?> GetByIdAsync(
+        Guid eventId,
+        CancellationToken cancellationToken = default);
+
+    Task<EducationalEventResponse?> CreateAsync(
         CreateEducationalEventRequest request,
         string organizerUsername,
         UploadedFileData? coverImage,
         CancellationToken cancellationToken = default);
+    
+    
 }

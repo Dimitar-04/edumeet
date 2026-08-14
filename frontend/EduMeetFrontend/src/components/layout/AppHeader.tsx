@@ -17,7 +17,7 @@ function AppHeader() {
 
         <nav className="primary-nav" aria-label="Primary navigation">
           <NavLink to="/" end>Home</NavLink>
-          <a href="/#discover">Explore</a>
+          <NavLink to="/events">Events</NavLink>
           <span className="nav-disabled" title="Coming soon">Organizations</span>
         </nav>
 

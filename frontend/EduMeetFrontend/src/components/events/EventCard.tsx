@@ -43,7 +43,6 @@ function EventCard({ event }: EventCardProps) {
     <Link
       className="event-card-link"
       to={`/events/${event.id}`}
-      state={{ event }}
       aria-label={`View ${event.title}`}
     >
     <article className="event-card">

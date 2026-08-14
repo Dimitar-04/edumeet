@@ -47,7 +47,7 @@ function CreateEventPage() {
     if (stage !== 'success') return;
 
     const redirectTimer = window.setTimeout(() => {
-      navigate('/', { replace: true });
+      navigate('/events', { replace: true });
     }, 2200);
 
     return () => window.clearTimeout(redirectTimer);
@@ -164,7 +164,7 @@ function CreateEventPage() {
 
       <main className="create-event-main section-container">
         <nav className="breadcrumb" aria-label="Breadcrumb">
-          <Link to="/">Home</Link>
+          <Link to="/events">Events</Link>
           <span aria-hidden="true">/</span>
           <span>{stage === 'edit' ? 'Create event' : 'Preview event'}</span>
         </nav>
@@ -324,7 +324,7 @@ function CreateEventPage() {
               ) : null}
 
               <div className="form-actions">
-                <Link className="button button-secondary" to="/">
+                <Link className="button button-secondary" to="/events">
                   Cancel
                 </Link>
                 <button className="button button-primary" type="submit">
