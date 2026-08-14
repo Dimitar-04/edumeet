@@ -17,6 +17,8 @@ public class EducationalEventRepository(ApplicationDbContext context) :BaseRepos
                 .ThenInclude(org=>org.IndividualProfile)
             .Include(educationalEvent => educationalEvent.Organizer)
                 .ThenInclude(org => org.OrganizationProfile)
+            .Include(educationalEvent =>
+                educationalEvent.EventParticipants)
             .Where(educationalEvent => educationalEvent.Date >= fromUtc)
             .OrderBy(educationalEvent => educationalEvent.Date)
             .ToListAsync(cancellationToken);
@@ -32,6 +34,20 @@ public class EducationalEventRepository(ApplicationDbContext context) :BaseRepos
                 .ThenInclude(organizer => organizer.IndividualProfile)
             .Include(educationalEvent => educationalEvent.Organizer)
                 .ThenInclude(organizer => organizer.OrganizationProfile)
+            .Include(educationalEvent =>
+                educationalEvent.EventParticipants)
+            .SingleOrDefaultAsync(
+                educationalEvent => educationalEvent.Id == eventId,
+                cancellationToken);
+    }
+
+    public Task<EducationalEvent?> GetTrackedByIdWithParticipantsAsync(
+        Guid eventId,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.EducationalEvents
+            .Include(educationalEvent =>
+                educationalEvent.EventParticipants)
             .SingleOrDefaultAsync(
                 educationalEvent => educationalEvent.Id == eventId,
                 cancellationToken);

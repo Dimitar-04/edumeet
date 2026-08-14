@@ -16,4 +16,12 @@ export interface EducationalEventResponse {
   organizerId: string;
   organizerName: string;
   organizerImageUrl: string | null;
+  registeredPeopleCount: number;
+  isCurrentUserRegistered: boolean;
+}
+
+export interface EventRegistrationResponse {
+  eventId: string;
+  isRegistered: boolean;
+  registeredPeopleCount: number;
 }

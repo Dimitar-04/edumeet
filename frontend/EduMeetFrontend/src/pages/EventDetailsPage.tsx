@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Link, useParams } from 'react-router';
-import { getEventById } from '../api/eventsApi';
+import { getEventById, toggleEventRegistration } from '../api/eventsApi';
 import { resolvePublicAssetUrl } from '../api/apiConfig';
+import EventRegistrationDialog, {
+  type RegistrationAction,
+  type RegistrationDialogPhase,
+} from '../components/events/EventRegistrationDialog';
 import AppHeader from '../components/layout/AppHeader';
 import UserAvatar from '../components/user/UserAvatar';
 import { useAuth } from '../contexts/AuthContext';
+import type { ProblemDetails } from '../types/api/errors';
 import type { EducationalEventResponse } from '../types/event/responses';
 import { AccountType } from '../types/user/auth';
 
@@ -16,6 +22,17 @@ function EventDetailsPage() {
   const [loadError, setLoadError] = useState('');
   const [isRegistered, setIsRegistered] = useState(false);
   const [registeredCount, setRegisteredCount] = useState(0);
+  const [isUpdatingRegistration, setIsUpdatingRegistration] = useState(false);
+  const [registrationDialog, setRegistrationDialog] = useState<{
+    open: boolean;
+    phase: RegistrationDialogPhase;
+    action: RegistrationAction;
+    errorMessage?: string;
+  }>({
+    open: false,
+    phase: 'confirm',
+    action: 'register',
+  });
 
   useEffect(() => {
     const loadEvent = async () => {
@@ -30,6 +47,8 @@ function EventDetailsPage() {
         }
 
         setEvent(loadedEvent);
+        setIsRegistered(loadedEvent.isCurrentUserRegistered);
+        setRegisteredCount(loadedEvent.registeredPeopleCount);
       } catch {
         setLoadError('The event details could not be loaded.');
       } finally {
@@ -40,16 +59,52 @@ function EventDetailsPage() {
     void loadEvent();
   }, [eventId]);
 
-  const toggleRegistration = () => {
-    setIsRegistered((currentlyRegistered) => {
-      setRegisteredCount((currentCount) =>
-        currentlyRegistered
-          ? Math.max(0, currentCount - 1)
-          : currentCount + 1,
-      );
-
-      return !currentlyRegistered;
+  const openRegistrationDialog = () => {
+    setRegistrationDialog({
+      open: true,
+      phase: 'confirm',
+      action: isRegistered ? 'unregister' : 'register',
     });
+  };
+
+  const closeRegistrationDialog = () => {
+    if (isUpdatingRegistration) return;
+
+    setRegistrationDialog((current) => ({ ...current, open: false }));
+  };
+
+  const confirmRegistrationChange = async () => {
+    if (!event) return;
+
+    try {
+      setIsUpdatingRegistration(true);
+      const response = await toggleEventRegistration(event.id);
+
+      setIsRegistered(response.isRegistered);
+      setRegisteredCount(response.registeredPeopleCount);
+      setRegistrationDialog((current) => ({
+        ...current,
+        phase: 'success',
+        errorMessage: undefined,
+      }));
+    } catch (error) {
+      let errorMessage = 'Please try again.';
+
+      if (axios.isAxiosError<ProblemDetails>(error)) {
+        errorMessage =
+          error.response?.data.detail ??
+          error.response?.data.title ??
+          errorMessage;
+      }
+
+      setRegistrationDialog((current) => ({
+        ...current,
+        phase: 'error',
+        errorMessage,
+      }));
+    } finally {
+      setIsUpdatingRegistration(false);
+    }
   };
 
   if (isLoading) {
@@ -68,7 +123,9 @@ function EventDetailsPage() {
       <div className="app-shell event-details-shell">
         <AppHeader />
         <main className="event-details-page section-container">
-          <Link className="breadcrumb" to="/events">&larr; Back to events</Link>
+          <Link className="breadcrumb" to="/events">
+            &larr; Back to events
+          </Link>
           <div className="empty-state" role="alert">
             <h1>Event unavailable</h1>
             <p>{loadError}</p>
@@ -97,15 +154,14 @@ function EventDetailsPage() {
       <AppHeader />
 
       <main className="event-details-page section-container">
-        <Link className="breadcrumb" to="/events">&larr; Back to events</Link>
+        <Link className="breadcrumb" to="/events">
+          &larr; Back to events
+        </Link>
 
         <article className="event-details-card">
           <div className="event-details-cover">
             {event.imageUrl ? (
-              <img
-                src={resolvePublicAssetUrl(event.imageUrl)}
-                alt=""
-              />
+              <img src={resolvePublicAssetUrl(event.imageUrl)} alt="" />
             ) : (
               <span aria-hidden="true">{eventInitials}</span>
             )}
@@ -127,7 +183,10 @@ function EventDetailsPage() {
               <p className="event-details-description">{event.description}</p>
             </div>
 
-            <aside className="event-details-aside" aria-label="Event information">
+            <aside
+              className="event-details-aside"
+              aria-label="Event information"
+            >
               <section>
                 <span>Location</span>
                 <strong>{event.locationName}</strong>
@@ -153,25 +212,28 @@ function EventDetailsPage() {
                 <span>Attendance</span>
                 <strong>
                   {registeredCount}{' '}
-                  {registeredCount === 1 ? 'person is' : 'people are'} registered
+                  {registeredCount === 1 ? 'person is' : 'people are'}{' '}
+                  registered
                 </strong>
                 <p>Reserve your place and join this learning community.</p>
 
                 {!user ? (
                   <Link className="button button-primary" to="/login">
-                    Log in to register
+                    Log in to register for event
                   </Link>
                 ) : canRegister ? (
                   <button
                     className={
                       isRegistered
-                        ? 'button button-secondary'
+                        ? 'button button-danger-outline'
                         : 'button button-primary'
                     }
                     type="button"
-                    onClick={toggleRegistration}
+                    onClick={openRegistrationDialog}
                   >
-                    {isRegistered ? 'Cancel registration' : 'Register for event'}
+                    {isRegistered
+                      ? 'Unregister for event'
+                      : 'Register for event'}
                   </button>
                 ) : null}
               </section>
@@ -179,6 +241,17 @@ function EventDetailsPage() {
           </div>
         </article>
       </main>
+
+      <EventRegistrationDialog
+        open={registrationDialog.open}
+        phase={registrationDialog.phase}
+        action={registrationDialog.action}
+        eventTitle={event.title}
+        isSubmitting={isUpdatingRegistration}
+        errorMessage={registrationDialog.errorMessage}
+        onConfirm={() => void confirmRegistrationChange()}
+        onClose={closeRegistrationDialog}
+      />
     </div>
   );
 }

@@ -11,4 +11,8 @@ public interface IEducationalEventRepository : IBaseRepository<EducationalEvent>
     Task<EducationalEvent?> GetByIdWithOrganizerAsync(
         Guid eventId,
         CancellationToken cancellationToken = default);
+
+    Task<EducationalEvent?> GetTrackedByIdWithParticipantsAsync(
+        Guid eventId,
+        CancellationToken cancellationToken = default);
 }

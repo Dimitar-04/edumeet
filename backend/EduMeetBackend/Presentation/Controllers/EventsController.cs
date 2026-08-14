@@ -46,6 +46,7 @@ public class EventsController : ControllerBase
         var educationalEvent =
             await _educationalEventService.GetByIdAsync(
                 eventId,
+                User.Identity?.Name,
                 cancellationToken);
 
         return educationalEvent is null
@@ -97,17 +98,29 @@ public class EventsController : ControllerBase
             createdEvent);
     }
 
-    [HttpPut("{eventId:guid}")]
-    [ProducesResponseType<EducationalEventResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpPost("{eventId:guid}/registrations")]
+    [ProducesResponseType<EventRegistrationResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> RegisterUserForEvent(Guid eventId)
+    public async Task<IActionResult> RegisterUserForEvent(
+        Guid eventId,
+        CancellationToken cancellationToken)
     {
-        var username = User?.Identity?.Name;
+        var username = User.Identity?.Name;
+
         if (string.IsNullOrWhiteSpace(username))
         {
             return Unauthorized();
         }
-        
+
+        var response =
+            await _educationalEventService.RegisterUserForEventAsync(
+                eventId,
+                username,
+                cancellationToken);
+
+        return Ok(response);
     }
 }

@@ -15,5 +15,7 @@ public sealed record EducationalEventResponse(
     string? GooglePlaceId,
     Guid OrganizerId,
     string OrganizerName,
-    string? OrganizerImageUrl
+    string? OrganizerImageUrl,
+    int RegisteredPeopleCount,
+    bool IsCurrentUserRegistered
 );

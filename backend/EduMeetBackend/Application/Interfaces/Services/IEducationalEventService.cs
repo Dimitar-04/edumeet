@@ -10,6 +10,7 @@ public interface IEducationalEventService
 
     Task<EducationalEventResponse?> GetByIdAsync(
         Guid eventId,
+        string? currentUsername,
         CancellationToken cancellationToken = default);
 
     Task<EducationalEventResponse?> CreateAsync(
@@ -17,6 +18,9 @@ public interface IEducationalEventService
         string organizerUsername,
         UploadedFileData? coverImage,
         CancellationToken cancellationToken = default);
-    
-    
+
+    Task<EventRegistrationResponse> RegisterUserForEventAsync(
+        Guid eventId,
+        string username,
+        CancellationToken cancellationToken = default);
 }

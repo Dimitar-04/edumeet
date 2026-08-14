@@ -2,7 +2,10 @@ import axios from 'axios';
 import axiosInstance from './axiosInstance';
 import type { CreateEducationalEventRequest } from '../types/event/requests';
 import { toCreateEventFormData } from '../types/event/requests';
-import type { EducationalEventResponse } from '../types/event/responses';
+import type {
+  EducationalEventResponse,
+  EventRegistrationResponse,
+} from '../types/event/responses';
 
 export async function getUpcomingEvents(): Promise<EducationalEventResponse[]> {
   const response = await axiosInstance.get<EducationalEventResponse[]>('/events');
@@ -36,4 +39,14 @@ export async function getEventById(
 
     throw error;
   }
+}
+
+export async function toggleEventRegistration(
+  eventId: string,
+): Promise<EventRegistrationResponse> {
+  const response = await axiosInstance.post<EventRegistrationResponse>(
+    `/events/${eventId}/registrations`,
+  );
+
+  return response.data;
 }

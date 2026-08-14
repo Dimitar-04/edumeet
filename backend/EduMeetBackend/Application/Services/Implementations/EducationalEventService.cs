@@ -1,9 +1,11 @@
 using _1._Domain.Models;
+using _2._Application.Exceptions;
 using _2._Application.Requests;
 using _2._Application.Responses;
 using _2._Application.Interfaces;
 using _2._Application.Interfaces.Repositories;
 using _2._Application.Interfaces.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 
 namespace _2._Application.Services.Implementations;
 
@@ -22,11 +24,14 @@ public sealed class EducationalEventService(
             timeProvider.GetUtcNow().UtcDateTime,
             cancellationToken);
 
-        return events.Select(ToResponse).ToList();
+        return events
+            .Select(educationalEvent => ToResponse(educationalEvent))
+            .ToList();
     }
 
     public async Task<EducationalEventResponse?> GetByIdAsync(
         Guid eventId,
+        string? currentUsername,
         CancellationToken cancellationToken = default)
     {
         var educationalEvent =
@@ -34,9 +39,26 @@ public sealed class EducationalEventService(
                 eventId,
                 cancellationToken);
 
-        return educationalEvent is null
-            ? null
-            : ToResponse(educationalEvent);
+        if (educationalEvent is null)
+        {
+            return null;
+        }
+
+        Guid? currentIndividualProfileId = null;
+
+        if (!string.IsNullOrWhiteSpace(currentUsername))
+        {
+            var currentUser = await appUserRepository.FindByUsernameAsync(
+                currentUsername,
+                cancellationToken);
+
+            currentIndividualProfileId =
+                currentUser?.IndividualProfile?.Id;
+        }
+
+        return ToResponse(
+            educationalEvent,
+            currentIndividualProfileId);
     }
 
     public async Task<EducationalEventResponse?> CreateAsync(
@@ -47,6 +69,9 @@ public sealed class EducationalEventService(
     {
         var organizers = await appUserRepository.FindAsync(
             predicate: user => user.UserName == organizerUsername,
+            include: query => query
+                .Include(user => user.IndividualProfile)
+                .Include(user => user.OrganizationProfile),
             cancellationToken: cancellationToken);
 
         var organizer = organizers.FirstOrDefault();
@@ -78,7 +103,7 @@ public sealed class EducationalEventService(
             Address = request.Address.Trim(),
             Latitude = request.Latitude,
             Longitude = request.Longitude,
-            GooglePlaceId = request.GooglePlaceId.Trim(),
+            GooglePlaceId = request.GooglePlaceId?.Trim(),
             OrganizerId = organizer.Id,
             Organizer = organizer
         };
@@ -89,19 +114,98 @@ public sealed class EducationalEventService(
         return ToResponse(educationalEvent);
     }
 
-    private static EducationalEventResponse ToResponse(
-        EducationalEvent educationalEvent)
+    public async Task<EventRegistrationResponse> RegisterUserForEventAsync(
+        Guid eventId,
+        string username,
+        CancellationToken cancellationToken = default)
     {
-        string organizerName = "";
-        if (educationalEvent.Organizer.IndividualProfile is not null and var org)
+        var user = await appUserRepository.FindByUsernameAsync(
+            username,
+            cancellationToken);
+
+        if (user is null)
         {
-            organizerName = org.FirstName + " " + org.LastName;
+            throw new NotFoundException(
+                "The authenticated user no longer exists.");
+        }
+
+        if (user.IndividualProfile is null)
+        {
+            throw new ForbiddenException(
+                "Only individual accounts can register for events.");
+        }
+
+        var educationalEvent =
+            await eventRepository.GetTrackedByIdWithParticipantsAsync(
+                eventId,
+                cancellationToken);
+
+        if (educationalEvent is null)
+        {
+            throw new NotFoundException(
+                "The requested event does not exist.");
+        }
+
+        if (educationalEvent.OrganizerId == user.Id)
+        {
+            throw new ForbiddenException(
+                "You cannot register for an event that you organized.");
+        }
+
+        var individualProfileId = user.IndividualProfile.Id;
+
+        var isAlreadyRegistered =
+            educationalEvent.EventParticipants.FirstOrDefault(
+                participant =>
+                    participant.ParticipantId == individualProfileId);
+
+        bool isRegistered;
+
+        if (isAlreadyRegistered is not null)
+        {
+            educationalEvent.EventParticipants.Remove(isAlreadyRegistered);
+            isRegistered = false;
         }
         else
         {
-            organizerName = educationalEvent.Organizer.OrganizationProfile!.Name;
-            
+            educationalEvent.EventParticipants.Add(
+                new EventParticipant
+                {
+                    ParticipantId = individualProfileId,
+                    EducationalEventId = educationalEvent.Id
+                });
+
+            isRegistered = true;
         }
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return new EventRegistrationResponse(
+            educationalEvent.Id,
+            IsRegistered: isRegistered,
+            RegisteredPeopleCount:
+                educationalEvent.EventParticipants.Count);
+    }
+
+    private static EducationalEventResponse ToResponse(
+        EducationalEvent educationalEvent,
+        Guid? currentIndividualProfileId = null)
+    {
+        var organizer = educationalEvent.Organizer;
+
+        var organizerName = organizer.IndividualProfile is not null
+            ? $"{organizer.IndividualProfile.FirstName} " +
+              $"{organizer.IndividualProfile.LastName}"
+            : organizer.OrganizationProfile?.Name
+              ?? organizer.UserName
+              ?? "EduMeet organizer";
+
+        var isCurrentUserRegistered =
+            currentIndividualProfileId.HasValue &&
+            educationalEvent.EventParticipants.Any(
+                participant =>
+                    participant.ParticipantId ==
+                    currentIndividualProfileId.Value);
         
         return new EducationalEventResponse(
             educationalEvent.Id,
@@ -118,6 +222,8 @@ public sealed class EducationalEventService(
             educationalEvent.GooglePlaceId,
             educationalEvent.OrganizerId,
             organizerName,
-            educationalEvent.Organizer.ImageUrl);
+            organizer.ImageUrl,
+            educationalEvent.EventParticipants.Count,
+            isCurrentUserRegistered);
     }
 }
