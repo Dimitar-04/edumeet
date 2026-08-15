@@ -5,9 +5,14 @@ import type { ProfileEventResponse } from '../../types/user/responses';
 interface ProfileEventCardProps {
   event: ProfileEventResponse;
   showRating: boolean;
+  relationship: 'hosted' | 'attended';
 }
 
-function ProfileEventCard({ event, showRating }: ProfileEventCardProps) {
+function ProfileEventCard({
+  event,
+  showRating,
+  relationship,
+}: ProfileEventCardProps) {
   const eventDate = new Date(event.date);
   const initials = event.title
     .split(/\s+/)
@@ -29,6 +34,9 @@ function ProfileEventCard({ event, showRating }: ProfileEventCardProps) {
           <span aria-hidden="true">{initials}</span>
         )}
         <strong>{event.category}</strong>
+        <small className={`profile-event-role profile-event-role-${relationship}`}>
+          {relationship === 'hosted' ? 'Created' : 'Attended'}
+        </small>
       </div>
 
       <div className="profile-event-copy">

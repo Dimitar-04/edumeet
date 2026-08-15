@@ -14,7 +14,7 @@ bin/
 obj/
 **/bin/
 **/obj/
-backend/EduMeetBackend/Presentation/wwwroot/uploads/
+**/wwwroot/uploads/
 *.user
 *.suo
 *.userosscache

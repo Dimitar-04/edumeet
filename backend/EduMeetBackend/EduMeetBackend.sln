@@ -1,12 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{5B1752D5-9AA3-432B-A215-251301F610C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "1. Domain\Domain.csproj", "{5B1752D5-9AA3-432B-A215-251301F610C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{CA1C5289-AEA7-4D3B-8E7F-AEB0EA8F4A66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "2. Application\Application.csproj", "{CA1C5289-AEA7-4D3B-8E7F-AEB0EA8F4A66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{5A2E99C3-B2F6-4F04-B744-5CBE1A6E858B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "3. Infrastructure\Infrastructure.csproj", "{5A2E99C3-B2F6-4F04-B744-5CBE1A6E858B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{E48B29E5-5F14-4BE5-AAEC-824EA8DD36A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "4. Presentation\Presentation.csproj", "{E48B29E5-5F14-4BE5-AAEC-824EA8DD36A1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Domain", "1. Domain", "{36AB3158-72D9-404E-92C7-1114F01C8BE2}"
 EndProject

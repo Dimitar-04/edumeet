@@ -67,4 +67,6 @@ export interface PublicUserProfileResponse {
     website: string | null;
   } | null;
   organizedEvents: ProfileEventResponse[];
+  attendedEventsCount: number;
+  attendedEvents: ProfileEventResponse[];
 }
