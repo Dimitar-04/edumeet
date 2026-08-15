@@ -25,10 +25,10 @@ public class EventsController : ControllerBase
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<EducationalEventResponse>>(
         StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetUpcoming(
+    public async Task<IActionResult> GetAll(
         CancellationToken cancellationToken)
     {
-        var events = await _educationalEventService.GetUpcomingAsync(
+        var events = await _educationalEventService.GetAllAsync(
             cancellationToken);
 
         return Ok(events);
@@ -125,11 +125,16 @@ public class EventsController : ControllerBase
     }
 
     [HttpPost("{eventId:guid}/reviews")]
-    [ProducesResponseType<EventRegistrationResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ReviewCreatedResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> PostReviewForEvent(Guid eventId)
+    public async Task<IActionResult> PostReviewForEvent(
+        Guid eventId,
+        [FromBody] ReviewRequest request,
+        CancellationToken cancellationToken)
     {
         var username = User.Identity?.Name;
         
@@ -137,7 +142,17 @@ public class EventsController : ControllerBase
         {
             return Unauthorized();
         }
-        
+
+        var creationResult =
+            await _educationalEventService.CreateReviewAsync(
+                eventId,
+                username,
+                request,
+                cancellationToken);
+
+        return Created(
+            $"/api/events/{eventId}",
+            creationResult);
     }
     
 }

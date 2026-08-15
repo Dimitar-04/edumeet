@@ -11,4 +11,5 @@ public class IndividualProfile : BaseEntity
     public required string LastName { get; set; }
 
     public ICollection<EventParticipant> EventParticipants { get; set; } = new List<EventParticipant>();
+    public ICollection<Review> Reviews { get; set; } = new List<Review>();
 }

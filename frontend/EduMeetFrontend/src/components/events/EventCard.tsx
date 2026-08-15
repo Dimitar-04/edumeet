@@ -38,6 +38,7 @@ function EventCard({ event }: EventCardProps) {
     .join('')
     .toUpperCase();
   const visualTone = categoryTones[event.category] ?? 'silver';
+  const isPastEvent = eventDate.getTime() <= Date.now();
 
   return (
     <Link
@@ -45,44 +46,49 @@ function EventCard({ event }: EventCardProps) {
       to={`/events/${event.id}`}
       aria-label={`View ${event.title}`}
     >
-    <article className="event-card">
-      <div className={`event-card-art event-card-art-${visualTone}`}>
-        {event.imageUrl ? (
-          <img
-            className="event-card-image"
-            src={resolvePublicAssetUrl(event.imageUrl)}
-            alt=""
+      <article className={`event-card ${isPastEvent ? 'event-card-past' : ''}`}>
+        <div className={`event-card-art event-card-art-${visualTone}`}>
+          {event.imageUrl ? (
+            <img
+              className="event-card-image"
+              src={resolvePublicAssetUrl(event.imageUrl)}
+              alt=""
+            />
+          ) : null}
+          <span className="event-category">{event.category}</span>
+          {!event.imageUrl ? (
+            <span className="event-art-code" aria-hidden="true">
+              {artCode}
+            </span>
+          ) : null}
+        </div>
+
+        <div className="event-card-body">
+          <div className="event-date-block" aria-label={fullDate}>
+            <span>{month}</span>
+            <strong>{day}</strong>
+          </div>
+          <div className="event-card-copy">
+            <p>
+              {event.format} · {time}
+            </p>
+            <h3>{event.title}</h3>
+            <span className="event-location">{event.locationName}</span>
+          </div>
+        </div>
+
+        <div className="event-card-footer">
+          <UserAvatar
+            className="organizer-initial"
+            userName={event.organizerName}
+            imageUrl={event.organizerImageUrl}
           />
-        ) : null}
-        <span className="event-category">{event.category}</span>
-        {!event.imageUrl ? (
-          <span className="event-art-code" aria-hidden="true">
-            {artCode}
-          </span>
-        ) : null}
-      </div>
-
-      <div className="event-card-body">
-        <div className="event-date-block" aria-label={fullDate}>
-          <span>{month}</span>
-          <strong>{day}</strong>
+          <span>By {event.organizerName}</span>
+          {isPastEvent && event.averageRating !== null ? (
+            <strong>{event.averageRating.toFixed(1)} / 5</strong>
+          ) : null}
         </div>
-        <div className="event-card-copy">
-          <p>{event.format} · {time}</p>
-          <h3>{event.title}</h3>
-          <span className="event-location">{event.locationName}</span>
-        </div>
-      </div>
-
-      <div className="event-card-footer">
-        <UserAvatar
-          className="organizer-initial"
-          userName={event.organizerName}
-          imageUrl={event.organizerImageUrl}
-        />
-        <span>By {event.organizerName}</span>
-      </div>
-    </article>
+      </article>
     </Link>
   );
 }

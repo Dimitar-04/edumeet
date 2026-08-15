@@ -17,5 +17,9 @@ public sealed record EducationalEventResponse(
     string OrganizerName,
     string? OrganizerImageUrl,
     int RegisteredPeopleCount,
-    bool IsCurrentUserRegistered
+    bool IsCurrentUserRegistered,
+    double? AverageRating,
+    int RatingCount,
+    bool HasCurrentUserReviewed,
+    IReadOnlyList<EventReviewResponse> Reviews
 );

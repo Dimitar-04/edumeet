@@ -19,7 +19,7 @@ public static class FormFileReader
     {
         if (file is null || file.Length == 0)
         {
-            return new FormFileReadResult(null, "Please select a file.");
+            return new FormFileReadResult(null, null);
         }
 
         if (file.Length > maximumSizeBytes)

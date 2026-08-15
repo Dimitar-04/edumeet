@@ -1,13 +1,17 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
-import type { CreateEducationalEventRequest } from '../types/event/requests';
+import type {
+  CreateEducationalEventRequest,
+  CreateReviewRequest,
+} from '../types/event/requests';
 import { toCreateEventFormData } from '../types/event/requests';
 import type {
   EducationalEventResponse,
   EventRegistrationResponse,
+  ReviewCreatedResponse,
 } from '../types/event/responses';
 
-export async function getUpcomingEvents(): Promise<EducationalEventResponse[]> {
+export async function getEvents(): Promise<EducationalEventResponse[]> {
   const response = await axiosInstance.get<EducationalEventResponse[]>('/events');
   return response.data;
 }
@@ -46,6 +50,18 @@ export async function toggleEventRegistration(
 ): Promise<EventRegistrationResponse> {
   const response = await axiosInstance.post<EventRegistrationResponse>(
     `/events/${eventId}/registrations`,
+  );
+
+  return response.data;
+}
+
+export async function createEventReview(
+  eventId: string,
+  request: CreateReviewRequest,
+): Promise<ReviewCreatedResponse> {
+  const response = await axiosInstance.post<ReviewCreatedResponse>(
+    `/events/${eventId}/reviews`,
+    request,
   );
 
   return response.data;

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
-import { getUpcomingEvents } from '../api/eventsApi';
+import { getEvents } from '../api/eventsApi';
 import AppHeader from '../components/layout/AppHeader';
 import type { EducationalEventResponse } from '../types/event/responses';
 
@@ -11,7 +11,18 @@ function LandingPage() {
   useEffect(() => {
     const loadSummary = async () => {
       try {
-        setEvents(await getUpcomingEvents());
+        const allEvents = await getEvents();
+        const now = Date.now();
+
+        setEvents(
+          allEvents
+            .filter((event) => new Date(event.date).getTime() > now)
+            .sort(
+              (first, second) =>
+                new Date(first.date).getTime() -
+                new Date(second.date).getTime(),
+            ),
+        );
       } catch {
         setStatsUnavailable(true);
       }

@@ -42,9 +42,7 @@ builder.Services
         options.User.RequireUniqueEmail = true;
 
         options.Lockout.AllowedForNewUsers = true;
-        options.Lockout.MaxFailedAccessAttempts = 5;
-        options.Lockout.DefaultLockoutTimeSpan =
-            TimeSpan.FromMinutes(10);
+        
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddUserStore<ApplicationUserStore>()

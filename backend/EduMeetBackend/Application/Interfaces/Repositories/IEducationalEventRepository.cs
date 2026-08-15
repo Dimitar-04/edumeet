@@ -4,8 +4,7 @@ namespace _2._Application.Interfaces.Repositories;
 
 public interface IEducationalEventRepository : IBaseRepository<EducationalEvent>
 {
-    Task<IReadOnlyList<EducationalEvent>> GetUpcomingAsync(
-        DateTime fromUtc,
+    Task<IReadOnlyList<EducationalEvent>> GetAllWithDetailsAsync(
         CancellationToken cancellationToken = default);
 
     Task<EducationalEvent?> GetByIdWithOrganizerAsync(
@@ -13,6 +12,10 @@ public interface IEducationalEventRepository : IBaseRepository<EducationalEvent>
         CancellationToken cancellationToken = default);
 
     Task<EducationalEvent?> GetTrackedByIdWithParticipantsAsync(
+        Guid eventId,
+        CancellationToken cancellationToken = default);
+
+    Task<EducationalEvent?> GetTrackedForReviewAsync(
         Guid eventId,
         CancellationToken cancellationToken = default);
 }

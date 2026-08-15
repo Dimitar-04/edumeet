@@ -5,7 +5,7 @@ namespace _2._Application.Interfaces;
 
 public interface IEducationalEventService
 {
-    Task<IReadOnlyList<EducationalEventResponse>> GetUpcomingAsync(
+    Task<IReadOnlyList<EducationalEventResponse>> GetAllAsync(
         CancellationToken cancellationToken = default);
 
     Task<EducationalEventResponse?> GetByIdAsync(
@@ -24,8 +24,9 @@ public interface IEducationalEventService
         string username,
         CancellationToken cancellationToken = default);
 
-    Task<CreatedReviewResponse> CreateReviewAsync(
+    Task<ReviewCreatedResponse> CreateReviewAsync(
         Guid eventId,
-        string username
-    );
+        string username,
+        ReviewRequest reviewRequest,
+        CancellationToken cancellationToken = default);
 }

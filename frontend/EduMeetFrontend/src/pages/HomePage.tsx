@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
-import { getUpcomingEvents } from '../api/eventsApi';
+import { getEvents } from '../api/eventsApi';
 import AppHeader from '../components/layout/AppHeader';
 import EventCard from '../components/events/EventCard';
 import EventFilters from '../components/events/EventFilters';
@@ -19,7 +19,7 @@ function HomePage() {
   useEffect(() => {
     const loadEvents = async () => {
       try {
-        setEvents(await getUpcomingEvents());
+        setEvents(await getEvents());
       } catch {
         setLoadError('Events could not be loaded. Please try again shortly.');
       } finally {
@@ -46,6 +46,25 @@ function HomePage() {
     });
   }, [activeCategory, events, searchTerm]);
 
+  const { upcomingEvents, pastEvents } = useMemo(() => {
+    const now = Date.now();
+
+    return {
+      upcomingEvents: visibleEvents
+        .filter((event) => new Date(event.date).getTime() > now)
+        .sort(
+          (first, second) =>
+            new Date(first.date).getTime() - new Date(second.date).getTime(),
+        ),
+      pastEvents: visibleEvents
+        .filter((event) => new Date(event.date).getTime() <= now)
+        .sort(
+          (first, second) =>
+            new Date(second.date).getTime() - new Date(first.date).getTime(),
+        ),
+    };
+  }, [visibleEvents]);
+
   return (
     <div className="app-shell">
       <AppHeader />
@@ -55,8 +74,8 @@ function HomePage() {
           <div className="section-container">
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Upcoming near you</p>
-                <h2 id="events-title">Discover something new</h2>
+                <p className="eyebrow">Learn together</p>
+                <h2 id="events-title">Discover events</h2>
               </div>
               <Link className="text-link" to="/events/create">
                 Create your own
@@ -81,10 +100,43 @@ function HomePage() {
                 <p>{loadError}</p>
               </div>
             ) : visibleEvents.length > 0 ? (
-              <div className="event-grid">
-                {visibleEvents.map((event) => (
-                  <EventCard event={event} key={event.id} />
-                ))}
+              <div className="event-feed">
+                {upcomingEvents.length > 0 ? (
+                  <section className="event-feed-group" aria-labelledby="upcoming-events-title">
+                    <div className="event-feed-heading">
+                      <div>
+                        <p className="eyebrow">Coming up</p>
+                        <h3 id="upcoming-events-title">Upcoming events</h3>
+                      </div>
+                      <span>{upcomingEvents.length}</span>
+                    </div>
+                    <div className="event-grid">
+                      {upcomingEvents.map((event) => (
+                        <EventCard event={event} key={event.id} />
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
+
+                {pastEvents.length > 0 ? (
+                  <section
+                    className="event-feed-group event-feed-past"
+                    aria-labelledby="past-events-title"
+                  >
+                    <div className="event-feed-heading">
+                      <div>
+                        <p className="eyebrow">Event archive</p>
+                        <h3 id="past-events-title">Past events</h3>
+                      </div>
+                      <span>{pastEvents.length}</span>
+                    </div>
+                    <div className="event-grid">
+                      {pastEvents.map((event) => (
+                        <EventCard event={event} key={event.id} />
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
               </div>
             ) : (
               <div className="empty-state">

@@ -8,27 +8,39 @@ public class ReviewModelTypeConfiguration:IEntityTypeConfiguration<Review>
 {
     public void Configure(EntityTypeBuilder<Review> builder)
     {
-        builder.HasKey(r => r.Id);
-        builder.HasKey(r => r.Id);
+        builder.HasKey(review => review.Id);
 
-        builder.Property(r => r.Grade)
+        builder.Property(review => review.Grade)
             .IsRequired();
 
-        builder.Property(r => r.Description)
+        builder.Property(review => review.Description)
+            .IsRequired()
             .HasMaxLength(1000);
 
-        builder.HasOne(r => r.EducationalEvent)
-            .WithMany(e => e.Reviews)
-            .HasForeignKey(r => r.EducationalEventId)
+        builder.HasOne(review => review.EducationalEvent)
+            .WithMany(educationalEvent => educationalEvent.Reviews)
+            .HasForeignKey(review => review.EducationalEventId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.ToTable(t =>
+        builder.HasOne(review => review.Reviewer)
+            .WithMany(profile => profile.Reviews)
+            .HasForeignKey(review => review.ReviewerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(review => review.ReviewerId);
+
+        builder.HasIndex(review => new
+            {
+                review.EducationalEventId,
+                review.ReviewerId
+            })
+            .IsUnique();
+
+        builder.ToTable(table =>
         {
-            t.HasCheckConstraint(
+            table.HasCheckConstraint(
                 "CK_Review_Grade",
                 "\"Grade\" >= 1 AND \"Grade\" <= 5");
         });
-
-        builder.HasIndex(r => r.EducationalEventId);
     }
 }

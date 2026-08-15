@@ -1,5 +1,13 @@
 import type { EventCategory } from './common';
 
+export interface EventReviewResponse {
+  reviewerId: string;
+  reviewerName: string;
+  reviewerImageUrl: string | null;
+  grade: number;
+  description: string;
+}
+
 export interface EducationalEventResponse {
   id: string;
   title: string;
@@ -18,6 +26,17 @@ export interface EducationalEventResponse {
   organizerImageUrl: string | null;
   registeredPeopleCount: number;
   isCurrentUserRegistered: boolean;
+  averageRating: number | null;
+  ratingCount: number;
+  hasCurrentUserReviewed: boolean;
+  reviews: EventReviewResponse[];
+}
+
+export interface ReviewCreatedResponse {
+  eventId: string;
+  review: EventReviewResponse;
+  averageRating: number;
+  ratingCount: number;
 }
 
 export interface EventRegistrationResponse {

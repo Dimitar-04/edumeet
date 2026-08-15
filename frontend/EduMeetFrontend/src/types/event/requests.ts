@@ -14,6 +14,11 @@ export interface CreateEducationalEventRequest {
   googlePlaceId: string | null;
 }
 
+export interface CreateReviewRequest {
+  grade: number;
+  description: string;
+}
+
 export function toCreateEventFormData(
   request: CreateEducationalEventRequest,
 ): FormData {
