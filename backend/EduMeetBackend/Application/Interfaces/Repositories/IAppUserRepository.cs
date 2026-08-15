@@ -18,4 +18,8 @@ public interface IAppUserRepository:IBaseRepository<AppUser>
     Task<AppUser?> FindTrackedByUsernameAsync(
         string username,
         CancellationToken cancellationToken = default);
+    
+    public Task<AppUser?> GetPublicProfileAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default);
 }

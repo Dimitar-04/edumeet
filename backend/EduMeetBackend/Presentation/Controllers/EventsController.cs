@@ -123,4 +123,21 @@ public class EventsController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpPost("{eventId:guid}/reviews")]
+    [ProducesResponseType<EventRegistrationResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> PostReviewForEvent(Guid eventId)
+    {
+        var username = User.Identity?.Name;
+        
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return Unauthorized();
+        }
+        
+    }
+    
 }

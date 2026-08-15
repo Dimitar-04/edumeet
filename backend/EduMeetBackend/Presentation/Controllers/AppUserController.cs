@@ -76,4 +76,22 @@ public class AppUserController:ControllerBase
             new ProfileImageResponse(
                 updatedUser.ImageUrl!));
     }
+
+
+    [AllowAnonymous]
+    [HttpGet("{userId:guid}")]
+    [ProducesResponseType<PublicUserProfileResponse>( StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetUserProfile(Guid userId)
+    {
+        var profile = await _appUserService.GetUserProfileByIdAsync(
+            userId);
+
+        if (profile is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(profile);
+    }
 }

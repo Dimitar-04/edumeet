@@ -23,4 +23,9 @@ public interface IEducationalEventService
         Guid eventId,
         string username,
         CancellationToken cancellationToken = default);
+
+    Task<CreatedReviewResponse> CreateReviewAsync(
+        Guid eventId,
+        string username
+    );
 }

@@ -198,14 +198,17 @@ function EventDetailsPage() {
 
               <section className="event-details-organizer">
                 <span>Hosted by</span>
-                <div>
+                <Link
+                  className="event-organizer-link"
+                  to={`/profile/${event.organizerId}`}
+                >
                   <UserAvatar
                     className="event-details-avatar"
                     userName={event.organizerName}
                     imageUrl={event.organizerImageUrl}
                   />
                   <strong>{event.organizerName}</strong>
-                </div>
+                </Link>
               </section>
 
               <section className="event-registration-panel">

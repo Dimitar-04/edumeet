@@ -1,8 +1,10 @@
+using _1._Domain.Enums;
 using _1._Domain.Models;
 using _2._Application.Interfaces;
 using _2._Application.Interfaces.Repositories;
 using _2._Application.Interfaces.UnitOfWork;
 using _2._Application.Requests;
+using _2._Application.Responses;
 
 namespace _2._Application.Services.Implementations;
 
@@ -40,19 +42,79 @@ public class AppUserService:IAppUserService
         return user;
     }
 
-    public async Task<AppUser?> GetByIdAsync(Guid userId)
+    public async Task<PublicUserProfileResponse?> GetUserProfileByIdAsync(Guid userId)
     {
-        var users=await _appUserRepository.FindAsync(
-            predicate: u => u.Id == userId
-        );
-        if (users.Count==0)
+        var user = await _appUserRepository.GetPublicProfileAsync(userId);
+
+        if (user == null)
         {
             return null;
         }
-        return users.First();
-    }
-    
-   
+        
+        var displayName = user.AccountType switch
+        {
+            AccountType.Individual when user.IndividualProfile is not null =>
+                $"{user.IndividualProfile.FirstName} " +
+                $"{user.IndividualProfile.LastName}",
 
-   
+            AccountType.Organization when user.OrganizationProfile is not null =>
+                user.OrganizationProfile.Name,
+
+            _ => user.UserName ?? "EduMeet user"
+        };
+        
+        var individual = user.IndividualProfile is null
+            ? null
+            : new IndividualProfileResponse(
+                user.IndividualProfile.Id,
+                user.IndividualProfile.FirstName,
+                user.IndividualProfile.LastName);
+
+        var organization = user.OrganizationProfile is null
+            ? null
+            : new OrganizationProfileResponse(
+                user.OrganizationProfile.Id,
+                user.OrganizationProfile.Name,
+                user.OrganizationProfile.Website);
+        var events = user.OrganizedEvents
+            .OrderByDescending(educationalEvent => educationalEvent.Date)
+            .Select(educationalEvent =>
+            {
+                var ratingCount = educationalEvent.Reviews.Count;
+
+                double? averageRating = ratingCount == 0
+                    ? null
+                    : educationalEvent.Reviews.Average(
+                        review => review.Grade);
+
+                var reviews = educationalEvent.Reviews
+                    .Select(r => new ReviewResponse(
+                        r.Grade,
+                        r.Description
+                    )).ToList();
+
+                return new ProfileEventResponse(
+                    educationalEvent.Id,
+                    educationalEvent.Title,
+                    educationalEvent.Category,
+                    educationalEvent.Format,
+                    educationalEvent.ImageUrl,
+                    educationalEvent.Date,
+                    educationalEvent.LocationName,
+                    averageRating,
+                    ratingCount,
+                    reviews);
+            })
+            .ToList();
+        
+        return new PublicUserProfileResponse(
+            user.Id,
+            user.UserName!,
+            user.AccountType,
+            displayName,
+            user.ImageUrl,
+            individual,
+            organization,
+            events);
+    }
 }

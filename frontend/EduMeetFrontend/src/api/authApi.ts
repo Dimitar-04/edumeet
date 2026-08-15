@@ -2,11 +2,9 @@ import axios from 'axios';
 import type {
   RegisterRequest,
   LoginRequest,
-  UpdateProfileImageRequest,
 } from '../types/user/requests';
 import type {
   AuthenticationResponse,
-  ProfileImageResponse,
   RefreshResponse,
   RegisteredUserResponse,
 } from '../types/user/responses';
@@ -75,20 +73,6 @@ export async function getCurrentUser(): Promise<RegisteredUserResponse> {
 
 export async function refreshAccessToken(): Promise<RefreshResponse> {
   const response = await axiosInstance.post<RefreshResponse>('/auth/refresh');
-
-  return response.data;
-}
-
-export async function updateProfileImage(
-  request: UpdateProfileImageRequest,
-): Promise<ProfileImageResponse> {
-  const formData = new FormData();
-  formData.append('image', request.image);
-
-  const response = await axiosInstance.put<ProfileImageResponse>(
-    '/profile/image',
-    formData,
-  );
 
   return response.data;
 }

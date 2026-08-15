@@ -63,4 +63,19 @@ public sealed class AppUserRepository(UserManager<AppUser> userManager, Applicat
             user => user.UserName == username,
             cancellationToken);
     }
+
+    public Task<AppUser?> GetPublicProfileAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        return Context.Users
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(u => u.IndividualProfile)
+            .Include(u => u.OrganizationProfile)
+            .Include(u => u.OrganizedEvents)
+            .ThenInclude(oe => oe.Reviews)
+            .SingleOrDefaultAsync(
+                u => u.Id == userId,
+                cancellationToken
+            );
+    }
 }
