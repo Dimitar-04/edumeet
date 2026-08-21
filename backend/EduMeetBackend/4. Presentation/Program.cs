@@ -11,6 +11,7 @@ using _3._Infrastracture.Persitance.Identity;
 using _3._Infrastracture.Persitance.Repositories;
 using _3._Infrastracture.Persitance.UnitOfWork;
 using _3._Infrastracture.Services;
+using _3._Infrastracture.Services.BackgroundServices;
 using _4._Presentation.Authentication;
 using _4._Presentation.ExceptionHandling;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -65,10 +66,27 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IEmailOutboxRepository, EmailOutboxRepository>();
+builder.Services.AddTransient<IEmailSenderService, SmtpEmailSender>();
+builder.Services.AddHostedService<EmailOutboxWorker>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+
+builder.Services
+    .AddOptions<EmailOptions>()
+    .Bind(
+        builder.Configuration.GetRequiredSection(
+            EmailOptions.SectionName))
+    .Validate(
+        options =>
+            !string.IsNullOrWhiteSpace(options.Host) &&
+            options.Port > 0 &&
+            !string.IsNullOrWhiteSpace(options.FromAddress) &&
+            !string.IsNullOrWhiteSpace(options.FrontendBaseUrl),
+        "Email configuration is invalid.")
+    .ValidateOnStart();
 
 
 var jwtSection = builder.Configuration.GetRequiredSection(JwtOptions.SectionName);

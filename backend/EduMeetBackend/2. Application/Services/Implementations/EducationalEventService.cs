@@ -5,6 +5,7 @@ using _2._Application.Responses;
 using _2._Application.Interfaces;
 using _2._Application.Interfaces.Repositories;
 using _2._Application.Interfaces.UnitOfWork;
+using _2._Application.Notifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace _2._Application.Services.Implementations;
@@ -13,6 +14,7 @@ public sealed class EducationalEventService(
     IAppUserRepository appUserRepository,
     IFileUploadService fileUploadService,
     IEducationalEventRepository eventRepository,
+    IEmailOutboxRepository emailOutboxRepository,
     IUnitOfWork unitOfWork,
     TimeProvider timeProvider)
     : IEducationalEventService
@@ -180,6 +182,23 @@ public sealed class EducationalEventService(
                     ParticipantId = individualProfileId,
                     EducationalEventId = educationalEvent.Id
                 });
+            
+            
+
+            var recipientMail = user.Email;
+            var recipientName =
+                $"{user.IndividualProfile.FirstName} " +
+                user.IndividualProfile.LastName;
+            
+            emailOutboxRepository.Enqueue(
+                new EventRegistrationEmailMessage(
+                    recipientMail,
+                    recipientName,
+                    educationalEvent.Id,
+                    educationalEvent.Title,
+                    educationalEvent.Date,
+                    educationalEvent.LocationName),
+                timeProvider.GetUtcNow().UtcDateTime);
 
             isRegistered = true;
         }

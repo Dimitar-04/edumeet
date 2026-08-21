@@ -1,4 +1,4 @@
-﻿namespace _1._Domain.Models;
+﻿ namespace _1._Domain.Models;
 
 public class EventParticipant
 {
