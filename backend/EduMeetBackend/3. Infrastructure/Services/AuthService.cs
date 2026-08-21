@@ -6,7 +6,6 @@ using _2._Application.Results;
 using _2._Application.Interfaces;
 using _2._Application.Interfaces.Repositories;
 using _2._Application.Interfaces.UnitOfWork;
-using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +20,6 @@ public sealed class AuthService(
     IUnitOfWork unitOfWork,
     ITokenService tokenService,
     TimeProvider timeProvider,
-    IMapper mapper,
     ILogger<AuthService> logger,
     SignInManager<AppUser> signInManager) : IAuthService
 {
@@ -39,7 +37,15 @@ public sealed class AuthService(
 
         try
         {
-            var user = mapper.Map<AppUser>(request);
+            var user = new AppUser
+            {
+                UserName = request.UserName.Trim(),
+                Email = request.Email.Trim(),
+                PhoneNumber = string.IsNullOrWhiteSpace(request.PhoneNumber)
+                    ? null
+                    : request.PhoneNumber.Trim(),
+                AccountType = request.AccountType
+            };
 
             
             var userCreationResult = await appUserRepository.AddAsync(
@@ -72,9 +78,12 @@ public sealed class AuthService(
             {
                 case AccountType.Individual:
                 {
-                    individualProfile = mapper.Map<IndividualProfile>(
-                        request.Individual!);
-                    individualProfile.AppUserId = user.Id;
+                    individualProfile = new IndividualProfile
+                    {
+                        AppUserId = user.Id,
+                        FirstName = request.Individual!.FirstName.Trim(),
+                        LastName = request.Individual.LastName.Trim()
+                    };
 
                     individualProfileRepository.Add(individualProfile);
                     break;
@@ -82,9 +91,15 @@ public sealed class AuthService(
 
                 case AccountType.Organization:
                 {
-                    organizationProfile = mapper.Map<OrganizationProfile>(
-                        request.Organization!);
-                    organizationProfile.AppUserId = user.Id;
+                    organizationProfile = new OrganizationProfile
+                    {
+                        AppUserId = user.Id,
+                        Name = request.Organization!.Name.Trim(),
+                        Website = string.IsNullOrWhiteSpace(
+                            request.Organization.Website)
+                            ? null
+                            : request.Organization.Website.Trim()
+                    };
 
                     organizationProfileRepository.Add(organizationProfile);
                     break;

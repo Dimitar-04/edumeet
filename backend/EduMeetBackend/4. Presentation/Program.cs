@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using _1._Domain.Models;
-using _2._Application.Mappings;
 using _2._Application.Interfaces;
 using _2._Application.Interfaces.Repositories;
 using _2._Application.Interfaces.UnitOfWork;
@@ -32,10 +31,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });
-
-builder.Services.AddAutoMapper(
-    _ => { },
-    typeof(AuthMappingProfile).Assembly);
 
 builder.Services
     .AddIdentityCore<AppUser>(options =>
