@@ -9,6 +9,7 @@ import type {
   EducationalEventResponse,
   EventRegistrationResponse,
   ReviewCreatedResponse,
+  ReviewDeletedResponse,
 } from '../types/event/responses';
 
 export async function getEvents(): Promise<EducationalEventResponse[]> {
@@ -62,6 +63,16 @@ export async function createEventReview(
   const response = await axiosInstance.post<ReviewCreatedResponse>(
     `/events/${eventId}/reviews`,
     request,
+  );
+
+  return response.data;
+}
+
+export async function deleteCurrentUserEventReview(
+  eventId: string,
+): Promise<ReviewDeletedResponse> {
+  const response = await axiosInstance.delete<ReviewDeletedResponse>(
+    `/events/${eventId}/reviews/me`,
   );
 
   return response.data;

@@ -1,9 +1,14 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
-import type { UpdateProfileImageRequest } from '../types/user/requests';
 import type {
+  UpdateProfileImageRequest,
+  UpdateUsernameRequest,
+} from '../types/user/requests';
+import type {
+  AuthenticationResponse,
   ProfileImageResponse,
   PublicUserProfileResponse,
+  RegisteredUserResponse,
 } from '../types/user/responses';
 
 export async function getPublicProfile(
@@ -36,4 +41,15 @@ export async function updateProfileImage(
   );
 
   return response.data;
+}
+
+export async function updateUsername(
+  request: UpdateUsernameRequest,
+): Promise<RegisteredUserResponse> {
+  const response = await axiosInstance.put<AuthenticationResponse>(
+    '/profile/username',
+    request,
+  );
+
+  return response.data.user;
 }

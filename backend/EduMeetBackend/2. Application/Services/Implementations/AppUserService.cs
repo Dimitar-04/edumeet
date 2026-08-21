@@ -5,6 +5,7 @@ using _2._Application.Interfaces.Repositories;
 using _2._Application.Interfaces.UnitOfWork;
 using _2._Application.Requests;
 using _2._Application.Responses;
+using _2._Application.Results;
 
 namespace _2._Application.Services.Implementations;
 
@@ -13,17 +14,20 @@ public class AppUserService:IAppUserService
     private readonly IAppUserRepository _appUserRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly  IFileUploadService _fileUploadService;
+    private readonly ITokenService _tokenService;
     private readonly TimeProvider _timeProvider;
 
     public AppUserService(
         IAppUserRepository appUserRepository,
         IUnitOfWork unitOfWork,
         IFileUploadService fileUploadService,
+        ITokenService tokenService,
         TimeProvider timeProvider)
     {
         _appUserRepository = appUserRepository;
         _unitOfWork = unitOfWork;
         _fileUploadService = fileUploadService;
+        _tokenService = tokenService;
         _timeProvider = timeProvider;
     }
 
@@ -46,6 +50,49 @@ public class AppUserService:IAppUserService
         await _unitOfWork.SaveChangesAsync(ct);
 
         return user;
+    }
+
+    public async Task<UsernameUpdateResult?> UpdateUsernameAsync(
+        string currentUsername,
+        string newUsername,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _appUserRepository.FindTrackedByUsernameAsync(
+            currentUsername,
+            cancellationToken);
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        var trimmedUsername = newUsername.Trim();
+
+        if (string.Equals(
+                user.UserName,
+                trimmedUsername,
+                StringComparison.Ordinal))
+        {
+            return UsernameUpdateResult.Failure(
+                ["Choose a username different from your current username."]);
+        }
+
+        var updateResult =
+            await _appUserRepository.UpdateUserNameAsync(
+                user,
+                trimmedUsername);
+
+        if (!updateResult.Succeeded)
+        {
+            return UsernameUpdateResult.Failure(
+                updateResult.Errors);
+        }
+
+        var accessToken = _tokenService.CreateAccessToken(user);
+
+        return UsernameUpdateResult.Success(
+            ToRegisteredUserResponse(user),
+            accessToken);
     }
 
     public async Task<PublicUserProfileResponse?> GetUserProfileByIdAsync(
@@ -153,5 +200,29 @@ public class AppUserService:IAppUserService
             averageRating,
             ratingCount,
             reviews);
+    }
+
+    private static RegisteredUserResponse ToRegisteredUserResponse(
+        AppUser user)
+    {
+        return new RegisteredUserResponse(
+            user.Id,
+            user.UserName!,
+            user.Email!,
+            user.PhoneNumber,
+            user.AccountType,
+            user.ImageUrl,
+            user.IndividualProfile is null
+                ? null
+                : new IndividualProfileResponse(
+                    user.IndividualProfile.Id,
+                    user.IndividualProfile.FirstName,
+                    user.IndividualProfile.LastName),
+            user.OrganizationProfile is null
+                ? null
+                : new OrganizationProfileResponse(
+                    user.OrganizationProfile.Id,
+                    user.OrganizationProfile.Name,
+                    user.OrganizationProfile.Website));
     }
 }

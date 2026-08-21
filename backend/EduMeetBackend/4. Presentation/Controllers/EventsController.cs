@@ -154,5 +154,30 @@ public class EventsController : ControllerBase
             $"/api/events/{eventId}",
             creationResult);
     }
+
+    [HttpDelete("{eventId:guid}/reviews/me")]
+    [ProducesResponseType<ReviewDeletedResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> DeleteCurrentUserReview(
+        Guid eventId,
+        CancellationToken cancellationToken)
+    {
+        var username = User.Identity?.Name;
+
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return Unauthorized();
+        }
+
+        var deletionResult =
+            await _educationalEventService.DeleteReviewAsync(
+                eventId,
+                username,
+                cancellationToken);
+
+        return Ok(deletionResult);
+    }
     
 }

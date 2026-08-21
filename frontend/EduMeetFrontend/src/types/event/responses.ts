@@ -39,6 +39,12 @@ export interface ReviewCreatedResponse {
   ratingCount: number;
 }
 
+export interface ReviewDeletedResponse {
+  eventId: string;
+  averageRating: number | null;
+  ratingCount: number;
+}
+
 export interface EventRegistrationResponse {
   eventId: string;
   isRegistered: boolean;

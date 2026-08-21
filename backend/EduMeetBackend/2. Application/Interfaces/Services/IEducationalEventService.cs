@@ -29,4 +29,9 @@ public interface IEducationalEventService
         string username,
         ReviewRequest reviewRequest,
         CancellationToken cancellationToken = default);
+
+    Task<ReviewDeletedResponse> DeleteReviewAsync(
+        Guid eventId,
+        string username,
+        CancellationToken cancellationToken = default);
 }

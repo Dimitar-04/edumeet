@@ -1,7 +1,18 @@
 import axios from "axios";
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+} from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router";
-import { getPublicProfile, updateProfileImage } from "../api/profileApi";
+import {
+  getPublicProfile,
+  updateProfileImage,
+  updateUsername,
+} from "../api/profileApi";
 import ProfileEventCard from "../components/events/ProfileEventCard";
 import AppHeader from "../components/layout/AppHeader";
 import UserAvatar from "../components/user/UserAvatar";
@@ -29,8 +40,16 @@ function ProfilePage() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [uploadMessage, setUploadMessage] = useState("");
+  const [usernameValue, setUsernameValue] = useState(user?.userName ?? "");
+  const [isUsernameSaving, setIsUsernameSaving] = useState(false);
+  const [usernameError, setUsernameError] = useState("");
+  const [usernameMessage, setUsernameMessage] = useState("");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
+
+  useEffect(() => {
+    setUsernameValue(user?.userName ?? "");
+  }, [user?.userName]);
 
   useEffect(() => {
     return () => {
@@ -187,6 +206,54 @@ function ProfilePage() {
     }
   };
 
+  const handleUsernameSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!user || !isOwnProfile) return;
+
+    const nextUsername = usernameValue.trim();
+
+    if (nextUsername.length < 3) {
+      setUsernameError("Username must contain at least 3 characters.");
+      setUsernameMessage("");
+      return;
+    }
+
+    try {
+      setIsUsernameSaving(true);
+      setUsernameError("");
+      setUsernameMessage("");
+
+      const updatedUser = await updateUsername({
+        userName: nextUsername,
+      });
+
+      setUser(updatedUser);
+      setProfile((current) =>
+        current
+          ? { ...current, userName: updatedUser.userName }
+          : current,
+      );
+      setUsernameValue(updatedUser.userName);
+      setUsernameMessage("Your username has been updated.");
+    } catch (error) {
+      let message = "The username could not be updated.";
+
+      if (axios.isAxiosError<ValidationProblemDetails>(error)) {
+        const errors = error.response?.data.errors;
+        const firstError = errors
+          ? Object.values(errors).flat()[0]
+          : undefined;
+
+        message = firstError ?? error.response?.data.title ?? message;
+      }
+
+      setUsernameError(message);
+    } finally {
+      setIsUsernameSaving(false);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       setIsLoggingOut(true);
@@ -262,45 +329,102 @@ function ProfilePage() {
 
           {isOwnProfile ? (
             <div className="profile-owner-controls">
-              <div className="profile-image-controls">
-                <label
-                  className="button button-secondary"
-                  htmlFor="profile-image"
+              <div className="profile-settings-grid">
+                <form
+                  className="profile-username-form"
+                  onSubmit={(event) => void handleUsernameSubmit(event)}
                 >
-                  Choose photo
-                </label>
-                <input
-                  ref={fileInputRef}
-                  className="visually-hidden"
-                  id="profile-image"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  onChange={handleImageChange}
-                />
-                {selectedImage ? (
-                  <button
-                    className="button button-primary"
-                    type="button"
-                    disabled={isUploading}
-                    onClick={() => void handleImageUpload()}
-                  >
-                    {isUploading ? "Saving..." : "Save photo"}
-                  </button>
-                ) : null}
+                  <div className="profile-setting-heading">
+                    <strong>Username</strong>
+                    <small>
+                      This is used when signing in and identifying your account.
+                    </small>
+                  </div>
+                  <div className="profile-username-input-row">
+                    <label className="visually-hidden" htmlFor="profile-username">
+                      Username
+                    </label>
+                    <input
+                      id="profile-username"
+                      name="userName"
+                      type="text"
+                      minLength={3}
+                      maxLength={256}
+                      autoComplete="username"
+                      value={usernameValue}
+                      disabled={isUsernameSaving}
+                      onChange={(event) => {
+                        setUsernameValue(event.target.value);
+                        setUsernameError("");
+                        setUsernameMessage("");
+                      }}
+                    />
+                    <button
+                      className="button button-primary"
+                      type="submit"
+                      disabled={
+                        isUsernameSaving ||
+                        usernameValue.trim() === user.userName
+                      }
+                    >
+                      {isUsernameSaving ? "Saving..." : "Save username"}
+                    </button>
+                  </div>
+                  {usernameError ? (
+                    <p className="publish-error profile-message" role="alert">
+                      {usernameError}
+                    </p>
+                  ) : null}
+                  {usernameMessage ? (
+                    <p className="profile-success" role="status">
+                      {usernameMessage}
+                    </p>
+                  ) : null}
+                </form>
+
+                <div className="profile-photo-setting">
+                  <div className="profile-setting-heading">
+                    <strong>Profile photo</strong>
+                    <small>JPEG, PNG or WebP, up to 5 MB.</small>
+                  </div>
+                  <div className="profile-image-controls">
+                    <label
+                      className="button button-secondary"
+                      htmlFor="profile-image"
+                    >
+                      Choose photo
+                    </label>
+                    <input
+                      ref={fileInputRef}
+                      className="visually-hidden"
+                      id="profile-image"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={handleImageChange}
+                    />
+                    {selectedImage ? (
+                      <button
+                        className="button button-primary"
+                        type="button"
+                        disabled={isUploading}
+                        onClick={() => void handleImageUpload()}
+                      >
+                        {isUploading ? "Saving..." : "Save photo"}
+                      </button>
+                    ) : null}
+                  </div>
+                  {uploadError ? (
+                    <p className="publish-error profile-message" role="alert">
+                      {uploadError}
+                    </p>
+                  ) : null}
+                  {uploadMessage ? (
+                    <p className="profile-success" role="status">
+                      {uploadMessage}
+                    </p>
+                  ) : null}
+                </div>
               </div>
-              <small className="profile-image-help">
-                JPEG, PNG or WebP, up to 5 MB.
-              </small>
-              {uploadError ? (
-                <p className="publish-error profile-message" role="alert">
-                  {uploadError}
-                </p>
-              ) : null}
-              {uploadMessage ? (
-                <p className="profile-success" role="status">
-                  {uploadMessage}
-                </p>
-              ) : null}
             </div>
           ) : null}
         </section>

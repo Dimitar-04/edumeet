@@ -21,6 +21,20 @@ public sealed class AppUserRepository(UserManager<AppUser> userManager, Applicat
             : UserCreationResult.Failure(
                 result.Errors.Select(error => error.Description));
     }
+
+    public async Task<UserCreationResult> UpdateUserNameAsync(
+        AppUser user,
+        string userName)
+    {
+        var result = await userManager.SetUserNameAsync(
+            user,
+            userName);
+
+        return result.Succeeded
+            ? UserCreationResult.Success()
+            : UserCreationResult.Failure(
+                result.Errors.Select(error => error.Description));
+    }
     
     
     public Task<AppUser?> FindByLoginAsync(
@@ -59,9 +73,12 @@ public sealed class AppUserRepository(UserManager<AppUser> userManager, Applicat
         string username,
         CancellationToken cancellationToken = default)
     {
-        return Context.Users.SingleOrDefaultAsync(
-            user => user.UserName == username,
-            cancellationToken);
+        return Context.Users
+            .Include(user => user.IndividualProfile)
+            .Include(user => user.OrganizationProfile)
+            .SingleOrDefaultAsync(
+                user => user.UserName == username,
+                cancellationToken);
     }
 
     public Task<AppUser?> GetPublicProfileAsync(Guid userId, CancellationToken cancellationToken = default)

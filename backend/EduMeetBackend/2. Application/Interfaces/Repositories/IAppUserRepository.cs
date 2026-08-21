@@ -8,6 +8,10 @@ public interface IAppUserRepository:IBaseRepository<AppUser>
     Task<UserCreationResult> AddAsync(
         AppUser user,
         string password);
+
+    Task<UserCreationResult> UpdateUserNameAsync(
+        AppUser user,
+        string userName);
     
     Task<AppUser?> FindByLoginAsync(
         string login,

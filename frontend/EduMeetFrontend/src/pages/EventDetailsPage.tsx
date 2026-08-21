@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link, useParams } from 'react-router';
 import {
   createEventReview,
+  deleteCurrentUserEventReview,
   getEventById,
   toggleEventRegistration,
 } from '../api/eventsApi';
@@ -11,6 +12,7 @@ import EventRegistrationDialog, {
   type RegistrationAction,
   type RegistrationDialogPhase,
 } from '../components/events/EventRegistrationDialog';
+import DeleteReviewDialog from '../components/events/DeleteReviewDialog';
 import EventReviewDialog, {
   type ReviewDialogPhase,
 } from '../components/events/EventReviewDialog';
@@ -27,6 +29,7 @@ import { AccountType } from '../types/user/auth';
 function EventDetailsPage() {
   const { eventId = '' } = useParams();
   const { user } = useAuth();
+  const [pageLoadedAt] = useState(() => Date.now());
   const [event, setEvent] = useState<EducationalEventResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -51,6 +54,11 @@ function EventDetailsPage() {
     phase: ReviewDialogPhase;
     errorMessage?: string;
   }>({ open: false, phase: 'form' });
+  const [deleteReviewDialog, setDeleteReviewDialog] = useState<{
+    open: boolean;
+    errorMessage?: string;
+  }>({ open: false });
+  const [isDeletingReview, setIsDeletingReview] = useState(false);
 
   useEffect(() => {
     const loadEvent = async () => {
@@ -162,9 +170,7 @@ function EventDetailsPage() {
 
       if (axios.isAxiosError<ValidationProblemDetails>(error)) {
         const errors = error.response?.data.errors;
-        const firstError = errors
-          ? Object.values(errors).flat()[0]
-          : undefined;
+        const firstError = errors ? Object.values(errors).flat()[0] : undefined;
 
         errorMessage =
           firstError ??
@@ -176,6 +182,49 @@ function EventDetailsPage() {
       setReviewDialog({ open: true, phase: 'error', errorMessage });
     } finally {
       setIsSubmittingReview(false);
+    }
+  };
+
+  const closeDeleteReviewDialog = () => {
+    if (isDeletingReview) return;
+    setDeleteReviewDialog({ open: false });
+  };
+
+  const deleteReview = async () => {
+    if (!event || !user) return;
+
+    try {
+      setIsDeletingReview(true);
+      setDeleteReviewDialog({ open: true });
+      const response = await deleteCurrentUserEventReview(event.id);
+
+      setEvent((current) =>
+        current
+          ? {
+              ...current,
+              averageRating: response.averageRating,
+              ratingCount: response.ratingCount,
+              hasCurrentUserReviewed: false,
+              reviews: current.reviews.filter(
+                (review) => review.reviewerId !== user.id,
+              ),
+            }
+          : current,
+      );
+      setDeleteReviewDialog({ open: false });
+    } catch (error) {
+      let errorMessage = 'Your review could not be removed. Please try again.';
+
+      if (axios.isAxiosError<ProblemDetails>(error)) {
+        errorMessage =
+          error.response?.data.detail ??
+          error.response?.data.title ??
+          errorMessage;
+      }
+
+      setDeleteReviewDialog({ open: true, errorMessage });
+    } finally {
+      setIsDeletingReview(false);
     }
   };
 
@@ -218,7 +267,7 @@ function EventDetailsPage() {
     `${event.latitude},${event.longitude}`,
   )}`;
   const isOrganizer = user?.id === event.organizerId;
-  const hasEventPassed = eventDate.getTime() <= Date.now();
+  const hasEventPassed = eventDate.getTime() <= pageLoadedAt;
   const canRegister =
     user?.accountType === AccountType.Individual &&
     !isOrganizer &&
@@ -357,7 +406,9 @@ function EventDetailsPage() {
                     <Link className="button button-secondary" to="/login">
                       Log in to review
                     </Link>
-                  ) : user.accountType === AccountType.Individual && !isOrganizer && !isRegistered ? (
+                  ) : user.accountType === AccountType.Individual &&
+                    !isOrganizer &&
+                    !isRegistered ? (
                     <p>Only registered attendees can review this event.</p>
                   ) : null}
                 </section>
@@ -366,7 +417,10 @@ function EventDetailsPage() {
           </div>
 
           {hasEventPassed ? (
-            <section className="event-reviews" aria-labelledby="event-reviews-title">
+            <section
+              className="event-reviews"
+              aria-labelledby="event-reviews-title"
+            >
               <div className="event-reviews-heading">
                 <div>
                   <p className="eyebrow">Attendee feedback</p>
@@ -391,7 +445,28 @@ function EventDetailsPage() {
                           />
                           <strong>{review.reviewerName}</strong>
                         </Link>
-                        <span>{review.grade} / 5</span>
+                        <div className="event-review-card-actions">
+                          <span>Rated: {review.grade} / 5</span>
+                          {review.reviewerId === user?.id ? (
+                            <button
+                              className="event-review-delete-button"
+                              type="button"
+                              aria-label="Remove your review"
+                              title="Remove review"
+                              onClick={() =>
+                                setDeleteReviewDialog({ open: true })
+                              }
+                            >
+                              <svg
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                                focusable="false"
+                              >
+                                <path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5" />
+                              </svg>
+                            </button>
+                          ) : null}
+                        </div>
                       </div>
                       <p>{review.description}</p>
                     </article>
@@ -429,6 +504,14 @@ function EventDetailsPage() {
         onDescriptionChange={setReviewDescription}
         onSubmit={() => void submitReview()}
         onClose={closeReviewDialog}
+      />
+      <DeleteReviewDialog
+        open={deleteReviewDialog.open}
+        eventTitle={event.title}
+        isSubmitting={isDeletingReview}
+        errorMessage={deleteReviewDialog.errorMessage}
+        onConfirm={() => void deleteReview()}
+        onClose={closeDeleteReviewDialog}
       />
     </div>
   );

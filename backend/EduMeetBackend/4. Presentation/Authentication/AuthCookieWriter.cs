@@ -13,24 +13,36 @@ public static class AuthCookieNames
 
 public static class AuthCookieWriter
 {
-    public static void Append(
+    public static void AppendAccessToken(
         HttpResponse response,
-        IssuedTokens tokens,
+        AccessTokenResult accessToken,
         bool isDevelopment)
     {
         response.Cookies.Append(
             AuthCookieNames.AccessToken,
-            tokens.AccessToken,
+            accessToken.Value,
             new CookieOptions
             {
                 HttpOnly = true,
                 Secure = !isDevelopment,
                 SameSite = SameSiteMode.Strict,
                 Path = "/",
-                Expires =
-                    tokens.AccessTokenExpiresAtUtc,
+                Expires = accessToken.ExpiresAtUtc,
                 IsEssential = true
             });
+    }
+
+    public static void Append(
+        HttpResponse response,
+        IssuedTokens tokens,
+        bool isDevelopment)
+    {
+        AppendAccessToken(
+            response,
+            new AccessTokenResult(
+                tokens.AccessToken,
+                tokens.AccessTokenExpiresAtUtc),
+            isDevelopment);
 
         response.Cookies.Append(
             AuthCookieNames.RefreshToken,

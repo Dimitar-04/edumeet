@@ -43,6 +43,10 @@ export interface UpdateProfileImageRequest {
   image: File;
 }
 
+export interface UpdateUsernameRequest {
+  userName: string;
+}
+
 export function toRegisterRequest(
   values: SignUpFormValues,
 ): RegisterRequest {

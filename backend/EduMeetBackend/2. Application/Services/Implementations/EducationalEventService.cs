@@ -298,6 +298,61 @@ public sealed class EducationalEventService(
             educationalEvent.Reviews.Count);
     }
 
+    public async Task<ReviewDeletedResponse> DeleteReviewAsync(
+        Guid eventId,
+        string username,
+        CancellationToken cancellationToken = default)
+    {
+        var educationalEvent = await eventRepository.GetTrackedForReviewAsync(
+            eventId,
+            cancellationToken);
+
+        if (educationalEvent is null)
+        {
+            throw new NotFoundException("The requested event does not exist.");
+        }
+
+        var user = await appUserRepository.FindByUsernameAsync(
+            username,
+            cancellationToken);
+
+        if (user is null)
+        {
+            throw new NotFoundException(
+                "The authenticated user no longer exists.");
+        }
+
+        if (user.IndividualProfile is null)
+        {
+            throw new ForbiddenException(
+                "Only individual accounts can remove event reviews.");
+        }
+
+        var review = educationalEvent.Reviews.SingleOrDefault(
+            existingReview =>
+                existingReview.ReviewerId == user.IndividualProfile.Id);
+
+        if (review is null)
+        {
+            throw new NotFoundException(
+                "You have not submitted a review for this event.");
+        }
+
+        educationalEvent.Reviews.Remove(review);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var ratingCount = educationalEvent.Reviews.Count;
+        var averageRating = ratingCount == 0
+            ? null
+            : (double?)educationalEvent.Reviews.Average(
+                existingReview => existingReview.Grade);
+
+        return new ReviewDeletedResponse(
+            eventId,
+            averageRating,
+            ratingCount);
+    }
+
     private static EducationalEventResponse ToResponse(
         EducationalEvent educationalEvent,
         Guid? currentIndividualProfileId = null,

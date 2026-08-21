@@ -1,5 +1,7 @@
 using _2._Application.Responses;
 using _2._Application.Interfaces;
+using _2._Application.Requests;
+using _4._Presentation.Authentication;
 using _4._Presentation.FileReaders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +17,60 @@ public class AppUserController:ControllerBase
         5 * 1024 * 1024;
 
     private readonly IAppUserService _appUserService;
+    private readonly IWebHostEnvironment _environment;
 
-    public AppUserController(IAppUserService appUserService)
+    public AppUserController(
+        IAppUserService appUserService,
+        IWebHostEnvironment environment)
     {
         _appUserService = appUserService;
+        _environment = environment;
+    }
+
+    [HttpPut("username")]
+    [ProducesResponseType<AuthenticationResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> UpdateUsername(
+        [FromBody] UpdateUsernameRequest request,
+        CancellationToken cancellationToken)
+    {
+        var currentUsername = User.Identity?.Name;
+
+        if (string.IsNullOrWhiteSpace(currentUsername))
+        {
+            return Unauthorized();
+        }
+
+        var result = await _appUserService.UpdateUsernameAsync(
+            currentUsername,
+            request.UserName,
+            cancellationToken);
+
+        if (result is null)
+        {
+            return Unauthorized();
+        }
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(
+                new ValidationProblemDetails(
+                    new Dictionary<string, string[]>
+                    {
+                        ["userName"] = result.Errors.ToArray()
+                    }));
+        }
+
+        AuthCookieWriter.AppendAccessToken(
+            Response,
+            result.AccessToken!,
+            _environment.IsDevelopment());
+
+        return Ok(
+            new AuthenticationResponse(
+                result.User!,
+                result.AccessToken!.ExpiresAtUtc));
     }
 
     [HttpPut("image")]
