@@ -345,8 +345,7 @@ function EventDetailsPage() {
                 <span>Attendance</span>
                 <strong>
                   {registeredCount}{' '}
-                  {registeredCount === 1 ? 'person is' : 'people are'}{' '}
-                  registered
+                  {registeredCount === 1 ? 'person ' : 'people '} registered
                 </strong>
                 <p>
                   {hasEventPassed
