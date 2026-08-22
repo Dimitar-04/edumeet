@@ -18,4 +18,8 @@ public interface IEducationalEventRepository : IBaseRepository<EducationalEvent>
     Task<EducationalEvent?> GetTrackedForReviewAsync(
         Guid eventId,
         CancellationToken cancellationToken = default);
+    
+    Task<EducationalEvent?> GetTrackedForAttendanceAsync(
+        Guid eventId,
+        CancellationToken cancellationToken = default);
 }

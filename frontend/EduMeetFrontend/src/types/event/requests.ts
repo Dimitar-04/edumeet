@@ -19,6 +19,10 @@ export interface CreateReviewRequest {
   description: string;
 }
 
+export interface AttendanceCheckInRequest {
+  attendanceToken: string;
+}
+
 export function toCreateEventFormData(
   request: CreateEducationalEventRequest,
 ): FormData {

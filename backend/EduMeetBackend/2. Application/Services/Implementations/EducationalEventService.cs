@@ -13,6 +13,7 @@ namespace _2._Application.Services.Implementations;
 public sealed class EducationalEventService(
     IAppUserRepository appUserRepository,
     IFileUploadService fileUploadService,
+    IAttendanceTokenService attendanceTokenService,
     IEducationalEventRepository eventRepository,
     IEmailOutboxRepository emailOutboxRepository,
     IUnitOfWork unitOfWork,
@@ -176,11 +177,14 @@ public sealed class EducationalEventService(
         }
         else
         {
+            var attendanceToken = attendanceTokenService.CreateToken();
+            
             educationalEvent.EventParticipants.Add(
                 new EventParticipant
                 {
                     ParticipantId = individualProfileId,
-                    EducationalEventId = educationalEvent.Id
+                    EducationalEventId = educationalEvent.Id,
+                    AttendanceTokenHash = attendanceToken.Hash
                 });
             
             
@@ -191,14 +195,15 @@ public sealed class EducationalEventService(
                 user.IndividualProfile.LastName;
             
             emailOutboxRepository.Enqueue(
-                new EventRegistrationEmailMessage(
-                    recipientMail,
-                    recipientName,
-                    educationalEvent.Id,
-                    educationalEvent.Title,
-                    educationalEvent.Date,
-                    educationalEvent.LocationName),
-                timeProvider.GetUtcNow().UtcDateTime);
+                    new EventRegistrationEmailMessage(
+                        recipientMail,
+                        recipientName,
+                        educationalEvent.Id,
+                        educationalEvent.Title,
+                        educationalEvent.Date,
+                        educationalEvent.LocationName,
+                        attendanceToken.Value), 
+                    timeProvider.GetUtcNow().UtcDateTime);
 
             isRegistered = true;
         }
@@ -353,6 +358,177 @@ public sealed class EducationalEventService(
             ratingCount);
     }
 
+    public async Task<AttendanceCheckInResponse> CheckInParticipantAsync(
+        Guid eventId,
+        string organizerUsername,
+        AttendanceCheckInRequest request,
+        CancellationToken cancellationToken = default)
+{
+    var organizer =
+        await appUserRepository.FindByUsernameAsync(
+            organizerUsername,
+            cancellationToken);
+
+    if (organizer is null)
+    {
+        throw new NotFoundException(
+            "The authenticated user no longer exists.");
+    }
+
+    var educationalEvent =
+        await eventRepository.GetTrackedForAttendanceAsync(
+            eventId,
+            cancellationToken);
+
+    if (educationalEvent is null)
+    {
+        throw new NotFoundException(
+            "The requested event does not exist.");
+    }
+
+    if (educationalEvent.OrganizerId != organizer.Id)
+    {
+        throw new ForbiddenException(
+            "Only the event organizer can check in participants.");
+    }
+
+    var nowUtc =
+        timeProvider.GetUtcNow().UtcDateTime;
+
+    var checkInOpensAtUtc =
+        educationalEvent.Date.AddHours(-1);
+
+    var checkInClosesAtUtc =
+        educationalEvent.Date.AddHours(12);
+
+    // if (nowUtc < checkInOpensAtUtc)
+    // {
+    //     throw new ConflictException(
+    //         "Attendance check-in has not opened yet.");
+    // }
+
+    if (nowUtc > checkInClosesAtUtc)
+    {
+        throw new ConflictException(
+            "Attendance check-in has closed.");
+    }
+
+    var attendanceTokenHash =
+        attendanceTokenService.HashToken(
+            request.AttendanceToken.Trim());
+
+    var eventParticipant =
+        educationalEvent.EventParticipants
+            .SingleOrDefault(participant =>
+                participant.AttendanceTokenHash ==
+                attendanceTokenHash);
+
+    if (eventParticipant is null)
+    {
+        throw new NotFoundException(
+            "The attendance code is invalid for this event.");
+    }
+
+    var alreadyCheckedIn =
+        eventParticipant.CheckedInAtUtc.HasValue;
+
+    if (!alreadyCheckedIn)
+    {
+        eventParticipant.CheckedInAtUtc = nowUtc;
+        eventParticipant.CheckedInByUserId =
+            organizer.Id;
+
+        await unitOfWork.SaveChangesAsync(
+            cancellationToken);
+    }
+
+    var registeredCount =
+        educationalEvent.EventParticipants.Count;
+
+    var attendedCount =
+        educationalEvent.EventParticipants.Count(
+            participant =>
+                participant.CheckedInAtUtc.HasValue);
+
+    var attendanceRate =
+        CalculateAttendanceRate(
+            registeredCount,
+            attendedCount);
+
+    var profile = eventParticipant.Participant;
+
+    return new AttendanceCheckInResponse(
+        educationalEvent.Id,
+        profile.AppUserId,
+        $"{profile.FirstName} {profile.LastName}",
+        eventParticipant.CheckedInAtUtc!.Value,
+        alreadyCheckedIn,
+        registeredCount,
+        attendedCount,
+        attendanceRate);
+}
+    public async Task<AttendanceSummaryResponse> GetAttendanceSummaryAsync(
+            Guid eventId,
+            string organizerUsername,
+            CancellationToken cancellationToken = default)
+    {
+        var organizer =
+            await appUserRepository.FindByUsernameAsync(
+                organizerUsername,
+                cancellationToken);
+
+        if (organizer is null)
+        {
+            throw new NotFoundException(
+                "The authenticated user no longer exists.");
+        }
+
+        var educationalEvent =
+            await eventRepository.GetTrackedForAttendanceAsync(
+                eventId,
+                cancellationToken);
+
+        if (educationalEvent is null)
+        {
+            throw new NotFoundException(
+                "The requested event does not exist.");
+        }
+
+        if (educationalEvent.OrganizerId != organizer.Id)
+        {
+            throw new ForbiddenException(
+                "Only the event organizer can view attendance.");
+        }
+
+        var participants =
+            educationalEvent.EventParticipants
+                .OrderByDescending(participant =>
+                    participant.CheckedInAtUtc.HasValue)
+                .ThenBy(participant =>
+                    participant.Participant.FirstName)
+                .Select(participant =>
+                    new AttendanceParticipantResponse(
+                        participant.Participant.AppUserId,
+                        $"{participant.Participant.FirstName} " +
+                        participant.Participant.LastName,
+                        participant.Participant.AppUser.ImageUrl,
+                        participant.CheckedInAtUtc))
+                .ToList();
+
+        var attendedCount =
+            participants.Count(participant =>
+                participant.CheckedInAtUtc.HasValue);
+
+        return new AttendanceSummaryResponse(
+            educationalEvent.Id,
+            participants.Count,
+            attendedCount,
+            CalculateAttendanceRate(
+                participants.Count,
+                attendedCount),
+            participants);
+    }
+
     private static EducationalEventResponse ToResponse(
         EducationalEvent educationalEvent,
         Guid? currentIndividualProfileId = null,
@@ -421,5 +597,20 @@ public sealed class EducationalEventService(
             ratingCount,
             hasCurrentUserReviewed,
             reviews);
+    }
+    
+    
+    private static double? CalculateAttendanceRate(
+        int registeredCount,
+        int attendedCount)
+    {
+        if (registeredCount == 0)
+        {
+            return null;
+        }
+
+        return Math.Round(
+            attendedCount * 100.0 / registeredCount,
+            digits: 1);
     }
 }

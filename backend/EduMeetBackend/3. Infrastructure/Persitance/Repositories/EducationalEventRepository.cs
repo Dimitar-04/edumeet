@@ -70,4 +70,22 @@ public class EducationalEventRepository(ApplicationDbContext context) :BaseRepos
                 educationalEvent => educationalEvent.Id == eventId,
                 cancellationToken);
     }
+
+    public Task<EducationalEvent?> GetTrackedForAttendanceAsync(
+        Guid eventId,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.EducationalEvents
+            .AsSplitQuery()
+            .Include(educationalEvent =>
+                educationalEvent.EventParticipants)
+            .ThenInclude(participant =>
+                participant.Participant)
+            .ThenInclude(profile =>
+                profile.AppUser)
+            .SingleOrDefaultAsync(
+                educationalEvent =>
+                    educationalEvent.Id == eventId,
+                cancellationToken);
+    }
 }

@@ -180,4 +180,59 @@ public class EventsController : ControllerBase
         return Ok(deletionResult);
     }
     
+    [HttpPost("{eventId:guid}/attendance/check-in")]
+    [ProducesResponseType<AttendanceCheckInResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> CheckInParticipant(
+        Guid eventId,
+        [FromBody] AttendanceCheckInRequest request,
+        CancellationToken cancellationToken)
+    {
+        var username = User.Identity?.Name;
+    
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return Unauthorized();
+        }
+    
+        var response =
+            await _educationalEventService
+                .CheckInParticipantAsync(
+                    eventId,
+                    username,
+                    request,
+                    cancellationToken);
+    
+        return Ok(response);
+    }
+    
+    [HttpGet("{eventId:guid}/attendance")]
+    [ProducesResponseType<AttendanceSummaryResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetAttendance(
+        Guid eventId,
+        CancellationToken cancellationToken)
+    {
+        var username = User.Identity?.Name;
+    
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return Unauthorized();
+        }
+    
+        var response =
+            await _educationalEventService
+                .GetAttendanceSummaryAsync(
+                    eventId,
+                    username,
+                    cancellationToken);
+    
+        return Ok(response);
+    }
 }

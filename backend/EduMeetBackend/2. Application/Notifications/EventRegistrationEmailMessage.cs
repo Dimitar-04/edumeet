@@ -6,4 +6,5 @@ public sealed record EventRegistrationEmailMessage(
     Guid EventId,
     string EventTitle,
     DateTime EventDateUtc,
-    string LocationName);
+    string LocationName,
+    string AttendanceToken);

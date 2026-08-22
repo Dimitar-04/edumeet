@@ -16,4 +16,6 @@ public class AppUser : IdentityUser<Guid>
     public ICollection<EducationalEvent> OrganizedEvents { get; set; } = [];
 
     public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
+    
+    public ICollection<EventParticipant> PerformedCheckIns { get; set; } = [];
 }

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^2.1.1",
+    "@zxing/browser": "^0.2.1",
     "axios": "^1.18.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

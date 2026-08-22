@@ -42,7 +42,10 @@ public class EmailOutboxRepository(ApplicationDbContext dbContext) : IEmailOutbo
             .ToListAsync(cancellationToken);
     }
 
-    public async Task MarkProcessedAsync(Guid messageId, DateTime processedAtUtc, CancellationToken cancellationToken = default)
+    public async Task MarkProcessedAsync(
+        Guid messageId,
+        DateTime processedAtUtc,
+        CancellationToken cancellationToken = default)
     {
         var message = await dbContext.OutboxMessages
             .SingleAsync(
@@ -52,6 +55,8 @@ public class EmailOutboxRepository(ApplicationDbContext dbContext) : IEmailOutbo
         message.ProcessedAtUtc = processedAtUtc;
         message.LastError = null;
         message.NextAttemptAtUtc = null;
+
+        message.Payload = "{}";
     }
 
     public async Task MarkFailedAsync(Guid messageId, string error, DateTime nextAttemptAtUtc,

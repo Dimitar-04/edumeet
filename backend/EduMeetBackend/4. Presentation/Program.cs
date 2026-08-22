@@ -60,6 +60,7 @@ builder.Services.AddScoped<IOrganizationProfileRepository, OrganizationProfileRe
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton<IAttendanceTokenService, AttendanceTokenService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailOutboxRepository, EmailOutboxRepository>();
 builder.Services.AddTransient<IEmailSenderService, SmtpEmailSender>();

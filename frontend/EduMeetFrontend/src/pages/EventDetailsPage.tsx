@@ -353,6 +353,15 @@ function EventDetailsPage() {
                     : 'Reserve your place and join this learning community.'}
                 </p>
 
+                {isOrganizer ? (
+                  <Link
+                    className="button button-primary"
+                    to={`/events/${event.id}/attendance`}
+                  >
+                    Manage attendance
+                  </Link>
+                ) : null}
+
                 {!hasEventPassed && !user ? (
                   <Link className="button button-primary" to="/login">
                     Log in to register for event

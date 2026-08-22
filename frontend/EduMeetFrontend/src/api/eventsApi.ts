@@ -1,11 +1,14 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
 import type {
+  AttendanceCheckInRequest,
   CreateEducationalEventRequest,
   CreateReviewRequest,
 } from '../types/event/requests';
 import { toCreateEventFormData } from '../types/event/requests';
 import type {
+  AttendanceCheckInResponse,
+  AttendanceSummaryResponse,
   EducationalEventResponse,
   EventRegistrationResponse,
   ReviewCreatedResponse,
@@ -73,6 +76,28 @@ export async function deleteCurrentUserEventReview(
 ): Promise<ReviewDeletedResponse> {
   const response = await axiosInstance.delete<ReviewDeletedResponse>(
     `/events/${eventId}/reviews/me`,
+  );
+
+  return response.data;
+}
+
+export async function getEventAttendance(
+  eventId: string,
+): Promise<AttendanceSummaryResponse> {
+  const response = await axiosInstance.get<AttendanceSummaryResponse>(
+    `/events/${eventId}/attendance`,
+  );
+
+  return response.data;
+}
+
+export async function checkInEventParticipant(
+  eventId: string,
+  request: AttendanceCheckInRequest,
+): Promise<AttendanceCheckInResponse> {
+  const response = await axiosInstance.post<AttendanceCheckInResponse>(
+    `/events/${eventId}/attendance/check-in`,
+    request,
   );
 
   return response.data;

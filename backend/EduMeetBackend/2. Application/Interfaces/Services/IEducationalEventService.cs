@@ -34,4 +34,15 @@ public interface IEducationalEventService
         Guid eventId,
         string username,
         CancellationToken cancellationToken = default);
+    
+    Task<AttendanceCheckInResponse> CheckInParticipantAsync(
+        Guid eventId,
+        string organizerUsername,
+        AttendanceCheckInRequest request,
+        CancellationToken cancellationToken = default);
+
+    Task<AttendanceSummaryResponse> GetAttendanceSummaryAsync(
+        Guid eventId,
+        string organizerUsername,
+        CancellationToken cancellationToken = default);
 }

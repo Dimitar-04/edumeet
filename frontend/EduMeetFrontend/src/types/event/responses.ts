@@ -50,3 +50,29 @@ export interface EventRegistrationResponse {
   isRegistered: boolean;
   registeredPeopleCount: number;
 }
+
+export interface AttendanceCheckInResponse {
+  eventId: string;
+  participantUserId: string;
+  participantName: string;
+  checkedInAtUtc: string;
+  alreadyCheckedIn: boolean;
+  registeredPeopleCount: number;
+  attendedPeopleCount: number;
+  attendanceRate: number | null;
+}
+
+export interface AttendanceParticipantResponse {
+  userId: string;
+  name: string;
+  imageUrl: string | null;
+  checkedInAtUtc: string | null;
+}
+
+export interface AttendanceSummaryResponse {
+  eventId: string;
+  registeredPeopleCount: number;
+  attendedPeopleCount: number;
+  attendanceRate: number | null;
+  participants: AttendanceParticipantResponse[];
+}

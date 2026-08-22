@@ -1,6 +1,7 @@
 import AuthPage from './components/auth/AuthPage';
 import CreateEventPage from './pages/CreateEventPage';
 import EventDetailsPage from './pages/EventDetailsPage';
+import EventAttendancePage from './pages/EventAttendancePage';
 import HomePage from './pages/HomePage';
 import LandingPage from './pages/LandingPage';
 import ProfilePage from './pages/ProfilePage';
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: '/events/create',
     element: <CreateEventPage />,
+  },
+  {
+    path: '/events/:eventId/attendance',
+    element: <EventAttendancePage />,
   },
   {
     path: '/events/:eventId',
