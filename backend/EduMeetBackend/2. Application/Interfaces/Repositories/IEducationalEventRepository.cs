@@ -9,6 +9,7 @@ public interface IEducationalEventRepository : IBaseRepository<EducationalEvent>
         string? category,
         bool includePast,
         DateTime nowUtc,
+        Guid? organizerId = null,
         CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<EducationalEvent>> GetUpcomingRegisteredWithDetailsAsync(

@@ -35,6 +35,18 @@ export async function getMyUpcomingSchedule(): Promise<
   return response.data;
 }
 
+export async function getOrganizedEvents(
+  organizerId: string,
+  request: GetEducationalEventsRequest = {},
+): Promise<EducationalEventResponse[]> {
+  const response = await axiosInstance.get<EducationalEventResponse[]>(
+    `/events/organized-by/${organizerId}`,
+    { params: request },
+  );
+
+  return response.data;
+}
+
 export async function createEvent(
   request: CreateEducationalEventRequest,
 ): Promise<EducationalEventResponse> {

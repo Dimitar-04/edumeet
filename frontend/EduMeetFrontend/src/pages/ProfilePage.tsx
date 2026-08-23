@@ -1,7 +1,6 @@
 import axios from 'axios';
 import {
   useEffect,
-  useMemo,
   useRef,
   useState,
   type ChangeEvent,
@@ -13,11 +12,16 @@ import {
   updateProfileImage,
   updateUsername,
 } from '../api/profileApi';
-import ProfileEventCard from '../components/events/ProfileEventCard';
+import { getOrganizedEvents } from '../api/eventsApi';
+import EventCategoryTabs from '../components/events/EventCategoryTabs';
+import EventCard from '../components/events/EventCard';
 import AppHeader from '../components/layout/AppHeader';
 import UserAvatar from '../components/user/UserAvatar';
 import { useAuth } from '../contexts/AuthContext';
 import type { ValidationProblemDetails } from '../types/api/errors';
+import type { EventCategory } from '../types/event/common';
+import type { EventTimeScope } from '../types/event/requests';
+import type { EducationalEventResponse } from '../types/event/responses';
 import { AccountType } from '../types/user/auth';
 import type { PublicUserProfileResponse } from '../types/user/responses';
 
@@ -47,6 +51,15 @@ function ProfilePage() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState('');
   const [profileViewedAt] = useState(Date.now);
+  const [organizedEvents, setOrganizedEvents] = useState<
+    EducationalEventResponse[]
+  >([]);
+  const [areEventsLoading, setAreEventsLoading] = useState(true);
+  const [eventsError, setEventsError] = useState('');
+  const [activeCategory, setActiveCategory] = useState<EventCategory | 'All'>(
+    'All',
+  );
+  const [eventScope, setEventScope] = useState<EventTimeScope>('Upcoming');
 
   useEffect(() => {
     return () => {
@@ -91,22 +104,50 @@ function ProfilePage() {
     };
   }, [isAuthLoading, requestedUserId]);
 
-  const { upcomingHostedEvents, pastHostedEvents } = useMemo(() => {
-    const events = profile?.organizedEvents ?? [];
+  useEffect(() => {
+    if (!profile) return;
 
-    return {
-      upcomingHostedEvents: events
-        .filter((event) => new Date(event.date).getTime() >= profileViewedAt)
-        .sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-        ),
-      pastHostedEvents: events
-        .filter((event) => new Date(event.date).getTime() < profileViewedAt)
-        .sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        ),
+    let isCurrentRequest = true;
+
+    const loadOrganizedEvents = async () => {
+      try {
+        setAreEventsLoading(true);
+        setEventsError('');
+
+        const loadedEvents = await getOrganizedEvents(profile.id, {
+          scope: eventScope,
+          category: activeCategory === 'All' ? undefined : activeCategory,
+        });
+
+        if (isCurrentRequest) {
+          setOrganizedEvents(loadedEvents);
+        }
+      } catch {
+        if (isCurrentRequest) {
+          setEventsError(
+            'The events created by this profile could not be loaded.',
+          );
+        }
+      } finally {
+        if (isCurrentRequest) {
+          setAreEventsLoading(false);
+        }
+      }
     };
-  }, [profile, profileViewedAt]);
+
+    void loadOrganizedEvents();
+
+    return () => {
+      isCurrentRequest = false;
+    };
+  }, [activeCategory, eventScope, profile]);
+
+  const upcomingHostedEvents = organizedEvents.filter(
+    (event) => new Date(event.date).getTime() > profileViewedAt,
+  );
+  const pastHostedEvents = organizedEvents.filter(
+    (event) => new Date(event.date).getTime() <= profileViewedAt,
+  );
 
   if (!isAuthLoading && !userId && !user) {
     return <Navigate to="/login" replace />;
@@ -292,23 +333,43 @@ function ProfilePage() {
           </div>
 
           <dl className="profile-stats">
-            <div>
-              <dt>{profile.organizedEvents.length}</dt>
-              <dd>Events created</dd>
-            </div>
-            <div>
-              <dt>{upcomingHostedEvents.length}</dt>
-              <dd>Upcoming hosted</dd>
-            </div>
-            <div>
-              <dt>
-                {pastHostedEvents.reduce(
-                  (sum, event) => sum + event.ratingCount,
-                  0,
+            {profile.accountType === AccountType.Organization ? (
+              <>
+                <div>
+                  <dt>{profile.statistics.hostedEventsCount}</dt>
+                  <dd>Hosted events</dd>
+                </div>
+                <div>
+                  <dt>{profile.statistics.averageRating?.toFixed(1) ?? '—'}</dt>
+                  <dd>Average rating</dd>
+                </div>
+                <div>
+                  <dt>{profile.statistics.reviewCount}</dt>
+                  <dd>Reviews received</dd>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <dt>{profile.statistics.hostedEventsCount}</dt>
+                  <dd>Created events</dd>
+                </div>
+                <div>
+                  <dt className="profile-stat-category">
+                    {profile.statistics.favoriteCategory ?? '—'}
+                  </dt>
+                  <dd>Favourite category</dd>
+                </div>
+                {profile.statistics.hostedEventsCount > 0 && (
+                  <div>
+                    <dt>
+                      {profile.statistics.averageRating?.toFixed(1) ?? '—'}
+                    </dt>
+                    <dd>Average rating</dd>
+                  </div>
                 )}
-              </dt>
-              <dd>Ratings received</dd>
-            </div>
+              </>
+            )}
           </dl>
 
           {isOwnProfile ? (
@@ -417,64 +478,121 @@ function ProfilePage() {
         </section>
 
         <section
-          className="profile-events-section"
-          aria-labelledby="upcoming-title"
+          className="profile-events-browser"
+          aria-labelledby="profile-events-title"
         >
-          <div className="profile-section-heading">
+          <div className="section-heading profile-events-browser-heading">
             <div>
               <p className="eyebrow">
-                {isOwnProfile
-                  ? 'Created by you'
-                  : `Created by ${profile.displayName}`}
+                {isOwnProfile ? 'Your work' : 'Event portfolio'}
               </p>
-              <h2 id="upcoming-title">Upcoming Events</h2>
+              <h2 id="profile-events-title">Hosted events</h2>
             </div>
-            <span>{upcomingHostedEvents.length}</span>
+            <span>{profile.statistics.hostedEventsCount}</span>
           </div>
-          {upcomingHostedEvents.length ? (
-            <div className="profile-event-grid">
-              {upcomingHostedEvents.map((event) => (
-                <ProfileEventCard
-                  key={event.id}
-                  event={event}
-                  showRating={false}
-                  relationship="hosted"
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="profile-events-empty">
-              No upcoming hosted events yet.
-            </p>
-          )}
-        </section>
 
-        <section
-          className="profile-events-section"
-          aria-labelledby="past-title"
-        >
-          <div className="profile-section-heading">
-            <div>
-              <p className="eyebrow">
-                {isOwnProfile ? 'Your hosting archive' : ''}
-              </p>
-              <h2 id="past-title">Past Events</h2>
+          <div className="profile-event-controls">
+            <EventCategoryTabs
+              activeCategory={activeCategory}
+              onCategoryChange={setActiveCategory}
+              className="profile-event-category-tabs"
+              ariaLabel="Filter hosted events by category"
+            />
+            <div
+              className="profile-event-scope"
+              aria-label="Choose which hosted events to show"
+            >
+              <button
+                className={eventScope === 'Upcoming' ? 'active' : ''}
+                type="button"
+                aria-pressed={eventScope === 'Upcoming'}
+                onClick={() => setEventScope('Upcoming')}
+              >
+                Upcoming
+              </button>
+              <button
+                className={eventScope === 'All' ? 'active' : ''}
+                type="button"
+                aria-pressed={eventScope === 'All'}
+                onClick={() => setEventScope('All')}
+              >
+                All
+              </button>
             </div>
-            <span>{pastHostedEvents.length}</span>
           </div>
-          {pastHostedEvents.length ? (
-            <div className="profile-event-grid">
-              {pastHostedEvents.map((event) => (
-                <ProfileEventCard
-                  key={event.id}
-                  event={event}
-                  showRating
-                  relationship="hosted"
-                />
-              ))}
+
+          {areEventsLoading ? (
+            <div className="empty-state" role="status">
+              <h3>Gathering hosted events&hellip;</h3>
+              <p>The profile&apos;s event list is almost ready.</p>
+            </div>
+          ) : eventsError ? (
+            <div className="empty-state" role="alert">
+              <h3>Hosted events unavailable</h3>
+              <p>{eventsError}</p>
+            </div>
+          ) : organizedEvents.length > 0 ? (
+            <div className="event-feed">
+              {eventScope === 'Upcoming' || upcomingHostedEvents.length > 0 ? (
+                <section
+                  className="event-feed-group profile-event-feed-group"
+                  aria-labelledby="profile-upcoming-events-title"
+                >
+                  <div className="event-feed-heading">
+                    <div>
+                      <p className="eyebrow">Coming up</p>
+                      <h3 id="profile-upcoming-events-title">
+                        Upcoming events
+                      </h3>
+                    </div>
+                    <span>{upcomingHostedEvents.length}</span>
+                  </div>
+                  <div className="event-grid">
+                    {upcomingHostedEvents.map((event) => (
+                      <EventCard event={event} key={event.id} />
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
+              {eventScope === 'All' && pastHostedEvents.length > 0 ? (
+                <section
+                  className="event-feed-group profile-event-feed-group profile-event-archive"
+                  aria-labelledby="profile-past-events-title"
+                >
+                  <div className="event-feed-heading">
+                    <div>
+                      <p className="eyebrow">From the archive</p>
+                      <h3 id="profile-past-events-title">Past events</h3>
+                    </div>
+                    <span>{pastHostedEvents.length}</span>
+                  </div>
+                  <div className="event-grid">
+                    {pastHostedEvents.map((event) => (
+                      <EventCard event={event} key={event.id} />
+                    ))}
+                  </div>
+                </section>
+              ) : null}
             </div>
           ) : (
-            <p className="profile-events-empty">No past hosted events yet.</p>
+            <div className="empty-state">
+              <h3>
+                {activeCategory !== 'All'
+                  ? 'No hosted events in this category'
+                  : eventScope === 'Upcoming'
+                    ? 'No upcoming hosted events'
+                    : 'No hosted events yet'}
+              </h3>
+              <p>
+                {activeCategory !== 'All'
+                  ? 'Choose another category to explore this profile.'
+                  : eventScope === 'Upcoming' &&
+                      profile.statistics.hostedEventsCount > 0
+                    ? 'Switch to all events to explore the archive.'
+                    : 'This profile has not created an event yet.'}
+              </p>
+            </div>
           )}
         </section>
 

@@ -95,4 +95,26 @@ public sealed class AppUserRepository(UserManager<AppUser> userManager, Applicat
                 cancellationToken
             );
     }
+
+    public Task<string?> GetFavoriteAttendedCategoryAsync(
+        Guid individualProfileId,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.EventParticipants
+            .AsNoTracking()
+            .Where(participant =>
+                participant.ParticipantId == individualProfileId &&
+                participant.CheckedInAtUtc != null)
+            .GroupBy(participant =>
+                participant.EducationalEvent.Category)
+            .Select(group => new
+            {
+                Category = group.Key,
+                AttendanceCount = group.Count()
+            })
+            .OrderByDescending(result => result.AttendanceCount)
+            .ThenBy(result => result.Category)
+            .Select(result => result.Category)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }

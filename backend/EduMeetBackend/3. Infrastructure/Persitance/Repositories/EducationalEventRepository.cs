@@ -12,10 +12,12 @@ public class EducationalEventRepository(ApplicationDbContext context) :BaseRepos
         string? category,
         bool includePast,
         DateTime nowUtc,
+        Guid? organizerId = null,
         CancellationToken cancellationToken = default)
     {
         var query = Context.EducationalEvents
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(educationalEvent => educationalEvent.Organizer)
                 .ThenInclude(org=>org.IndividualProfile)
             .Include(educationalEvent => educationalEvent.Organizer)
@@ -30,6 +32,12 @@ public class EducationalEventRepository(ApplicationDbContext context) :BaseRepos
         {
             query = query.Where(educationalEvent =>
                 educationalEvent.Date > nowUtc);
+        }
+
+        if (organizerId.HasValue)
+        {
+            query = query.Where(educationalEvent =>
+                educationalEvent.OrganizerId == organizerId.Value);
         }
 
         if (!string.IsNullOrWhiteSpace(category))

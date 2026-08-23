@@ -1,14 +1,5 @@
 import type { EventCategory } from '../../types/event/common';
-
-const categories: Array<EventCategory | 'All'> = [
-  'All',
-  'Technology',
-  'Design',
-  'Business',
-  'Science',
-  'Languages',
-  'Community',
-];
+import EventCategoryTabs from './EventCategoryTabs';
 
 interface EventFiltersProps {
   activeCategory: EventCategory | 'All';
@@ -25,18 +16,10 @@ function EventFilters({
 }: EventFiltersProps) {
   return (
     <div className="event-filters">
-      <div className="category-tabs" aria-label="Filter events by category">
-        {categories.map((category) => (
-          <button
-            className={activeCategory === category ? 'active' : ''}
-            key={category}
-            type="button"
-            onClick={() => onCategoryChange(category)}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
+      <EventCategoryTabs
+        activeCategory={activeCategory}
+        onCategoryChange={onCategoryChange}
+      />
 
       <label className="event-search">
         <span className="visually-hidden">Search events</span>

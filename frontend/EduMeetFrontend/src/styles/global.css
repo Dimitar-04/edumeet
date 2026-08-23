@@ -1080,6 +1080,12 @@ a {
   color: var(--charcoal);
 }
 
+.event-card-footer .event-card-average-rating {
+  flex: 0 0 auto;
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
 .organizer-initial {
   display: grid;
   width: 26px;
@@ -2110,8 +2116,12 @@ a {
 }
 
 .profile-stats dt {
+  display: flex;
+  min-height: 38px;
+  align-items: flex-end;
   font-size: 1.8rem;
   font-weight: 760;
+  line-height: 1;
   letter-spacing: -0.05em;
 }
 
@@ -2572,6 +2582,83 @@ a {
   grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   margin-top: 24px;
+}
+
+.profile-events-browser {
+  margin-top: 76px;
+}
+
+.profile-events-browser-heading {
+  margin-bottom: 20px;
+}
+
+.profile-event-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-block: 1px solid var(--line);
+  padding: 13px 0;
+}
+
+.profile-event-category-tabs {
+  gap: 3px;
+}
+
+.profile-event-category-tabs button {
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 0.72rem;
+}
+
+.profile-event-category-tabs button.active {
+  border-color: var(--blue);
+  background: rgba(32, 91, 142, 0.08);
+  color: var(--blue);
+}
+
+.profile-event-scope {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 17px;
+}
+
+.profile-event-scope button {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 7px 0;
+  background: transparent;
+  color: rgba(74, 74, 74, 0.58);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.profile-event-scope button:hover,
+.profile-event-scope button.active {
+  color: var(--charcoal);
+}
+
+.profile-event-scope button.active {
+  border-bottom-color: var(--blue);
+}
+
+.profile-events-browser .event-feed {
+  gap: 46px;
+  margin-top: 38px;
+}
+
+.profile-event-archive {
+  border-top: 1px solid var(--line);
+  padding-top: 34px;
+}
+
+.profile-stat-category {
+  overflow: hidden;
+  font-size: clamp(1rem, 2vw, 1.45rem) !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .event-review-card {
@@ -3552,6 +3639,22 @@ a {
 @media (max-width: 900px) {
   .attendance-workspace {
     grid-template-columns: 1fr;
+  }
+
+  .profile-event-controls {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .profile-event-category-tabs {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .profile-event-category-tabs button {
+    flex: 0 0 auto;
   }
 
   .attendance-camera-frame,

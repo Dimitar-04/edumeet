@@ -32,6 +32,41 @@ public sealed class EducationalEventService(
             request.Category,
             includePast,
             nowUtc,
+            organizerId: null,
+            cancellationToken: cancellationToken);
+
+        var upcomingEvents = events
+            .Where(educationalEvent => educationalEvent.Date > nowUtc)
+            .OrderBy(educationalEvent => educationalEvent.Date);
+
+        var orderedEvents = includePast
+            ? upcomingEvents.Concat(
+                events
+                    .Where(educationalEvent =>
+                        educationalEvent.Date <= nowUtc)
+                    .OrderByDescending(educationalEvent =>
+                        educationalEvent.Date))
+            : upcomingEvents;
+
+        return orderedEvents
+            .Select(educationalEvent => ToResponse(educationalEvent))
+            .ToList();
+    }
+
+    public async Task<IReadOnlyList<EducationalEventResponse>>
+        GetOrganizedEventsAsync(
+            Guid organizerId,
+            GetEducationalEventsRequest request,
+            CancellationToken cancellationToken = default)
+    {
+        var nowUtc = timeProvider.GetUtcNow().UtcDateTime;
+        var includePast = request.Scope == EventTimeScope.All;
+        var events = await eventRepository.SearchWithDetailsAsync(
+            request.Search,
+            request.Category,
+            includePast,
+            nowUtc,
+            organizerId,
             cancellationToken);
 
         var upcomingEvents = events

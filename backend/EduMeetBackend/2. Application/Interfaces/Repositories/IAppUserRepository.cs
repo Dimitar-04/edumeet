@@ -26,4 +26,8 @@ public interface IAppUserRepository:IBaseRepository<AppUser>
     public Task<AppUser?> GetPublicProfileAsync(
         Guid userId,
         CancellationToken cancellationToken = default);
+
+    Task<string?> GetFavoriteAttendedCategoryAsync(
+        Guid individualProfileId,
+        CancellationToken cancellationToken = default);
 }

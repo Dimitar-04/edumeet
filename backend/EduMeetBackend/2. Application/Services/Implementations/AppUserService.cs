@@ -130,10 +130,24 @@ public class AppUserService:IAppUserService
                 user.OrganizationProfile.Id,
                 user.OrganizationProfile.Name,
                 user.OrganizationProfile.Website);
-        var organizedEvents = user.OrganizedEvents
-            .OrderByDescending(educationalEvent => educationalEvent.Date)
-            .Select(ToProfileEventResponse)
+        var reviews = user.OrganizedEvents
+            .SelectMany(educationalEvent => educationalEvent.Reviews)
             .ToList();
+
+        var favoriteCategory = user.IndividualProfile is null
+            ? null
+            : await _appUserRepository
+                .GetFavoriteAttendedCategoryAsync(
+                    user.IndividualProfile.Id,
+                    cancellationToken);
+
+        var statistics = new ProfileStatisticsResponse(
+            user.OrganizedEvents.Count,
+            reviews.Count == 0
+                ? null
+                : reviews.Average(review => review.Grade),
+            reviews.Count,
+            favoriteCategory);
 
         return new PublicUserProfileResponse(
             user.Id,
@@ -143,35 +157,7 @@ public class AppUserService:IAppUserService
             user.ImageUrl,
             individual,
             organization,
-            organizedEvents);
-    }
-
-    private static ProfileEventResponse ToProfileEventResponse(
-        EducationalEvent educationalEvent)
-    {
-        var ratingCount = educationalEvent.Reviews.Count;
-
-        double? averageRating = ratingCount == 0
-            ? null
-            : educationalEvent.Reviews.Average(review => review.Grade);
-
-        var reviews = educationalEvent.Reviews
-            .Select(review => new ReviewResponse(
-                review.Grade,
-                review.Description))
-            .ToList();
-
-        return new ProfileEventResponse(
-            educationalEvent.Id,
-            educationalEvent.Title,
-            educationalEvent.Category,
-            educationalEvent.Format,
-            educationalEvent.ImageUrl,
-            educationalEvent.Date,
-            educationalEvent.LocationName,
-            averageRating,
-            ratingCount,
-            reviews);
+            statistics);
     }
 
     private static RegisteredUserResponse ToRegisteredUserResponse(

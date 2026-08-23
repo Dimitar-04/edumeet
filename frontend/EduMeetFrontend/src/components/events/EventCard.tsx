@@ -86,8 +86,12 @@ function EventCard({ event }: EventCardProps) {
             imageUrl={event.organizerImageUrl}
           />
           <span>By {event.organizerName}</span>
-          {isPastEvent && event.averageRating !== null ? (
-            <strong>{event.averageRating.toFixed(1)} / 5</strong>
+          {isPastEvent ? (
+            <strong className="event-card-average-rating">
+              {event.averageRating === null
+                ? 'Not rated yet'
+                : `${event.averageRating.toFixed(1)} / 5 average`}
+            </strong>
           ) : null}
         </div>
       </article>

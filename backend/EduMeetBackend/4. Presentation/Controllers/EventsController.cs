@@ -61,6 +61,24 @@ public class EventsController : ControllerBase
     }
 
     [AllowAnonymous]
+    [HttpGet("organized-by/{organizerId:guid}")]
+    [ProducesResponseType<IReadOnlyList<EducationalEventResponse>>(
+        StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetOrganizedEvents(
+        Guid organizerId,
+        [FromQuery] GetEducationalEventsRequest request,
+        CancellationToken cancellationToken)
+    {
+        var events = await _educationalEventService
+            .GetOrganizedEventsAsync(
+                organizerId,
+                request,
+                cancellationToken);
+
+        return Ok(events);
+    }
+
+    [AllowAnonymous]
     [HttpGet("{eventId:guid}")]
     [ProducesResponseType<EducationalEventResponse>(
         StatusCodes.Status200OK)]

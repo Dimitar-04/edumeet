@@ -115,11 +115,6 @@ function HomePage() {
                   All events
                 </button>
               </div>
-              <p>
-                {eventScope === 'Upcoming'
-                  ? 'Showing events that are still ahead.'
-                  : 'Upcoming events appear first, followed by the archive.'}
-              </p>
             </div>
 
             {isLoading ? (
@@ -164,12 +159,8 @@ function HomePage() {
                         <p className="eyebrow">From the archive</p>
                         <h3 id="past-events-title">Past events</h3>
                       </div>
-                      <span>{pastEvents.length}</span>
                     </div>
-                    <p className="event-feed-past-note">
-                      Events that have already taken place, ordered from most
-                      recent.
-                    </p>
+
                     <div className="event-grid">
                       {pastEvents.map((event) => (
                         <EventCard event={event} key={event.id} />

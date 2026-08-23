@@ -1,4 +1,5 @@
 import type { AccountType } from './auth';
+import type { EventCategory } from '../event/common';
 
 export interface RegisteredUserResponse {
   id: string;
@@ -32,22 +33,11 @@ export interface ProfileImageResponse {
   imageUrl: string;
 }
 
-export interface ReviewResponse {
-  grade: number;
-  description: string;
-}
-
-export interface ProfileEventResponse {
-  id: string;
-  title: string;
-  category: string;
-  format: string;
-  imageUrl: string | null;
-  date: string;
-  locationName: string;
+export interface ProfileStatisticsResponse {
+  hostedEventsCount: number;
   averageRating: number | null;
-  ratingCount: number;
-  reviews: ReviewResponse[];
+  reviewCount: number;
+  favoriteCategory: EventCategory | null;
 }
 
 export interface PublicUserProfileResponse {
@@ -66,5 +56,5 @@ export interface PublicUserProfileResponse {
     name: string;
     website: string | null;
   } | null;
-  organizedEvents: ProfileEventResponse[];
+  statistics: ProfileStatisticsResponse;
 }
