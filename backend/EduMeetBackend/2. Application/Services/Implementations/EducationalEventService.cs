@@ -6,6 +6,7 @@ using _2._Application.Interfaces;
 using _2._Application.Interfaces.Repositories;
 using _2._Application.Interfaces.UnitOfWork;
 using _2._Application.Notifications;
+using _2._Application.Results.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace _2._Application.Services.Implementations;
@@ -20,76 +21,65 @@ public sealed class EducationalEventService(
     TimeProvider timeProvider)
     : IEducationalEventService
 {
-    public async Task<IReadOnlyList<EducationalEventResponse>> GetAllAsync(
-        GetEducationalEventsRequest request,
-        CancellationToken cancellationToken = default)
+    public async Task<PagedResult<EducationalEventResponse>>
+        GetAllAsync(
+            GetEducationalEventsRequest request,
+            CancellationToken cancellationToken = default)
     {
-        var nowUtc = timeProvider.GetUtcNow().UtcDateTime;
-        var includePast = request.Scope == EventTimeScope.All;
+        var nowUtc =
+            timeProvider.GetUtcNow().UtcDateTime;
 
-        var events = await eventRepository.SearchWithDetailsAsync(
-            request.Search,
-            request.Category,
-            includePast,
-            nowUtc,
-            organizerId: null,
-            cancellationToken: cancellationToken);
+        var pagedEvents =
+            await eventRepository.SearchPagedWithDetailsAsync(
+                request.Search,
+                request.Category,
+                request.Scope,
+                nowUtc,
+                request.PageNumber,
+                request.PageSize,
+                cancellationToken: cancellationToken);
 
-        var upcomingEvents = events
-            .Where(educationalEvent => educationalEvent.Date > nowUtc)
-            .OrderBy(educationalEvent => educationalEvent.Date);
-
-        var orderedEvents = includePast
-            ? upcomingEvents.Concat(
-                events
-                    .Where(educationalEvent =>
-                        educationalEvent.Date <= nowUtc)
-                    .OrderByDescending(educationalEvent =>
-                        educationalEvent.Date))
-            : upcomingEvents;
-
-        return orderedEvents
-            .Select(educationalEvent => ToResponse(educationalEvent))
+        var responses = pagedEvents.Items
+            .Select(e=>ToResponse(e))
             .ToList();
-    }
 
-    public async Task<IReadOnlyList<EducationalEventResponse>>
+        return new PagedResult<EducationalEventResponse>(
+            responses,
+            pagedEvents.PageNumber,
+            pagedEvents.PageSize,
+            pagedEvents.TotalCount);
+    }
+    
+    
+    public async Task<PagedResult<EducationalEventResponse>>
         GetOrganizedEventsAsync(
             Guid organizerId,
             GetEducationalEventsRequest request,
             CancellationToken cancellationToken = default)
     {
-        var nowUtc = timeProvider.GetUtcNow().UtcDateTime;
-        var includePast = request.Scope == EventTimeScope.All;
-        var events = await eventRepository.SearchWithDetailsAsync(
+        var pagedEvents = await eventRepository.SearchPagedWithDetailsAsync(
             request.Search,
             request.Category,
-            includePast,
-            nowUtc,
+            request.Scope,
+            timeProvider.GetUtcNow().UtcDateTime,
+            request.PageNumber,
+            request.PageSize,
             organizerId,
             cancellationToken);
 
-        var upcomingEvents = events
-            .Where(educationalEvent => educationalEvent.Date > nowUtc)
-            .OrderBy(educationalEvent => educationalEvent.Date);
-
-        var orderedEvents = includePast
-            ? upcomingEvents.Concat(
-                events
-                    .Where(educationalEvent =>
-                        educationalEvent.Date <= nowUtc)
-                    .OrderByDescending(educationalEvent =>
-                        educationalEvent.Date))
-            : upcomingEvents;
-
-        return orderedEvents
-            .Select(educationalEvent => ToResponse(educationalEvent))
-            .ToList();
+        return new PagedResult<EducationalEventResponse>(
+            pagedEvents.Items
+                .Select(educationalEvent => ToResponse(educationalEvent))
+                .ToList(),
+            pagedEvents.PageNumber,
+            pagedEvents.PageSize,
+            pagedEvents.TotalCount);
     }
 
-    public async Task<IReadOnlyList<EducationalEventResponse>>
+    public async Task<PagedResult<EducationalEventResponse>>
         GetMyUpcomingScheduleAsync(
             string username,
+            PaginationRequest request,
             CancellationToken cancellationToken = default)
     {
         var user = await appUserRepository.FindByUsernameAsync(
@@ -109,18 +99,24 @@ public sealed class EducationalEventService(
         }
 
         var individualProfileId = user.IndividualProfile.Id;
-        var events = await eventRepository
+        var pagedEvents = await eventRepository
             .GetUpcomingRegisteredWithDetailsAsync(
                 individualProfileId,
                 timeProvider.GetUtcNow().UtcDateTime,
+                request.PageNumber,
+                request.PageSize,
                 cancellationToken);
 
-        return events
-            .Select(educationalEvent =>
-                ToResponse(
-                    educationalEvent,
-                    individualProfileId))
-            .ToList();
+        return new PagedResult<EducationalEventResponse>(
+            pagedEvents.Items
+                .Select(educationalEvent =>
+                    ToResponse(
+                        educationalEvent,
+                        individualProfileId))
+                .ToList(),
+            pagedEvents.PageNumber,
+            pagedEvents.PageSize,
+            pagedEvents.TotalCount);
     }
 
     public async Task<EducationalEventResponse?> GetByIdAsync(

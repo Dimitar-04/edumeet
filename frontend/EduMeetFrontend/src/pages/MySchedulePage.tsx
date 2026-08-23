@@ -2,16 +2,30 @@ import { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router';
 import { getMyUpcomingSchedule } from '../api/eventsApi';
 import EventCard from '../components/events/EventCard';
+import Pagination from '../components/common/Pagination';
 import AppHeader from '../components/layout/AppHeader';
 import { useAuth } from '../contexts/AuthContext';
 import { AccountType } from '../types/user/auth';
+import type { PagedResponse } from '../types/api/pagination';
 import type { EducationalEventResponse } from '../types/event/responses';
 
 function MySchedulePage() {
   const { user, isAuthLoading } = useAuth();
-  const [events, setEvents] = useState<EducationalEventResponse[]>([]);
+  const [schedulePage, setSchedulePage] = useState<
+    PagedResponse<EducationalEventResponse>
+  >({
+    items: [],
+    pageNumber: 1,
+    pageSize: 9,
+    totalCount: 0,
+    totalPages: 0,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
+  const [pageNumber, setPageNumber] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
+  const events = schedulePage.items;
 
   useEffect(() => {
     if (isAuthLoading || !user || user.accountType !== AccountType.Individual) {
@@ -24,10 +38,13 @@ function MySchedulePage() {
       try {
         setIsLoading(true);
         setLoadError('');
-        const loadedEvents = await getMyUpcomingSchedule();
+        const loadedEvents = await getMyUpcomingSchedule({
+          pageNumber,
+          pageSize: 9,
+        });
 
         if (isCurrentRequest) {
-          setEvents(loadedEvents);
+          setSchedulePage(loadedEvents);
         }
       } catch {
         if (isCurrentRequest) {
@@ -47,7 +64,7 @@ function MySchedulePage() {
     return () => {
       isCurrentRequest = false;
     };
-  }, [isAuthLoading, user]);
+  }, [isAuthLoading, pageNumber, user]);
 
   if (!isAuthLoading && !user) {
     return <Navigate to="/login" replace />;
@@ -70,9 +87,9 @@ function MySchedulePage() {
           {!isAuthLoading && !isLoading && !loadError ? (
             <div
               className="schedule-count"
-              aria-label={`${events.length} upcoming events`}
+              aria-label={`${schedulePage.totalCount} upcoming events`}
             >
-              <strong>{events.length}</strong>
+              <strong>{schedulePage.totalCount}</strong>
               <span>upcoming</span>
             </div>
           ) : null}
@@ -94,12 +111,22 @@ function MySchedulePage() {
               <div>
                 <h2 id="schedule-events-title">Coming up</h2>
               </div>
-              <span>{events.length}</span>
+              <span>{schedulePage.totalCount}</span>
             </div>
             <div className="event-grid schedule-grid">
               {events.map((event) => (
                 <EventCard event={event} key={event.id} />
               ))}
+            </div>
+            <div className="event-pagination-footer">
+              <p>
+                Page {schedulePage.pageNumber} of {schedulePage.totalPages}
+              </p>
+              <Pagination
+                pageNumber={schedulePage.pageNumber}
+                totalPages={schedulePage.totalPages}
+                onPageChange={setPageNumber}
+              />
             </div>
           </section>
         ) : (

@@ -1,6 +1,7 @@
 using _2._Application.Requests;
 using _2._Application.Responses;
 using _2._Application.Interfaces;
+using _2._Application.Results.Common;
 using _4._Presentation.FileReaders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,29 +21,31 @@ public class EventsController : ControllerBase
     }
     
     private const long MaxCoverImageSize = 8 * 1024 * 1024;
-
+    
     [AllowAnonymous]
     [HttpGet]
-    [ProducesResponseType<IReadOnlyList<EducationalEventResponse>>(
-        StatusCodes.Status200OK)]
+    [ProducesResponseType<PagedResult<EducationalEventResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetAll(
         [FromQuery] GetEducationalEventsRequest request,
         CancellationToken cancellationToken)
     {
-        var events = await _educationalEventService.GetAllAsync(
-            request,
-            cancellationToken);
+        var result =
+            await _educationalEventService.GetAllAsync(
+                request,
+                cancellationToken);
 
-        return Ok(events);
+        return Ok(result);
     }
 
     [HttpGet("my-schedule")]
-    [ProducesResponseType<IReadOnlyList<EducationalEventResponse>>(
+    [ProducesResponseType<PagedResult<EducationalEventResponse>>(
         StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetMySchedule(
+        [FromQuery] PaginationRequest request,
         CancellationToken cancellationToken)
     {
         var username = User.Identity?.Name;
@@ -55,6 +58,7 @@ public class EventsController : ControllerBase
         var events = await _educationalEventService
             .GetMyUpcomingScheduleAsync(
                 username,
+                request,
                 cancellationToken);
 
         return Ok(events);
@@ -62,7 +66,7 @@ public class EventsController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("organized-by/{organizerId:guid}")]
-    [ProducesResponseType<IReadOnlyList<EducationalEventResponse>>(
+    [ProducesResponseType<PagedResult<EducationalEventResponse>>(
         StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOrganizedEvents(
         Guid organizerId,

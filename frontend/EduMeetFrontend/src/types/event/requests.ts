@@ -23,12 +23,14 @@ export interface AttendanceCheckInRequest {
   attendanceToken: string;
 }
 
-export type EventTimeScope = 'Upcoming' | 'All';
+export type EventTimeScope = 'Upcoming' | 'Past' | 'All';
 
 export interface GetEducationalEventsRequest {
   scope?: EventTimeScope;
   search?: string;
   category?: EventCategory;
+  pageNumber?: number;
+  pageSize?: number;
 }
 
 export function toCreateEventFormData(

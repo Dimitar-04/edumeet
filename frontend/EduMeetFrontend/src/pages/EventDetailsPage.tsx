@@ -353,9 +353,8 @@ function EventDetailsPage() {
                   {hasEventPassed ? 'attended' : 'registered'}
                 </strong>
                 <p>
-                  {hasEventPassed
-                    ? 'Attendance confirmed through event check-in.'
-                    : 'Reserve your place and join this learning community.'}
+                  {!hasEventPassed &&
+                    'Reserve your place and join this learning community.'}
                 </p>
 
                 {isOrganizer ? (
@@ -422,7 +421,9 @@ function EventDetailsPage() {
                   ) : user.accountType === AccountType.Individual &&
                     !isOrganizer &&
                     !isRegistered ? (
-                    <p>Only registered attendees can review this event.</p>
+                    <p>
+                      Only registered attendees can post reviews for this event.
+                    </p>
                   ) : null}
                 </section>
               ) : null}

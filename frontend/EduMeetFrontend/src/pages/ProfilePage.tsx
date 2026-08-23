@@ -15,10 +15,12 @@ import {
 import { getOrganizedEvents } from '../api/eventsApi';
 import EventCategoryTabs from '../components/events/EventCategoryTabs';
 import EventCard from '../components/events/EventCard';
+import Pagination from '../components/common/Pagination';
 import AppHeader from '../components/layout/AppHeader';
 import UserAvatar from '../components/user/UserAvatar';
 import { useAuth } from '../contexts/AuthContext';
 import type { ValidationProblemDetails } from '../types/api/errors';
+import type { PagedResponse } from '../types/api/pagination';
 import type { EventCategory } from '../types/event/common';
 import type { EventTimeScope } from '../types/event/requests';
 import type { EducationalEventResponse } from '../types/event/responses';
@@ -50,16 +52,24 @@ function ProfilePage() {
   const [usernameMessage, setUsernameMessage] = useState('');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState('');
-  const [profileViewedAt] = useState(Date.now);
-  const [organizedEvents, setOrganizedEvents] = useState<
-    EducationalEventResponse[]
-  >([]);
+  const [organizedEventPage, setOrganizedEventPage] = useState<
+    PagedResponse<EducationalEventResponse>
+  >({
+    items: [],
+    pageNumber: 1,
+    pageSize: 6,
+    totalCount: 0,
+    totalPages: 0,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
   const [areEventsLoading, setAreEventsLoading] = useState(true);
   const [eventsError, setEventsError] = useState('');
   const [activeCategory, setActiveCategory] = useState<EventCategory | 'All'>(
     'All',
   );
   const [eventScope, setEventScope] = useState<EventTimeScope>('Upcoming');
+  const [eventPageNumber, setEventPageNumber] = useState(1);
 
   useEffect(() => {
     return () => {
@@ -88,6 +98,7 @@ function ProfilePage() {
 
         setProfile(response);
         setUsernameValue(response.userName);
+        setEventPageNumber(1);
       } catch {
         if (isCurrent) {
           setProfile(null);
@@ -117,10 +128,12 @@ function ProfilePage() {
         const loadedEvents = await getOrganizedEvents(profile.id, {
           scope: eventScope,
           category: activeCategory === 'All' ? undefined : activeCategory,
+          pageNumber: eventPageNumber,
+          pageSize: 6,
         });
 
         if (isCurrentRequest) {
-          setOrganizedEvents(loadedEvents);
+          setOrganizedEventPage(loadedEvents);
         }
       } catch {
         if (isCurrentRequest) {
@@ -140,14 +153,21 @@ function ProfilePage() {
     return () => {
       isCurrentRequest = false;
     };
-  }, [activeCategory, eventScope, profile]);
+  }, [activeCategory, eventPageNumber, eventScope, profile]);
 
-  const upcomingHostedEvents = organizedEvents.filter(
-    (event) => new Date(event.date).getTime() > profileViewedAt,
-  );
-  const pastHostedEvents = organizedEvents.filter(
-    (event) => new Date(event.date).getTime() <= profileViewedAt,
-  );
+  const organizedEvents = organizedEventPage.items;
+
+  const handleProfileCategoryChange = (
+    category: EventCategory | 'All',
+  ) => {
+    setActiveCategory(category);
+    setEventPageNumber(1);
+  };
+
+  const handleProfileEventScopeChange = (scope: EventTimeScope) => {
+    setEventScope(scope);
+    setEventPageNumber(1);
+  };
 
   if (!isAuthLoading && !userId && !user) {
     return <Navigate to="/login" replace />;
@@ -502,7 +522,7 @@ function ProfilePage() {
           <div className="profile-event-controls">
             <EventCategoryTabs
               activeCategory={activeCategory}
-              onCategoryChange={setActiveCategory}
+              onCategoryChange={handleProfileCategoryChange}
               className="profile-event-category-tabs"
               ariaLabel="Filter hosted events by category"
             />
@@ -514,17 +534,17 @@ function ProfilePage() {
                 className={eventScope === 'Upcoming' ? 'active' : ''}
                 type="button"
                 aria-pressed={eventScope === 'Upcoming'}
-                onClick={() => setEventScope('Upcoming')}
+                onClick={() => handleProfileEventScopeChange('Upcoming')}
               >
                 Upcoming
               </button>
               <button
-                className={eventScope === 'All' ? 'active' : ''}
+                className={eventScope === 'Past' ? 'active' : ''}
                 type="button"
-                aria-pressed={eventScope === 'All'}
-                onClick={() => setEventScope('All')}
+                aria-pressed={eventScope === 'Past'}
+                onClick={() => handleProfileEventScopeChange('Past')}
               >
-                All
+                Past
               </button>
             </div>
           </div>
@@ -540,8 +560,9 @@ function ProfilePage() {
               <p>{eventsError}</p>
             </div>
           ) : organizedEvents.length > 0 ? (
-            <div className="event-feed">
-              {eventScope === 'Upcoming' || upcomingHostedEvents.length > 0 ? (
+            <>
+              <div className="event-feed">
+              {eventScope === 'Upcoming' ? (
                 <section
                   className="event-feed-group profile-event-feed-group"
                   aria-labelledby="profile-upcoming-events-title"
@@ -553,17 +574,17 @@ function ProfilePage() {
                         Upcoming events
                       </h3>
                     </div>
-                    <span>{upcomingHostedEvents.length}</span>
+                    <span>{organizedEventPage.totalCount}</span>
                   </div>
                   <div className="event-grid">
-                    {upcomingHostedEvents.map((event) => (
+                    {organizedEvents.map((event) => (
                       <EventCard event={event} key={event.id} />
                     ))}
                   </div>
                 </section>
               ) : null}
 
-              {eventScope === 'All' && pastHostedEvents.length > 0 ? (
+              {eventScope === 'Past' ? (
                 <section
                   className="event-feed-group profile-event-feed-group profile-event-archive"
                   aria-labelledby="profile-past-events-title"
@@ -573,16 +594,28 @@ function ProfilePage() {
                       <p className="eyebrow">From the archive</p>
                       <h3 id="profile-past-events-title">Past events</h3>
                     </div>
-                    <span>{pastHostedEvents.length}</span>
+                    <span>{organizedEventPage.totalCount}</span>
                   </div>
                   <div className="event-grid">
-                    {pastHostedEvents.map((event) => (
+                    {organizedEvents.map((event) => (
                       <EventCard event={event} key={event.id} />
                     ))}
                   </div>
                 </section>
               ) : null}
-            </div>
+              </div>
+              <div className="event-pagination-footer">
+                <p>
+                  Page {organizedEventPage.pageNumber} of{' '}
+                  {organizedEventPage.totalPages}
+                </p>
+                <Pagination
+                  pageNumber={organizedEventPage.pageNumber}
+                  totalPages={organizedEventPage.totalPages}
+                  onPageChange={setEventPageNumber}
+                />
+              </div>
+            </>
           ) : (
             <div className="empty-state">
               <h3>
@@ -590,15 +623,14 @@ function ProfilePage() {
                   ? 'No hosted events in this category'
                   : eventScope === 'Upcoming'
                     ? 'No upcoming hosted events'
-                    : 'No hosted events yet'}
+                    : 'No past hosted events'}
               </h3>
               <p>
                 {activeCategory !== 'All'
                   ? 'Choose another category to explore this profile.'
-                  : eventScope === 'Upcoming' &&
-                      profile.statistics.hostedEventsCount > 0
-                    ? 'Switch to all events to explore the archive.'
-                    : 'This user has not created an event yet.'}
+                  : eventScope === 'Upcoming'
+                    ? 'Switch to past events to explore the archive.'
+                    : 'Completed events created by this profile will appear here.'}
               </p>
             </div>
           )}

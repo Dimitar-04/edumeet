@@ -11,7 +11,21 @@ function LandingPage() {
   useEffect(() => {
     const loadSummary = async () => {
       try {
-        const allEvents = await getEvents();
+        const firstEventPage = await getEvents({ pageSize: 24 });
+        const remainingEventPages = await Promise.all(
+          Array.from(
+            { length: Math.max(0, firstEventPage.totalPages - 1) },
+            (_, index) =>
+              getEvents({
+                pageNumber: index + 2,
+                pageSize: firstEventPage.pageSize,
+              }),
+          ),
+        );
+        const allEvents = [
+          ...firstEventPage.items,
+          ...remainingEventPages.flatMap((page) => page.items),
+        ];
         const now = Date.now();
 
         setEvents(

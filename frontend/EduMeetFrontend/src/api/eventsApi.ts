@@ -8,6 +8,10 @@ import type {
 } from '../types/event/requests';
 import { toCreateEventFormData } from '../types/event/requests';
 import type {
+  PagedResponse,
+  PaginationRequest,
+} from '../types/api/pagination';
+import type {
   AttendanceCheckInResponse,
   AttendanceSummaryResponse,
   EducationalEventResponse,
@@ -18,19 +22,20 @@ import type {
 
 export async function getEvents(
   request: GetEducationalEventsRequest = {},
-): Promise<EducationalEventResponse[]> {
-  const response = await axiosInstance.get<EducationalEventResponse[]>('/events', {
-    params: request,
-  });
+): Promise<PagedResponse<EducationalEventResponse>> {
+  const response = await axiosInstance.get<
+    PagedResponse<EducationalEventResponse>
+  >('/events', { params: request });
+
   return response.data;
 }
 
-export async function getMyUpcomingSchedule(): Promise<
-  EducationalEventResponse[]
-> {
-  const response = await axiosInstance.get<EducationalEventResponse[]>(
-    '/events/my-schedule',
-  );
+export async function getMyUpcomingSchedule(
+  request: PaginationRequest = {},
+): Promise<PagedResponse<EducationalEventResponse>> {
+  const response = await axiosInstance.get<
+    PagedResponse<EducationalEventResponse>
+  >('/events/my-schedule', { params: request });
 
   return response.data;
 }
@@ -38,11 +43,10 @@ export async function getMyUpcomingSchedule(): Promise<
 export async function getOrganizedEvents(
   organizerId: string,
   request: GetEducationalEventsRequest = {},
-): Promise<EducationalEventResponse[]> {
-  const response = await axiosInstance.get<EducationalEventResponse[]>(
-    `/events/organized-by/${organizerId}`,
-    { params: request },
-  );
+): Promise<PagedResponse<EducationalEventResponse>> {
+  const response = await axiosInstance.get<
+    PagedResponse<EducationalEventResponse>
+  >(`/events/organized-by/${organizerId}`, { params: request });
 
   return response.data;
 }
