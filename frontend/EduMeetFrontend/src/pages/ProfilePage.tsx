@@ -317,7 +317,7 @@ function ProfilePage() {
             />
             <div>
               <p className="eyebrow">{accountLabel} profile</p>
-              <h1 id="profile-title">{profile.displayName}</h1>
+              <h2 id="profile-title">{profile.displayName}</h2>
               <p className="profile-username">@{profile.userName}</p>
               {profile.organization?.website ? (
                 <a
@@ -332,7 +332,13 @@ function ProfilePage() {
             </div>
           </div>
 
-          <dl className="profile-stats">
+          <dl
+            className={`profile-stats ${
+              profile.accountType === AccountType.Individual
+                ? 'profile-stats-individual'
+                : ''
+            }`}
+          >
             {profile.accountType === AccountType.Organization ? (
               <>
                 <div>
@@ -351,15 +357,14 @@ function ProfilePage() {
             ) : (
               <>
                 <div>
+                  <dt>{profile.statistics.attendedEventsCount}</dt>
+                  <dd>Events attended</dd>
+                </div>
+                <div>
                   <dt>{profile.statistics.hostedEventsCount}</dt>
                   <dd>Created events</dd>
                 </div>
-                <div>
-                  <dt className="profile-stat-category">
-                    {profile.statistics.favoriteCategory ?? '—'}
-                  </dt>
-                  <dd>Favourite category</dd>
-                </div>
+
                 {profile.statistics.hostedEventsCount > 0 && (
                   <div>
                     <dt>
@@ -368,6 +373,12 @@ function ProfilePage() {
                     <dd>Average rating</dd>
                   </div>
                 )}
+                <div>
+                  <dt className="profile-stat-category">
+                    {profile.statistics.favoriteCategory ?? '—'}
+                  </dt>
+                  <dd>Favourite category</dd>
+                </div>
               </>
             )}
           </dl>
@@ -381,9 +392,6 @@ function ProfilePage() {
                 >
                   <div className="profile-setting-heading">
                     <strong>Username</strong>
-                    <small>
-                      This is used when signing in and identifying your account.
-                    </small>
                   </div>
                   <div className="profile-username-input-row">
                     <label
@@ -590,7 +598,7 @@ function ProfilePage() {
                   : eventScope === 'Upcoming' &&
                       profile.statistics.hostedEventsCount > 0
                     ? 'Switch to all events to explore the archive.'
-                    : 'This profile has not created an event yet.'}
+                    : 'This user has not created an event yet.'}
               </p>
             </div>
           )}

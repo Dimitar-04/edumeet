@@ -141,13 +141,20 @@ public class AppUserService:IAppUserService
                     user.IndividualProfile.Id,
                     cancellationToken);
 
+        var attendedEventsCount = user.IndividualProfile is null
+            ? 0
+            : await _appUserRepository.GetAttendedEventsCountAsync(
+                user.IndividualProfile.Id,
+                cancellationToken);
+
         var statistics = new ProfileStatisticsResponse(
             user.OrganizedEvents.Count,
             reviews.Count == 0
                 ? null
                 : reviews.Average(review => review.Grade),
             reviews.Count,
-            favoriteCategory);
+            favoriteCategory,
+            attendedEventsCount);
 
         return new PublicUserProfileResponse(
             user.Id,

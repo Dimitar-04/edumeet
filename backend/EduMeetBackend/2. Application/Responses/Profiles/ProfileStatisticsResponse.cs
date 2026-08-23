@@ -4,4 +4,5 @@ public sealed record ProfileStatisticsResponse(
     int HostedEventsCount,
     double? AverageRating,
     int ReviewCount,
-    string? FavoriteCategory);
+    string? FavoriteCategory,
+    int AttendedEventsCount);

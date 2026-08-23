@@ -344,12 +344,17 @@ function EventDetailsPage() {
               <section className="event-registration-panel">
                 <span>Attendance</span>
                 <strong>
-                  {registeredCount}{' '}
-                  {registeredCount === 1 ? 'person ' : 'people '} registered
+                  {hasEventPassed ? event.attendedPeopleCount : registeredCount}{' '}
+                  {(hasEventPassed
+                    ? event.attendedPeopleCount
+                    : registeredCount) === 1
+                    ? 'person '
+                    : 'people '}
+                  {hasEventPassed ? 'attended' : 'registered'}
                 </strong>
                 <p>
                   {hasEventPassed
-                    ? 'Registration for this event has closed.'
+                    ? 'Attendance confirmed through event check-in.'
                     : 'Reserve your place and join this learning community.'}
                 </p>
 

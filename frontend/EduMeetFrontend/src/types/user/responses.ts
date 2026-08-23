@@ -38,6 +38,7 @@ export interface ProfileStatisticsResponse {
   averageRating: number | null;
   reviewCount: number;
   favoriteCategory: EventCategory | null;
+  attendedEventsCount: number;
 }
 
 export interface PublicUserProfileResponse {

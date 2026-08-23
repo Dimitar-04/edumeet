@@ -2077,12 +2077,12 @@ a {
   margin-bottom: 10px;
 }
 
-.public-profile-identity h1 {
+.public-profile-identity h2 {
   margin: 0;
-  font-size: clamp(2.4rem, 5vw, 4.4rem);
-  font-weight: 560;
-  letter-spacing: -0.06em;
-  line-height: 1;
+  font-size: clamp(2rem, 3.5vw, 3.1rem);
+  font-weight: 720;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
 }
 
 .profile-username {
@@ -3375,6 +3375,10 @@ a {
 
 .attendance-stats div + div {
   border-left: 1px solid var(--line);
+}
+
+.profile-stats-individual {
+  grid-template-columns: repeat(4, minmax(90px, 1fr));
 }
 
 .attendance-stats dt {

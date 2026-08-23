@@ -25,6 +25,7 @@ export interface EducationalEventResponse {
   organizerName: string;
   organizerImageUrl: string | null;
   registeredPeopleCount: number;
+  attendedPeopleCount: number;
   isCurrentUserRegistered: boolean;
   averageRating: number | null;
   ratingCount: number;

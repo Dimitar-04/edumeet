@@ -684,6 +684,8 @@ public sealed class EducationalEventService(
             organizerName,
             organizer.ImageUrl,
             educationalEvent.EventParticipants.Count,
+            educationalEvent.EventParticipants.Count(participant =>
+                participant.CheckedInAtUtc.HasValue),
             isCurrentUserRegistered,
             averageRating,
             ratingCount,

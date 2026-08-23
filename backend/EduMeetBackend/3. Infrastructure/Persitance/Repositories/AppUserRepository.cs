@@ -117,4 +117,17 @@ public sealed class AppUserRepository(UserManager<AppUser> userManager, Applicat
             .Select(result => result.Category)
             .FirstOrDefaultAsync(cancellationToken);
     }
+
+    public Task<int> GetAttendedEventsCountAsync(
+        Guid individualProfileId,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.EventParticipants
+            .AsNoTracking()
+            .CountAsync(
+                participant =>
+                    participant.ParticipantId == individualProfileId &&
+                    participant.CheckedInAtUtc != null,
+                cancellationToken);
+    }
 }

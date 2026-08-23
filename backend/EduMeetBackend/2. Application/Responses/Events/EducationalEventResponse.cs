@@ -17,6 +17,7 @@ public sealed record EducationalEventResponse(
     string OrganizerName,
     string? OrganizerImageUrl,
     int RegisteredPeopleCount,
+    int AttendedPeopleCount,
     bool IsCurrentUserRegistered,
     double? AverageRating,
     int RatingCount,
