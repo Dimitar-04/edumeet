@@ -26,9 +26,11 @@ public class EventsController : ControllerBase
     [ProducesResponseType<IReadOnlyList<EducationalEventResponse>>(
         StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(
+        [FromQuery] GetEducationalEventsRequest request,
         CancellationToken cancellationToken)
     {
         var events = await _educationalEventService.GetAllAsync(
+            request,
             cancellationToken);
 
         return Ok(events);

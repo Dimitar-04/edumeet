@@ -21,12 +21,33 @@ public sealed class EducationalEventService(
     : IEducationalEventService
 {
     public async Task<IReadOnlyList<EducationalEventResponse>> GetAllAsync(
+        GetEducationalEventsRequest request,
         CancellationToken cancellationToken = default)
     {
-        var events = await eventRepository.GetAllWithDetailsAsync(
+        var nowUtc = timeProvider.GetUtcNow().UtcDateTime;
+        var includePast = request.Scope == EventTimeScope.All;
+
+        var events = await eventRepository.SearchWithDetailsAsync(
+            request.Search,
+            request.Category,
+            includePast,
+            nowUtc,
             cancellationToken);
 
-        return events
+        var upcomingEvents = events
+            .Where(educationalEvent => educationalEvent.Date > nowUtc)
+            .OrderBy(educationalEvent => educationalEvent.Date);
+
+        var orderedEvents = includePast
+            ? upcomingEvents.Concat(
+                events
+                    .Where(educationalEvent =>
+                        educationalEvent.Date <= nowUtc)
+                    .OrderByDescending(educationalEvent =>
+                        educationalEvent.Date))
+            : upcomingEvents;
+
+        return orderedEvents
             .Select(educationalEvent => ToResponse(educationalEvent))
             .ToList();
     }

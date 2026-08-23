@@ -1,4 +1,5 @@
 import { resolvePublicAssetUrl } from '../../api/apiConfig';
+import { useState } from 'react';
 import { Link } from 'react-router';
 import type { EventCategory } from '../../types/event/common';
 import type { EducationalEventResponse } from '../../types/event/responses';
@@ -21,6 +22,7 @@ const categoryTones: Record<
 };
 
 function EventCard({ event }: EventCardProps) {
+  const [renderedAt] = useState(Date.now);
   const eventDate = new Date(event.date);
   const month = eventDate.toLocaleDateString('en', { month: 'short' });
   const day = eventDate.toLocaleDateString('en', { day: '2-digit' });
@@ -38,7 +40,7 @@ function EventCard({ event }: EventCardProps) {
     .join('')
     .toUpperCase();
   const visualTone = categoryTones[event.category] ?? 'silver';
-  const isPastEvent = eventDate.getTime() <= Date.now();
+  const isPastEvent = eventDate.getTime() <= renderedAt;
 
   return (
     <Link

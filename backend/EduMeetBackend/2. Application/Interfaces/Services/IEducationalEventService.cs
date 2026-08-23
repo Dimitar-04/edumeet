@@ -6,6 +6,7 @@ namespace _2._Application.Interfaces;
 public interface IEducationalEventService
 {
     Task<IReadOnlyList<EducationalEventResponse>> GetAllAsync(
+        GetEducationalEventsRequest request,
         CancellationToken cancellationToken = default);
 
     Task<EducationalEventResponse?> GetByIdAsync(

@@ -4,6 +4,7 @@ import type {
   AttendanceCheckInRequest,
   CreateEducationalEventRequest,
   CreateReviewRequest,
+  GetEducationalEventsRequest,
 } from '../types/event/requests';
 import { toCreateEventFormData } from '../types/event/requests';
 import type {
@@ -15,8 +16,12 @@ import type {
   ReviewDeletedResponse,
 } from '../types/event/responses';
 
-export async function getEvents(): Promise<EducationalEventResponse[]> {
-  const response = await axiosInstance.get<EducationalEventResponse[]>('/events');
+export async function getEvents(
+  request: GetEducationalEventsRequest = {},
+): Promise<EducationalEventResponse[]> {
+  const response = await axiosInstance.get<EducationalEventResponse[]>('/events', {
+    params: request,
+  });
   return response.data;
 }
 

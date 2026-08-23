@@ -4,7 +4,11 @@ namespace _2._Application.Interfaces.Repositories;
 
 public interface IEducationalEventRepository : IBaseRepository<EducationalEvent>
 {
-    Task<IReadOnlyList<EducationalEvent>> GetAllWithDetailsAsync(
+    Task<IReadOnlyList<EducationalEvent>> SearchWithDetailsAsync(
+        string? search,
+        string? category,
+        bool includePast,
+        DateTime nowUtc,
         CancellationToken cancellationToken = default);
 
     Task<EducationalEvent?> GetByIdWithOrganizerAsync(
