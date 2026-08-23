@@ -33,6 +33,12 @@ export interface GetEducationalEventsRequest {
   pageSize?: number;
 }
 
+export interface GetAttendedEventsRequest {
+  category?: EventCategory;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
 export function toCreateEventFormData(
   request: CreateEducationalEventRequest,
 ): FormData {

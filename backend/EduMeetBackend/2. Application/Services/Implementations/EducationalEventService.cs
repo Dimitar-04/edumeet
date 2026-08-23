@@ -119,6 +119,49 @@ public sealed class EducationalEventService(
             pagedEvents.TotalCount);
     }
 
+    public async Task<PagedResult<EducationalEventResponse>>
+        GetMyAttendedEventsAsync(
+            string username,
+            GetAttendedEventsRequest request,
+            CancellationToken cancellationToken = default)
+    {
+        var user = await appUserRepository.FindByUsernameAsync(
+            username,
+            cancellationToken);
+
+        if (user is null)
+        {
+            throw new NotFoundException(
+                "The authenticated user no longer exists.");
+        }
+
+        if (user.IndividualProfile is null)
+        {
+            throw new ForbiddenException(
+                "Only individual accounts have an attendance history.");
+        }
+
+        var individualProfileId = user.IndividualProfile.Id;
+        var pagedEvents = await eventRepository.GetAttendedWithDetailsAsync(
+            individualProfileId,
+            timeProvider.GetUtcNow().UtcDateTime,
+            request.Category,
+            request.PageNumber,
+            request.PageSize,
+            cancellationToken);
+
+        return new PagedResult<EducationalEventResponse>(
+            pagedEvents.Items
+                .Select(educationalEvent =>
+                    ToResponse(
+                        educationalEvent,
+                        individualProfileId))
+                .ToList(),
+            pagedEvents.PageNumber,
+            pagedEvents.PageSize,
+            pagedEvents.TotalCount);
+    }
+
     public async Task<EducationalEventResponse?> GetByIdAsync(
         Guid eventId,
         string? currentUsername,
@@ -351,12 +394,14 @@ public sealed class EducationalEventService(
         var reviewerId = user.IndividualProfile.Id;
 
         var attendedEvent = educationalEvent.EventParticipants.Any(
-            participant => participant.ParticipantId == reviewerId);
+            participant =>
+                participant.ParticipantId == reviewerId &&
+                participant.CheckedInAtUtc.HasValue);
 
         if (!attendedEvent)
         {
             throw new ForbiddenException(
-                "Only registered participants can review this event.");
+                "Only participants who checked in at the event can review it.");
         }
 
 
@@ -631,12 +676,18 @@ public sealed class EducationalEventService(
               ?? organizer.UserName
               ?? "EduMeet organizer";
 
-        var isCurrentUserRegistered =
-            currentIndividualProfileId.HasValue &&
-            educationalEvent.EventParticipants.Any(
+        var currentUserParticipation = currentIndividualProfileId.HasValue
+            ? educationalEvent.EventParticipants.FirstOrDefault(
                 participant =>
                     participant.ParticipantId ==
-                    currentIndividualProfileId.Value);
+                    currentIndividualProfileId.Value)
+            : null;
+
+        var isCurrentUserRegistered =
+            currentUserParticipation is not null;
+
+        var hasCurrentUserAttended =
+            currentUserParticipation?.CheckedInAtUtc.HasValue == true;
 
         var ratingCount = educationalEvent.Reviews.Count;
         var averageRating = ratingCount == 0
@@ -683,6 +734,7 @@ public sealed class EducationalEventService(
             educationalEvent.EventParticipants.Count(participant =>
                 participant.CheckedInAtUtc.HasValue),
             isCurrentUserRegistered,
+            hasCurrentUserAttended,
             averageRating,
             ratingCount,
             hasCurrentUserReviewed,

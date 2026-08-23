@@ -216,6 +216,54 @@ public class EducationalEventRepository(ApplicationDbContext context) :BaseRepos
             totalCount);
     }
 
+    public async Task<PagedResult<EducationalEvent>>
+        GetAttendedWithDetailsAsync(
+            Guid individualProfileId,
+            DateTime nowUtc,
+            string? category,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default)
+    {
+        var query = Context.EducationalEvents
+            .AsNoTracking()
+            .Where(educationalEvent =>
+                educationalEvent.Date <= nowUtc &&
+                educationalEvent.EventParticipants.Any(participant =>
+                    participant.ParticipantId == individualProfileId &&
+                    participant.CheckedInAtUtc != null));
+
+        if (!string.IsNullOrWhiteSpace(category))
+        {
+            var normalizedCategory = category.Trim();
+
+            query = query.Where(educationalEvent =>
+                educationalEvent.Category == normalizedCategory);
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var events = await query
+            .OrderByDescending(educationalEvent => educationalEvent.Date)
+            .ThenBy(educationalEvent => educationalEvent.Id)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Include(educationalEvent => educationalEvent.Organizer)
+                .ThenInclude(organizer => organizer.IndividualProfile)
+            .Include(educationalEvent => educationalEvent.Organizer)
+                .ThenInclude(organizer => organizer.OrganizationProfile)
+            .Include(educationalEvent => educationalEvent.EventParticipants)
+            .Include(educationalEvent => educationalEvent.Reviews)
+            .AsSplitQuery()
+            .ToListAsync(cancellationToken);
+
+        return new PagedResult<EducationalEvent>(
+            events,
+            pageNumber,
+            pageSize,
+            totalCount);
+    }
+
     public Task<EducationalEvent?> GetByIdWithOrganizerAsync(
         Guid eventId,
         CancellationToken cancellationToken = default)

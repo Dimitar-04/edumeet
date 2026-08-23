@@ -4,6 +4,7 @@ import type {
   AttendanceCheckInRequest,
   CreateEducationalEventRequest,
   CreateReviewRequest,
+  GetAttendedEventsRequest,
   GetEducationalEventsRequest,
 } from '../types/event/requests';
 import { toCreateEventFormData } from '../types/event/requests';
@@ -36,6 +37,16 @@ export async function getMyUpcomingSchedule(
   const response = await axiosInstance.get<
     PagedResponse<EducationalEventResponse>
   >('/events/my-schedule', { params: request });
+
+  return response.data;
+}
+
+export async function getMyAttendedEvents(
+  request: GetAttendedEventsRequest = {},
+): Promise<PagedResponse<EducationalEventResponse>> {
+  const response = await axiosInstance.get<
+    PagedResponse<EducationalEventResponse>
+  >('/events/my-attended', { params: request });
 
   return response.data;
 }

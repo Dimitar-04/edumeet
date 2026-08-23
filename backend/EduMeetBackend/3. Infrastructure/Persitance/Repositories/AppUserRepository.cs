@@ -98,13 +98,15 @@ public sealed class AppUserRepository(UserManager<AppUser> userManager, Applicat
 
     public Task<string?> GetFavoriteAttendedCategoryAsync(
         Guid individualProfileId,
+        DateTime nowUtc,
         CancellationToken cancellationToken = default)
     {
         return Context.EventParticipants
             .AsNoTracking()
             .Where(participant =>
                 participant.ParticipantId == individualProfileId &&
-                participant.CheckedInAtUtc != null)
+                participant.CheckedInAtUtc != null &&
+                participant.EducationalEvent.Date <= nowUtc)
             .GroupBy(participant =>
                 participant.EducationalEvent.Category)
             .Select(group => new
@@ -120,6 +122,7 @@ public sealed class AppUserRepository(UserManager<AppUser> userManager, Applicat
 
     public Task<int> GetAttendedEventsCountAsync(
         Guid individualProfileId,
+        DateTime nowUtc,
         CancellationToken cancellationToken = default)
     {
         return Context.EventParticipants
@@ -127,7 +130,8 @@ public sealed class AppUserRepository(UserManager<AppUser> userManager, Applicat
             .CountAsync(
                 participant =>
                     participant.ParticipantId == individualProfileId &&
-                    participant.CheckedInAtUtc != null,
+                    participant.CheckedInAtUtc != null &&
+                    participant.EducationalEvent.Date <= nowUtc,
                 cancellationToken);
     }
 }

@@ -15,17 +15,20 @@ public class AppUserService:IAppUserService
     private readonly IUnitOfWork _unitOfWork;
     private readonly  IFileUploadService _fileUploadService;
     private readonly ITokenService _tokenService;
+    private readonly TimeProvider _timeProvider;
 
     public AppUserService(
         IAppUserRepository appUserRepository,
         IUnitOfWork unitOfWork,
         IFileUploadService fileUploadService,
-        ITokenService tokenService)
+        ITokenService tokenService,
+        TimeProvider timeProvider)
     {
         _appUserRepository = appUserRepository;
         _unitOfWork = unitOfWork;
         _fileUploadService = fileUploadService;
         _tokenService = tokenService;
+        _timeProvider = timeProvider;
     }
 
     public async Task<AppUser?> UpdateProfileImageAsync(string username, UploadedFileData image, CancellationToken ct = default)
@@ -139,12 +142,14 @@ public class AppUserService:IAppUserService
             : await _appUserRepository
                 .GetFavoriteAttendedCategoryAsync(
                     user.IndividualProfile.Id,
+                    _timeProvider.GetUtcNow().UtcDateTime,
                     cancellationToken);
 
         var attendedEventsCount = user.IndividualProfile is null
             ? 0
             : await _appUserRepository.GetAttendedEventsCountAsync(
                 user.IndividualProfile.Id,
+                _timeProvider.GetUtcNow().UtcDateTime,
                 cancellationToken);
 
         var statistics = new ProfileStatisticsResponse(

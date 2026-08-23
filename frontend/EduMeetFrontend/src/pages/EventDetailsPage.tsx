@@ -276,7 +276,7 @@ function EventDetailsPage() {
     user?.accountType === AccountType.Individual &&
     !isOrganizer &&
     hasEventPassed &&
-    isRegistered &&
+    event.hasCurrentUserAttended &&
     !event.hasCurrentUserReviewed;
 
   return (
@@ -420,9 +420,10 @@ function EventDetailsPage() {
                     </Link>
                   ) : user.accountType === AccountType.Individual &&
                     !isOrganizer &&
-                    !isRegistered ? (
+                    !event.hasCurrentUserAttended ? (
                     <p>
-                      Only registered attendees can post reviews for this event.
+                      Only attendees who checked in at this event can post a
+                      review.
                     </p>
                   ) : null}
                 </section>

@@ -17,6 +17,12 @@ public interface IEducationalEventService
             CancellationToken cancellationToken = default);
 
     Task<PagedResult<EducationalEventResponse>>
+        GetMyAttendedEventsAsync(
+            string username,
+            GetAttendedEventsRequest request,
+            CancellationToken cancellationToken = default);
+
+    Task<PagedResult<EducationalEventResponse>>
         GetOrganizedEventsAsync(
             Guid organizerId,
             GetEducationalEventsRequest request,

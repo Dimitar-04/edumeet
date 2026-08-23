@@ -29,9 +29,11 @@ public interface IAppUserRepository:IBaseRepository<AppUser>
 
     Task<string?> GetFavoriteAttendedCategoryAsync(
         Guid individualProfileId,
+        DateTime nowUtc,
         CancellationToken cancellationToken = default);
 
     Task<int> GetAttendedEventsCountAsync(
         Guid individualProfileId,
+        DateTime nowUtc,
         CancellationToken cancellationToken = default);
 }

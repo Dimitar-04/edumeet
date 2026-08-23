@@ -64,6 +64,32 @@ public class EventsController : ControllerBase
         return Ok(events);
     }
 
+    [HttpGet("my-attended")]
+    [ProducesResponseType<PagedResult<EducationalEventResponse>>(
+        StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetMyAttendedEvents(
+        [FromQuery] GetAttendedEventsRequest request,
+        CancellationToken cancellationToken)
+    {
+        var username = User.Identity?.Name;
+
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return Unauthorized();
+        }
+
+        var events = await _educationalEventService
+            .GetMyAttendedEventsAsync(
+                username,
+                request,
+                cancellationToken);
+
+        return Ok(events);
+    }
+
     [AllowAnonymous]
     [HttpGet("organized-by/{organizerId:guid}")]
     [ProducesResponseType<PagedResult<EducationalEventResponse>>(

@@ -285,7 +285,7 @@ public sealed class AuthService(
         
         storedToken.RevokedAtUtc = now;
 
-        var replacement = tokenService.CreateRefreshToken(storedToken.ExpiresAtUtc);
+        var replacement = tokenService.CreateRefreshToken();
         
         refreshTokenRepository.Add(new RefreshToken
         {

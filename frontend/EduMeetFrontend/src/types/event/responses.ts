@@ -27,6 +27,7 @@ export interface EducationalEventResponse {
   registeredPeopleCount: number;
   attendedPeopleCount: number;
   isCurrentUserRegistered: boolean;
+  hasCurrentUserAttended: boolean;
   averageRating: number | null;
   ratingCount: number;
   hasCurrentUserReviewed: boolean;

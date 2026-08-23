@@ -19,6 +19,7 @@ public sealed record EducationalEventResponse(
     int RegisteredPeopleCount,
     int AttendedPeopleCount,
     bool IsCurrentUserRegistered,
+    bool HasCurrentUserAttended,
     double? AverageRating,
     int RatingCount,
     bool HasCurrentUserReviewed,

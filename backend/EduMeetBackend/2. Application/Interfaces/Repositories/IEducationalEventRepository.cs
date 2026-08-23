@@ -32,6 +32,14 @@ public interface IEducationalEventRepository : IBaseRepository<EducationalEvent>
             int pageSize,
             CancellationToken cancellationToken = default);
 
+    Task<PagedResult<EducationalEvent>> GetAttendedWithDetailsAsync(
+        Guid individualProfileId,
+        DateTime nowUtc,
+        string? category,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken = default);
+
     Task<EducationalEvent?> GetByIdWithOrganizerAsync(
         Guid eventId,
         CancellationToken cancellationToken = default);
