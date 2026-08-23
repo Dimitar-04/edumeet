@@ -36,6 +36,30 @@ public class EventsController : ControllerBase
         return Ok(events);
     }
 
+    [HttpGet("my-schedule")]
+    [ProducesResponseType<IReadOnlyList<EducationalEventResponse>>(
+        StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetMySchedule(
+        CancellationToken cancellationToken)
+    {
+        var username = User.Identity?.Name;
+
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return Unauthorized();
+        }
+
+        var events = await _educationalEventService
+            .GetMyUpcomingScheduleAsync(
+                username,
+                cancellationToken);
+
+        return Ok(events);
+    }
+
     [AllowAnonymous]
     [HttpGet("{eventId:guid}")]
     [ProducesResponseType<EducationalEventResponse>(

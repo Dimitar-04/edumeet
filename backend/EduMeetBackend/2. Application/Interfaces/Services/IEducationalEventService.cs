@@ -9,6 +9,11 @@ public interface IEducationalEventService
         GetEducationalEventsRequest request,
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<EducationalEventResponse>>
+        GetMyUpcomingScheduleAsync(
+            string username,
+            CancellationToken cancellationToken = default);
+
     Task<EducationalEventResponse?> GetByIdAsync(
         Guid eventId,
         string? currentUsername,

@@ -55,6 +55,30 @@ public class EducationalEventRepository(ApplicationDbContext context) :BaseRepos
         return await query.ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<EducationalEvent>>
+        GetUpcomingRegisteredWithDetailsAsync(
+            Guid individualProfileId,
+            DateTime nowUtc,
+            CancellationToken cancellationToken = default)
+    {
+        return await Context.EducationalEvents
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Where(educationalEvent =>
+                educationalEvent.Date > nowUtc &&
+                educationalEvent.EventParticipants.Any(participant =>
+                    participant.ParticipantId == individualProfileId))
+            .Include(educationalEvent => educationalEvent.Organizer)
+                .ThenInclude(organizer => organizer.IndividualProfile)
+            .Include(educationalEvent => educationalEvent.Organizer)
+                .ThenInclude(organizer => organizer.OrganizationProfile)
+            .Include(educationalEvent =>
+                educationalEvent.EventParticipants)
+            .Include(educationalEvent => educationalEvent.Reviews)
+            .OrderBy(educationalEvent => educationalEvent.Date)
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<EducationalEvent?> GetByIdWithOrganizerAsync(
         Guid eventId,
         CancellationToken cancellationToken = default)

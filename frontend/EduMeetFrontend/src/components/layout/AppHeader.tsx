@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
+import { AccountType } from '../../types/user/auth';
 import UserAvatar from '../user/UserAvatar';
 
 function AppHeader() {
@@ -16,13 +17,20 @@ function AppHeader() {
         </Link>
 
         <nav className="primary-nav" aria-label="Primary navigation">
-          <NavLink to="/" end>Home</NavLink>
+          <NavLink to="/" end>
+            Home
+          </NavLink>
           <NavLink to="/events">Events</NavLink>
-          <span className="nav-disabled" title="Coming soon">Organizations</span>
+          {user?.accountType === AccountType.Individual ? (
+            <NavLink to="/my-events">My schedule</NavLink>
+          ) : null}
         </nav>
 
         <div className="header-actions">
-          <Link className="button button-primary header-create" to="/events/create">
+          <Link
+            className="button button-primary header-create"
+            to="/events/create"
+          >
             Create event
           </Link>
 
@@ -53,7 +61,10 @@ function AppHeader() {
                   <strong>Guest</strong>
                 </span>
               </div>
-              <Link className="button button-secondary header-login" to="/login">
+              <Link
+                className="button button-secondary header-login"
+                to="/login"
+              >
                 Log in
               </Link>
             </div>

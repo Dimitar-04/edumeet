@@ -25,6 +25,16 @@ export async function getEvents(
   return response.data;
 }
 
+export async function getMyUpcomingSchedule(): Promise<
+  EducationalEventResponse[]
+> {
+  const response = await axiosInstance.get<EducationalEventResponse[]>(
+    '/events/my-schedule',
+  );
+
+  return response.data;
+}
+
 export async function createEvent(
   request: CreateEducationalEventRequest,
 ): Promise<EducationalEventResponse> {

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 import {
   useEffect,
   useMemo,
@@ -6,23 +6,23 @@ import {
   useState,
   type ChangeEvent,
   type FormEvent,
-} from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router";
+} from 'react';
+import { Link, Navigate, useNavigate, useParams } from 'react-router';
 import {
   getPublicProfile,
   updateProfileImage,
   updateUsername,
-} from "../api/profileApi";
-import ProfileEventCard from "../components/events/ProfileEventCard";
-import AppHeader from "../components/layout/AppHeader";
-import UserAvatar from "../components/user/UserAvatar";
-import { useAuth } from "../contexts/AuthContext";
-import type { ValidationProblemDetails } from "../types/api/errors";
-import { AccountType } from "../types/user/auth";
-import type { PublicUserProfileResponse } from "../types/user/responses";
+} from '../api/profileApi';
+import ProfileEventCard from '../components/events/ProfileEventCard';
+import AppHeader from '../components/layout/AppHeader';
+import UserAvatar from '../components/user/UserAvatar';
+import { useAuth } from '../contexts/AuthContext';
+import type { ValidationProblemDetails } from '../types/api/errors';
+import { AccountType } from '../types/user/auth';
+import type { PublicUserProfileResponse } from '../types/user/responses';
 
 const maximumProfileImageSizeBytes = 5 * 1024 * 1024;
-const acceptedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+const acceptedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
 function ProfilePage() {
   const { userId } = useParams();
@@ -34,22 +34,19 @@ function ProfilePage() {
     null,
   );
   const [isProfileLoading, setIsProfileLoading] = useState(true);
-  const [profileError, setProfileError] = useState("");
+  const [profileError, setProfileError] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const [imagePreviewUrl, setImagePreviewUrl] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState("");
-  const [uploadMessage, setUploadMessage] = useState("");
-  const [usernameValue, setUsernameValue] = useState(user?.userName ?? "");
+  const [uploadError, setUploadError] = useState('');
+  const [uploadMessage, setUploadMessage] = useState('');
+  const [usernameValue, setUsernameValue] = useState(user?.userName ?? '');
   const [isUsernameSaving, setIsUsernameSaving] = useState(false);
-  const [usernameError, setUsernameError] = useState("");
-  const [usernameMessage, setUsernameMessage] = useState("");
+  const [usernameError, setUsernameError] = useState('');
+  const [usernameMessage, setUsernameMessage] = useState('');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [logoutError, setLogoutError] = useState("");
-
-  useEffect(() => {
-    setUsernameValue(user?.userName ?? "");
-  }, [user?.userName]);
+  const [logoutError, setLogoutError] = useState('');
+  const [profileViewedAt] = useState(Date.now);
 
   useEffect(() => {
     return () => {
@@ -59,7 +56,6 @@ function ProfilePage() {
 
   useEffect(() => {
     if (isAuthLoading || !requestedUserId) {
-      if (!isAuthLoading) setIsProfileLoading(false);
       return;
     }
 
@@ -67,21 +63,22 @@ function ProfilePage() {
     const loadProfile = async () => {
       try {
         setIsProfileLoading(true);
-        setProfileError("");
+        setProfileError('');
         const response = await getPublicProfile(requestedUserId);
         if (!isCurrent) return;
 
         if (!response) {
           setProfile(null);
-          setProfileError("This profile could not be found.");
+          setProfileError('This profile could not be found.');
           return;
         }
 
         setProfile(response);
+        setUsernameValue(response.userName);
       } catch {
         if (isCurrent) {
           setProfile(null);
-          setProfileError("The profile could not be loaded.");
+          setProfileError('The profile could not be loaded.');
         }
       } finally {
         if (isCurrent) setIsProfileLoading(false);
@@ -94,27 +91,26 @@ function ProfilePage() {
     };
   }, [isAuthLoading, requestedUserId]);
 
-  const { upcomingHostedEvents, pastHostedEvents, attendedEvents } =
-    useMemo(() => {
-      const now = Date.now();
-      const events = profile?.organizedEvents ?? [];
+  const { upcomingHostedEvents, pastHostedEvents } = useMemo(() => {
+    const events = profile?.organizedEvents ?? [];
 
-      return {
-        upcomingHostedEvents: events
-          .filter((event) => new Date(event.date).getTime() >= now)
-          .sort(
-            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-          ),
-        pastHostedEvents: events
-          .filter((event) => new Date(event.date).getTime() < now)
-          .sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-          ),
-        attendedEvents: [...(profile?.attendedEvents ?? [])].sort(
+    return {
+      upcomingHostedEvents: events
+        .filter((event) => new Date(event.date).getTime() >= profileViewedAt)
+        .sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+        ),
+      pastHostedEvents: events
+        .filter((event) => new Date(event.date).getTime() < profileViewedAt)
+        .sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         ),
-      };
-    }, [profile]);
+    };
+  }, [profile, profileViewedAt]);
+
+  if (!isAuthLoading && !userId && !user) {
+    return <Navigate to="/login" replace />;
+  }
 
   if (isAuthLoading || isProfileLoading) {
     return (
@@ -126,8 +122,6 @@ function ProfilePage() {
       </div>
     );
   }
-
-  if (!userId && !user) return <Navigate to="/login" replace />;
 
   if (!profile) {
     return (
@@ -149,27 +143,27 @@ function ProfilePage() {
   const isOwnProfile = user?.id === profile.id;
   const accountLabel =
     profile.accountType === AccountType.Organization
-      ? "Organization"
-      : "Individual";
+      ? 'Organization'
+      : 'Individual';
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const image = event.target.files?.[0] ?? null;
-    setUploadError("");
-    setUploadMessage("");
+    setUploadError('');
+    setUploadMessage('');
 
     if (!image) {
       setSelectedImage(null);
-      setImagePreviewUrl("");
+      setImagePreviewUrl('');
       return;
     }
     if (!acceptedImageTypes.has(image.type)) {
-      setUploadError("Choose a JPEG, PNG, or WebP image.");
-      event.target.value = "";
+      setUploadError('Choose a JPEG, PNG, or WebP image.');
+      event.target.value = '';
       return;
     }
     if (image.size > maximumProfileImageSizeBytes) {
-      setUploadError("The profile image cannot exceed 5 MB.");
-      event.target.value = "";
+      setUploadError('The profile image cannot exceed 5 MB.');
+      event.target.value = '';
       return;
     }
 
@@ -181,8 +175,8 @@ function ProfilePage() {
     if (!selectedImage || !user || !isOwnProfile) return;
     try {
       setIsUploading(true);
-      setUploadError("");
-      setUploadMessage("");
+      setUploadError('');
+      setUploadMessage('');
       const response = await updateProfileImage({ image: selectedImage });
 
       setUser({ ...user, imageUrl: response.imageUrl });
@@ -190,11 +184,11 @@ function ProfilePage() {
         current ? { ...current, imageUrl: response.imageUrl } : current,
       );
       setSelectedImage(null);
-      setImagePreviewUrl("");
-      setUploadMessage("Your profile photo has been updated.");
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      setImagePreviewUrl('');
+      setUploadMessage('Your profile photo has been updated.');
+      if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (error) {
-      let message = "The profile photo could not be updated.";
+      let message = 'The profile photo could not be updated.';
       if (axios.isAxiosError<ValidationProblemDetails>(error)) {
         const errors = error.response?.data.errors;
         const firstError = errors ? Object.values(errors).flat()[0] : undefined;
@@ -214,15 +208,15 @@ function ProfilePage() {
     const nextUsername = usernameValue.trim();
 
     if (nextUsername.length < 3) {
-      setUsernameError("Username must contain at least 3 characters.");
-      setUsernameMessage("");
+      setUsernameError('Username must contain at least 3 characters.');
+      setUsernameMessage('');
       return;
     }
 
     try {
       setIsUsernameSaving(true);
-      setUsernameError("");
-      setUsernameMessage("");
+      setUsernameError('');
+      setUsernameMessage('');
 
       const updatedUser = await updateUsername({
         userName: nextUsername,
@@ -230,20 +224,16 @@ function ProfilePage() {
 
       setUser(updatedUser);
       setProfile((current) =>
-        current
-          ? { ...current, userName: updatedUser.userName }
-          : current,
+        current ? { ...current, userName: updatedUser.userName } : current,
       );
       setUsernameValue(updatedUser.userName);
-      setUsernameMessage("Your username has been updated.");
+      setUsernameMessage('Your username has been updated.');
     } catch (error) {
-      let message = "The username could not be updated.";
+      let message = 'The username could not be updated.';
 
       if (axios.isAxiosError<ValidationProblemDetails>(error)) {
         const errors = error.response?.data.errors;
-        const firstError = errors
-          ? Object.values(errors).flat()[0]
-          : undefined;
+        const firstError = errors ? Object.values(errors).flat()[0] : undefined;
 
         message = firstError ?? error.response?.data.title ?? message;
       }
@@ -257,11 +247,11 @@ function ProfilePage() {
   const handleLogout = async () => {
     try {
       setIsLoggingOut(true);
-      setLogoutError("");
+      setLogoutError('');
       await logout();
-      navigate("/", { replace: true });
+      navigate('/', { replace: true });
     } catch {
-      setLogoutError("Could not log you out. Please try again.");
+      setLogoutError('Could not log you out. Please try again.');
       setIsLoggingOut(false);
     }
   };
@@ -312,18 +302,12 @@ function ProfilePage() {
             </div>
             <div>
               <dt>
-                {profile.individual
-                  ? profile.attendedEventsCount
-                  : pastHostedEvents.reduce(
-                      (sum, event) => sum + event.ratingCount,
-                      0,
-                    )}
+                {pastHostedEvents.reduce(
+                  (sum, event) => sum + event.ratingCount,
+                  0,
+                )}
               </dt>
-              <dd>
-                {profile.individual
-                  ? "Events attended"
-                  : "Ratings received"}
-              </dd>
+              <dd>Ratings received</dd>
             </div>
           </dl>
 
@@ -341,7 +325,10 @@ function ProfilePage() {
                     </small>
                   </div>
                   <div className="profile-username-input-row">
-                    <label className="visually-hidden" htmlFor="profile-username">
+                    <label
+                      className="visually-hidden"
+                      htmlFor="profile-username"
+                    >
                       Username
                     </label>
                     <input
@@ -355,8 +342,8 @@ function ProfilePage() {
                       disabled={isUsernameSaving}
                       onChange={(event) => {
                         setUsernameValue(event.target.value);
-                        setUsernameError("");
-                        setUsernameMessage("");
+                        setUsernameError('');
+                        setUsernameMessage('');
                       }}
                     />
                     <button
@@ -367,7 +354,7 @@ function ProfilePage() {
                         usernameValue.trim() === user.userName
                       }
                     >
-                      {isUsernameSaving ? "Saving..." : "Save username"}
+                      {isUsernameSaving ? 'Saving...' : 'Save username'}
                     </button>
                   </div>
                   {usernameError ? (
@@ -409,7 +396,7 @@ function ProfilePage() {
                         disabled={isUploading}
                         onClick={() => void handleImageUpload()}
                       >
-                        {isUploading ? "Saving..." : "Save photo"}
+                        {isUploading ? 'Saving...' : 'Save photo'}
                       </button>
                     ) : null}
                   </div>
@@ -437,7 +424,7 @@ function ProfilePage() {
             <div>
               <p className="eyebrow">
                 {isOwnProfile
-                  ? "Created by you"
+                  ? 'Created by you'
                   : `Created by ${profile.displayName}`}
               </p>
               <h2 id="upcoming-title">Upcoming Events</h2>
@@ -469,7 +456,7 @@ function ProfilePage() {
           <div className="profile-section-heading">
             <div>
               <p className="eyebrow">
-                {isOwnProfile ? "Your hosting archive" : ""}
+                {isOwnProfile ? 'Your hosting archive' : ''}
               </p>
               <h2 id="past-title">Past Events</h2>
             </div>
@@ -491,37 +478,6 @@ function ProfilePage() {
           )}
         </section>
 
-        {isOwnProfile && profile.individual ? (
-          <section
-            className="profile-events-section profile-attended-section"
-            aria-labelledby="attended-title"
-          >
-            <div className="profile-section-heading">
-              <div>
-                <p className="eyebrow">Your participation</p>
-                <h2 id="attended-title">Events you attended</h2>
-              </div>
-              <span>{profile.attendedEventsCount}</span>
-            </div>
-            {attendedEvents.length ? (
-              <div className="profile-event-grid">
-                {attendedEvents.map((event) => (
-                  <ProfileEventCard
-                    key={event.id}
-                    event={event}
-                    showRating
-                    relationship="attended"
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="profile-events-empty">
-                You haven&apos;t attended any completed events yet.
-              </p>
-            )}
-          </section>
-        ) : null}
-
         {isOwnProfile ? (
           <section className="profile-account-actions">
             <div>
@@ -534,7 +490,7 @@ function ProfilePage() {
               disabled={isLoggingOut || isUploading}
               onClick={() => void handleLogout()}
             >
-              {isLoggingOut ? "Logging out..." : "Log out"}
+              {isLoggingOut ? 'Logging out...' : 'Log out'}
             </button>
             {logoutError ? (
               <p className="publish-error" role="alert">

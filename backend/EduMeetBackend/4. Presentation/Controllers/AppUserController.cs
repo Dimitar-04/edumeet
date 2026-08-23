@@ -140,7 +140,6 @@ public class AppUserController:ControllerBase
     {
         var profile = await _appUserService.GetUserProfileByIdAsync(
             userId,
-            User.Identity?.Name,
             cancellationToken);
 
         if (profile is null)

@@ -52,6 +52,42 @@ public sealed class EducationalEventService(
             .ToList();
     }
 
+    public async Task<IReadOnlyList<EducationalEventResponse>>
+        GetMyUpcomingScheduleAsync(
+            string username,
+            CancellationToken cancellationToken = default)
+    {
+        var user = await appUserRepository.FindByUsernameAsync(
+            username,
+            cancellationToken);
+
+        if (user is null)
+        {
+            throw new NotFoundException(
+                "The authenticated user no longer exists.");
+        }
+
+        if (user.IndividualProfile is null)
+        {
+            throw new ForbiddenException(
+                "Only individual accounts have a registered-event schedule.");
+        }
+
+        var individualProfileId = user.IndividualProfile.Id;
+        var events = await eventRepository
+            .GetUpcomingRegisteredWithDetailsAsync(
+                individualProfileId,
+                timeProvider.GetUtcNow().UtcDateTime,
+                cancellationToken);
+
+        return events
+            .Select(educationalEvent =>
+                ToResponse(
+                    educationalEvent,
+                    individualProfileId))
+            .ToList();
+    }
+
     public async Task<EducationalEventResponse?> GetByIdAsync(
         Guid eventId,
         string? currentUsername,

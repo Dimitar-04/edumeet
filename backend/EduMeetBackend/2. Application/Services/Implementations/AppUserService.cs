@@ -15,20 +15,17 @@ public class AppUserService:IAppUserService
     private readonly IUnitOfWork _unitOfWork;
     private readonly  IFileUploadService _fileUploadService;
     private readonly ITokenService _tokenService;
-    private readonly TimeProvider _timeProvider;
 
     public AppUserService(
         IAppUserRepository appUserRepository,
         IUnitOfWork unitOfWork,
         IFileUploadService fileUploadService,
-        ITokenService tokenService,
-        TimeProvider timeProvider)
+        ITokenService tokenService)
     {
         _appUserRepository = appUserRepository;
         _unitOfWork = unitOfWork;
         _fileUploadService = fileUploadService;
         _tokenService = tokenService;
-        _timeProvider = timeProvider;
     }
 
     public async Task<AppUser?> UpdateProfileImageAsync(string username, UploadedFileData image, CancellationToken ct = default)
@@ -97,7 +94,6 @@ public class AppUserService:IAppUserService
 
     public async Task<PublicUserProfileResponse?> GetUserProfileByIdAsync(
         Guid userId,
-        string? currentUsername,
         CancellationToken cancellationToken = default)
     {
         var user = await _appUserRepository.GetPublicProfileAsync(
@@ -139,28 +135,6 @@ public class AppUserService:IAppUserService
             .Select(ToProfileEventResponse)
             .ToList();
 
-        var isOwnProfile = !string.IsNullOrWhiteSpace(currentUsername) &&
-            string.Equals(
-                user.UserName,
-                currentUsername,
-                StringComparison.OrdinalIgnoreCase);
-
-        var nowUtc = _timeProvider.GetUtcNow().UtcDateTime;
-
-        var completedAttendedEvents = user.IndividualProfile is not null
-            ? user.IndividualProfile.EventParticipants
-                .Select(participant => participant.EducationalEvent)
-                .Where(educationalEvent => educationalEvent.Date <= nowUtc)
-                .OrderByDescending(educationalEvent => educationalEvent.Date)
-                .ToList()
-            : [];
-
-        var attendedEvents = isOwnProfile
-            ? completedAttendedEvents
-                .Select(ToProfileEventResponse)
-                .ToList()
-            : [];
-        
         return new PublicUserProfileResponse(
             user.Id,
             user.UserName!,
@@ -169,9 +143,7 @@ public class AppUserService:IAppUserService
             user.ImageUrl,
             individual,
             organization,
-            organizedEvents,
-            completedAttendedEvents.Count,
-            attendedEvents);
+            organizedEvents);
     }
 
     private static ProfileEventResponse ToProfileEventResponse(

@@ -4,6 +4,7 @@ import EventDetailsPage from './pages/EventDetailsPage';
 import EventAttendancePage from './pages/EventAttendancePage';
 import HomePage from './pages/HomePage';
 import LandingPage from './pages/LandingPage';
+import MySchedulePage from './pages/MySchedulePage';
 import ProfilePage from './pages/ProfilePage';
 import { createBrowserRouter, Navigate } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: '/events/create',
     element: <CreateEventPage />,
+  },
+  {
+    path: '/my-events',
+    element: <MySchedulePage />,
   },
   {
     path: '/events/:eventId/attendance',

@@ -16,6 +16,5 @@ public interface IAppUserService
     
     Task<PublicUserProfileResponse?> GetUserProfileByIdAsync(
         Guid userId,
-        string? currentUsername,
         CancellationToken cancellationToken = default);
 }

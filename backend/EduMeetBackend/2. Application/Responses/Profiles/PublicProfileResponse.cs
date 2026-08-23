@@ -10,6 +10,4 @@ public sealed record PublicUserProfileResponse(
     string? ImageUrl,
     IndividualProfileResponse? Individual,
     OrganizationProfileResponse? Organization,
-    List<ProfileEventResponse> OrganizedEvents,
-    int AttendedEventsCount,
-    List<ProfileEventResponse> AttendedEvents);
+    List<ProfileEventResponse> OrganizedEvents);

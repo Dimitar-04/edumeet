@@ -11,6 +11,11 @@ public interface IEducationalEventRepository : IBaseRepository<EducationalEvent>
         DateTime nowUtc,
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<EducationalEvent>> GetUpcomingRegisteredWithDetailsAsync(
+            Guid individualProfileId,
+            DateTime nowUtc,
+            CancellationToken cancellationToken = default);
+
     Task<EducationalEvent?> GetByIdWithOrganizerAsync(
         Guid eventId,
         CancellationToken cancellationToken = default);

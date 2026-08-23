@@ -87,12 +87,9 @@ public sealed class AppUserRepository(UserManager<AppUser> userManager, Applicat
             .AsNoTracking()
             .AsSplitQuery()
             .Include(u => u.IndividualProfile)
-                .ThenInclude(profile => profile!.EventParticipants)
-                    .ThenInclude(participant => participant.EducationalEvent)
-                        .ThenInclude(educationalEvent => educationalEvent.Reviews)
             .Include(u => u.OrganizationProfile)
             .Include(u => u.OrganizedEvents)
-            .ThenInclude(oe => oe.Reviews)
+                .ThenInclude(educationalEvent => educationalEvent.Reviews)
             .SingleOrDefaultAsync(
                 u => u.Id == userId,
                 cancellationToken

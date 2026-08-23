@@ -695,6 +695,97 @@ a {
   font-size: 0.84rem;
 }
 
+.schedule-page {
+  padding-top: clamp(42px, 7vw, 82px);
+  padding-bottom: 90px;
+}
+
+.schedule-hero {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 54px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 34px;
+}
+
+.schedule-hero h1 {
+  margin: 6px 0 14px;
+  font-size: clamp(2.8rem, 7vw, 5.7rem);
+  font-weight: 540;
+  letter-spacing: -0.065em;
+}
+
+.schedule-hero > div:first-child > p:last-child {
+  max-width: 590px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.schedule-count {
+  display: grid;
+  min-width: 112px;
+  justify-items: center;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 17px 22px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.schedule-count strong {
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+}
+
+.schedule-count span {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.schedule-heading h2 {
+  margin: 0;
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+  font-weight: 560;
+  letter-spacing: -0.05em;
+}
+
+.schedule-grid {
+  margin-top: 28px;
+}
+
+.schedule-empty .button {
+  margin-top: 12px;
+}
+
+.profile-owner-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(109, 129, 150, 0.24);
+  border-radius: 18px;
+  padding: 18px 20px;
+  background: rgba(109, 129, 150, 0.07);
+}
+
+.profile-owner-navigation strong,
+.profile-owner-navigation p {
+  margin: 0;
+}
+
+.profile-owner-navigation p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
 .landing-next {
   display: grid;
   align-content: end;
@@ -2986,6 +3077,7 @@ a {
   .section-heading,
   .event-filters,
   .event-scope-toolbar,
+  .schedule-hero,
   .organizer-banner {
     align-items: flex-start;
     flex-direction: column;
@@ -3006,6 +3098,15 @@ a {
 
   .event-scope-toolbar {
     gap: 10px;
+  }
+
+  .schedule-count {
+    justify-items: start;
+  }
+
+  .profile-owner-navigation {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .profile-settings-grid {
