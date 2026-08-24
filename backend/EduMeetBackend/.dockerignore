@@ -1,0 +1,9 @@
+**/bin
+**/obj
+.idea
+*.user
+*.suo
+.env
+.env.*
+4. Presentation/appsettings.Development.json
+4. Presentation/wwwroot/uploads

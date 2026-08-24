@@ -1,22 +1,76 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:17
-    container_name: edumeet-postgres
-
     restart: unless-stopped
-
     environment:
       POSTGRES_DB: edumeet
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-
     ports:
       - "5433:5432"
-
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d edumeet"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrations
+    environment: &backend-environment
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=edumeet;Username=postgres;Password=postgres
+      Jwt__SigningKey: "${JWT_SIGNING_KEY:?Set JWT_SIGNING_KEY in the Compose .env file}"
+      Jwt__Issuer: EduMeet.Api
+      Jwt__Audience: EduMeet.Frontend
+      Jwt__AccessTokenMinutes: "15"
+      Jwt__RefreshTokenDays: "10"
+      Email__Host: smtp.gmail.com
+      Email__Port: "587"
+      Email__Username: "${EMAIL_USERNAME:?Set EMAIL_USERNAME in the Compose .env file}"
+      Email__Password: "${EMAIL_PASSWORD:?Set EMAIL_PASSWORD in the Compose .env file}"
+      Email__FromAddress: "${EMAIL_FROM_ADDRESS:?Set EMAIL_FROM_ADDRESS in the Compose .env file}"
+      Email__FromName: EduMeet
+      Email__FrontendBaseUrl: http://localhost:5173
+      Email__UseSslOnConnect: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      <<: *backend-environment
+      ASPNETCORE_URLS: http://+:5062
+    ports:
+      - "5062:5062"
+    volumes:
+      - uploads:/app/wwwroot/uploads
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  frontend:
+    build:
+      context: ../../frontend/EduMeetFrontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      VITE_GOOGLE_MAPS_API_KEY: "${VITE_GOOGLE_MAPS_API_KEY:?Set VITE_GOOGLE_MAPS_API_KEY in the Compose .env file}"
+    ports:
+      - "5173:5173"
+    depends_on:
+      backend:
+        condition: service_started
 
 volumes:
   postgres_data:
+  uploads:
