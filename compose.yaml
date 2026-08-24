@@ -18,22 +18,22 @@ services:
 
   migrate:
     build:
-      context: .
+      context: ./backend/EduMeetBackend
       dockerfile: Dockerfile
       target: migrations
     environment: &backend-environment
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=edumeet;Username=postgres;Password=postgres
-      Jwt__SigningKey: "${JWT_SIGNING_KEY:?Set JWT_SIGNING_KEY in the Compose .env file}"
+      Jwt__SigningKey: "${JWT_SIGNING_KEY:-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}"
       Jwt__Issuer: EduMeet.Api
       Jwt__Audience: EduMeet.Frontend
       Jwt__AccessTokenMinutes: "15"
       Jwt__RefreshTokenDays: "10"
       Email__Host: smtp.gmail.com
       Email__Port: "587"
-      Email__Username: "${EMAIL_USERNAME:?Set EMAIL_USERNAME in the Compose .env file}"
-      Email__Password: "${EMAIL_PASSWORD:?Set EMAIL_PASSWORD in the Compose .env file}"
-      Email__FromAddress: "${EMAIL_FROM_ADDRESS:?Set EMAIL_FROM_ADDRESS in the Compose .env file}"
+      Email__Username: "${EMAIL_USERNAME:-}"
+      Email__Password: "${EMAIL_PASSWORD:-}"
+      Email__FromAddress: "${EMAIL_FROM_ADDRESS:-noreply@edumeet.local}"
       Email__FromName: EduMeet
       Email__FrontendBaseUrl: http://localhost:5173
       Email__UseSslOnConnect: "false"
@@ -44,7 +44,7 @@ services:
 
   backend:
     build:
-      context: .
+      context: ./backend/EduMeetBackend
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
@@ -60,11 +60,11 @@ services:
 
   frontend:
     build:
-      context: ../../frontend/EduMeetFrontend
+      context: ./frontend/EduMeetFrontend
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
-      VITE_GOOGLE_MAPS_API_KEY: "${VITE_GOOGLE_MAPS_API_KEY:?Set VITE_GOOGLE_MAPS_API_KEY in the Compose .env file}"
+      VITE_GOOGLE_MAPS_API_KEY: "${VITE_GOOGLE_MAPS_API_KEY:-}"
     ports:
       - "5173:5173"
     depends_on:
