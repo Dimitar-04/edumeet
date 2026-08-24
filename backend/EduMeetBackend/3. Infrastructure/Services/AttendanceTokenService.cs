@@ -72,8 +72,6 @@ public sealed class AttendanceTokenService
             compactCode.All(character =>
                 HumanFriendlyAlphabet.Contains(character));
 
-        // Keep already-issued long tokens working. Only the new 12-character
-        // attendance codes receive case/spacing/hyphen normalization.
         return isHumanFriendlyCode
             ? compactCode
             : trimmedToken;
