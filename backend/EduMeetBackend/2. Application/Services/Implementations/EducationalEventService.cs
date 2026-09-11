@@ -318,8 +318,6 @@ public sealed class EducationalEventService(
                     AttendanceTokenHash = attendanceToken.Hash
                 });
             
-            
-
             var recipientMail = user.Email;
             var recipientName =
                 $"{user.IndividualProfile.FirstName} " +
@@ -505,7 +503,7 @@ public sealed class EducationalEventService(
     if (organizer is null)
     {
         throw new NotFoundException(
-            "The authenticated user no longer exists.");
+            "The event organizer no longer exists.");
     }
 
     var educationalEvent =
@@ -534,11 +532,11 @@ public sealed class EducationalEventService(
     var checkInClosesAtUtc =
         educationalEvent.Date.AddHours(12);
 
-    // if (nowUtc < checkInOpensAtUtc)
-    // {
-    //     throw new ConflictException(
-    //         "Attendance check-in has not opened yet.");
-    // }
+    if (nowUtc < checkInOpensAtUtc)
+    {
+        throw new ConflictException(
+            "Attendance check-in has not opened yet.");
+    }
 
     if (nowUtc > checkInClosesAtUtc)
     {
