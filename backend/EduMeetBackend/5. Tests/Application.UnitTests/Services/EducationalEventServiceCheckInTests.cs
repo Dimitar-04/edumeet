@@ -289,6 +289,42 @@ public sealed class EducationalEventServiceCheckInTests
             .SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
+    [Fact(DisplayName = "Mutation: check-in at the exact opening time succeeds")]
+    public async Task CheckInParticipantAsync_AtOpeningBoundary_ChecksInParticipant()
+    {
+        // This kills the surviving mutation: nowUtc < opensAt becomes <=.
+        var scenario = new ValidCheckInScenario();
+        scenario.Event.Date = scenario.NowUtc.UtcDateTime.AddHours(1);
+
+        var result = await scenario.Service.CheckInParticipantAsync(
+            scenario.EventId,
+            ValidCheckInScenario.OrganizerUsername,
+            scenario.Request);
+
+        Assert.False(result.AlreadyCheckedIn);
+        Assert.Equal(scenario.NowUtc.UtcDateTime, result.CheckedInAtUtc);
+        await scenario.UnitOfWork.Received(1)
+            .SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact(DisplayName = "Mutation: check-in at the exact closing time succeeds")]
+    public async Task CheckInParticipantAsync_AtClosingBoundary_ChecksInParticipant()
+    {
+        // This kills the surviving mutation: nowUtc > closesAt becomes >=.
+        var scenario = new ValidCheckInScenario();
+        scenario.Event.Date = scenario.NowUtc.UtcDateTime.AddHours(-12);
+
+        var result = await scenario.Service.CheckInParticipantAsync(
+            scenario.EventId,
+            ValidCheckInScenario.OrganizerUsername,
+            scenario.Request);
+
+        Assert.False(result.AlreadyCheckedIn);
+        Assert.Equal(scenario.NowUtc.UtcDateTime, result.CheckedInAtUtc);
+        await scenario.UnitOfWork.Received(1)
+            .SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
     [Fact(DisplayName = "BCC variation: invalid attendance token is rejected")]
     public async Task CheckInParticipantAsync_WhenAttendanceTokenIsInvalid_ThrowsNotFoundException()
     {

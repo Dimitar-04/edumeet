@@ -39,6 +39,7 @@ dist/
 build/
 .vite/
 coverage/
+StrykerOutput/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

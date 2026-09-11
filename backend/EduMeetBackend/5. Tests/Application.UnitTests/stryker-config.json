@@ -1,0 +1,21 @@
+{
+  "stryker-config": {
+    "solution": "../../EduMeetBackend.sln",
+    "project": "Application.csproj",
+    "test-case-filter": "FullyQualifiedName~Application.UnitTests.Services.EducationalEventServiceCheckInTests",
+    "mutate": [
+      "**/EducationalEventService.cs{16365..19384}"
+    ],
+    "mutation-level": "Standard",
+    "reporters": [
+      "html",
+      "json",
+      "progress"
+    ],
+    "thresholds": {
+      "high": 80,
+      "low": 60,
+      "break": 0
+    }
+  }
+}

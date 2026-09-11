@@ -16,7 +16,7 @@ API, UI, end-to-end, and load tests.
 Included:
 
 - Functionality-based Input Space Partitioning (ISP) with Base Choice Coverage.
-- Graph coverage using Edge Coverage.
+- Source-code mutation testing with Stryker.NET.
 - Backend unit tests.
 - Targeted frontend component tests.
 - PostgreSQL integration tests.
@@ -28,7 +28,7 @@ Included:
 
 Excluded:
 
-- Mutation testing.
+- Graph coverage.
 - Security testing.
 - Exhaustive tests for trivial getters, setters, and static UI.
 - Final project documentation and presentation preparation; these will be
@@ -99,22 +99,31 @@ Each variation changes one non-base block while other applicable
 characteristics remain at their base blocks. Characteristics after a failed
 guard are considered not applicable because they cannot affect that execution.
 
-## 5. Graph Coverage
+## 5. Source-Code Mutation Testing
 
-Edge Coverage will be applied to the same `CheckInParticipantAsync` method.
+Stryker.NET will apply standard source-code mutations only to the configured
+source span containing `CheckInParticipantAsync`. The rest of
+`EducationalEventService` is excluded by the mutate filter.
 
 Implementation steps:
 
-1. Construct and number the control-flow graph nodes.
-2. List every feasible directed edge.
-3. Record the execution path of each BCC test.
-4. Map the tests to the edges they cover.
-5. Add a test only if a feasible edge is not covered by the BCC suite.
-6. Identify and explain any infeasible edge.
+1. Confirm that the original eight BCC tests pass.
+2. Generate mutants for operators, conditions, assignments, literals, LINQ,
+   and removable statements in the selected method.
+3. Run only `EducationalEventServiceCheckInTests` against the mutants.
+4. Inspect killed, surviving, uncovered, timed-out, and compile-error mutants.
+5. Add useful tests for meaningful surviving mutants.
+6. Identify any equivalent mutant that cannot change observable behavior.
+7. Save HTML and JSON reports as generated test artifacts.
 
-The existing BCC tests exercise both outcomes of every current decision, so
-they are expected to satisfy Edge Coverage without substantial duplicate tests.
-This still needs to be demonstrated through the formal graph and edge mapping.
+The initial quality target is an 80% or higher mutation score, with every
+surviving mutant individually analyzed. The preferred result is that all
+non-equivalent mutants are killed.
+
+Current result: Stryker generated 28 in-scope mutants. The original BCC suite
+killed 26; the two survivors changed the opening and closing comparisons to
+include equality. Two exact-boundary tests were added, after which all 28
+mutants were killed for a 100% mutation score.
 
 ## 6. Backend Unit Tests
 
@@ -368,7 +377,8 @@ slower and more sensitive to the execution environment.
 - [x] Add xUnit, NSubstitute, and Coverlet.
 - [x] Implement the successful BCC base case.
 - [x] Implement all non-base BCC cases.
-- [ ] Construct and map the formal control-flow graph.
+- [x] Configure and run mutation testing for `CheckInParticipantAsync`.
+- [x] Analyze surviving mutants and strengthen the selected tests.
 - [ ] Add remaining backend unit tests.
 - [ ] Generate and inspect backend coverage.
 - [ ] Add PostgreSQL integration-test infrastructure and tests.
@@ -387,7 +397,8 @@ slower and more sensitive to the execution environment.
 The testing implementation is complete when:
 
 - every feasible BCC block is tested;
-- every feasible graph edge of `CheckInParticipantAsync` is demonstrated;
+- mutation testing is restricted to `CheckInParticipantAsync` and every
+  surviving mutant is analyzed;
 - selected backend business rules have unit tests;
 - PostgreSQL-specific behavior is verified;
 - every API operation has a positive smoke test;
