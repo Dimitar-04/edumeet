@@ -379,7 +379,7 @@ slower and more sensitive to the execution environment.
 - [x] Implement all non-base BCC cases.
 - [x] Configure and run mutation testing for `CheckInParticipantAsync`.
 - [x] Analyze surviving mutants and strengthen the selected tests.
-- [ ] Add remaining backend unit tests.
+- [x] Add remaining backend unit tests.
 - [ ] Generate and inspect backend coverage.
 - [ ] Add PostgreSQL integration-test infrastructure and tests.
 - [ ] Add frontend component-test infrastructure and tests.
