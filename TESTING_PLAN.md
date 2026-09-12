@@ -380,8 +380,8 @@ slower and more sensitive to the execution environment.
 - [x] Configure and run mutation testing for `CheckInParticipantAsync`.
 - [x] Analyze surviving mutants and strengthen the selected tests.
 - [x] Add remaining backend unit tests.
-- [ ] Generate and inspect backend coverage.
-- [ ] Add PostgreSQL integration-test infrastructure and tests.
+- [x] Skip backend coverage measurement by agreement.
+- [x] Add PostgreSQL integration-test infrastructure and tests.
 - [ ] Add frontend component-test infrastructure and tests.
 - [ ] Prepare the isolated Docker test environment.
 - [ ] Add HTTP API tests.
