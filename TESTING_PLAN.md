@@ -382,7 +382,7 @@ slower and more sensitive to the execution environment.
 - [x] Add remaining backend unit tests.
 - [x] Skip backend coverage measurement by agreement.
 - [x] Add PostgreSQL integration-test infrastructure and tests.
-- [ ] Add frontend component-test infrastructure and tests.
+- [x] Add frontend component-test infrastructure and tests.
 - [ ] Prepare the isolated Docker test environment.
 - [ ] Add HTTP API tests.
 - [ ] Add Playwright infrastructure and E2E journeys.
