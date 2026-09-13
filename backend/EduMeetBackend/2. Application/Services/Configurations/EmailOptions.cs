@@ -17,4 +17,6 @@ public sealed class EmailOptions
         "http://localhost:5173";
 
     public bool UseSslOnConnect { get; init; }
+
+    public bool RequireStartTls { get; init; } = true;
 }

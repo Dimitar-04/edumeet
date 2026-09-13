@@ -39,6 +39,8 @@ dist/
 build/
 .vite/
 coverage/
+playwright-report/
+test-results/
 StrykerOutput/
 npm-debug.log*
 yarn-debug.log*

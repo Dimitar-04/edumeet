@@ -9,6 +9,11 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e:install": "playwright install chromium",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "e2e:stack:up": "docker compose -f ../../compose.e2e.yaml up --build -d --wait",
+    "e2e:stack:down": "docker compose -f ../../compose.e2e.yaml down --volumes --remove-orphans",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -21,6 +26,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/vite": "^4.3.2",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.1",

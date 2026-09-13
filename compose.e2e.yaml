@@ -1,0 +1,83 @@
+name: edumeet-e2e
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: edumeet_e2e
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d edumeet_e2e"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    environment:
+      MP_DATABASE: /tmp/mailpit.db
+    ports:
+      - "8026:8025"
+    tmpfs:
+      - /tmp
+
+  migrate:
+    build:
+      context: ./backend/EduMeetBackend
+      dockerfile: Dockerfile
+      target: migrations
+    environment: &backend-environment
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=edumeet_e2e;Username=postgres;Password=postgres
+      Jwt__SigningKey: QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE=
+      Jwt__Issuer: EduMeet.E2E
+      Jwt__Audience: EduMeet.E2E.Frontend
+      Jwt__AccessTokenMinutes: "60"
+      Jwt__RefreshTokenDays: "1"
+      Cors__AllowedOrigins__0: http://localhost:5174
+      Email__Host: mailpit
+      Email__Port: "1025"
+      Email__Username: ""
+      Email__Password: ""
+      Email__FromAddress: noreply@edumeet.test
+      Email__FromName: EduMeet E2E
+      Email__FrontendBaseUrl: http://localhost:5174
+      Email__UseSslOnConnect: "false"
+      Email__RequireStartTls: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  backend:
+    build:
+      context: ./backend/EduMeetBackend
+      dockerfile: Dockerfile
+    environment:
+      <<: *backend-environment
+      ASPNETCORE_URLS: http://+:5062
+    ports:
+      - "5063:5062"
+    tmpfs:
+      - /app/wwwroot/uploads
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      mailpit:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./frontend/EduMeetFrontend
+      dockerfile: Dockerfile
+    environment:
+      VITE_API_BASE_URL: http://localhost:5063/api
+      VITE_GOOGLE_MAPS_API_KEY: e2e-google-maps-key
+    ports:
+      - "5174:5173"
+    depends_on:
+      backend:
+        condition: service_started

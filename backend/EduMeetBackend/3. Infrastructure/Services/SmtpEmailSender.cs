@@ -170,7 +170,9 @@ public class SmtpEmailSender : IEmailSenderService
 
         var socketOptions = _options.UseSslOnConnect
             ? SecureSocketOptions.SslOnConnect
-            : SecureSocketOptions.StartTls;
+            : _options.RequireStartTls
+                ? SecureSocketOptions.StartTls
+                : SecureSocketOptions.None;
 
         await client.ConnectAsync(
             _options.Host,
