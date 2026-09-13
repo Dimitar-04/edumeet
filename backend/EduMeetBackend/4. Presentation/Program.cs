@@ -208,3 +208,6 @@ app.MapControllerRoute(
 
 
 app.Run();
+
+// Exposes the top-level entry point to WebApplicationFactory API tests.
+public partial class Program;

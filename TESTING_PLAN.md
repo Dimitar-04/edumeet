@@ -267,8 +267,12 @@ services or hardware.
 
 ## 10. HTTP API Tests
 
-API tests will call a running backend with a real PostgreSQL database. Clients
-will preserve authentication cookies between requests.
+API tests call the complete ASP.NET Core HTTP pipeline through
+`WebApplicationFactory`, backed by a disposable Testcontainers PostgreSQL
+database. Clients preserve authentication cookies between requests. The clock
+and file-storage boundary are replaced with deterministic test implementations;
+controllers, middleware, services, repositories, EF Core, and PostgreSQL remain
+real.
 
 Every API operation will receive one positive smoke test. Detailed negative
 cases will be concentrated on business-critical operations.
@@ -325,9 +329,10 @@ Docker Compose will provide:
 - React frontend;
 - health checks and predictable test ports.
 
-Docker Compose will be used for API, E2E, and load testing. Unit and frontend
-component tests do not require Docker. PostgreSQL integration tests will use a
-smaller Testcontainers-managed database rather than the complete Compose stack.
+Docker Compose will be used for E2E and load testing. Unit and frontend
+component tests do not require Docker. PostgreSQL integration and HTTP API tests
+use smaller Testcontainers-managed databases rather than the complete Compose
+stack.
 
 The test environment will use disposable data and will not reuse production or
 development database volumes.
@@ -384,7 +389,7 @@ slower and more sensitive to the execution environment.
 - [x] Add PostgreSQL integration-test infrastructure and tests.
 - [x] Add frontend component-test infrastructure and tests.
 - [ ] Prepare the isolated Docker test environment.
-- [ ] Add HTTP API tests.
+- [x] Add HTTP API tests.
 - [ ] Add Playwright infrastructure and E2E journeys.
 - [ ] Add representative accessibility and mobile checks.
 - [ ] Add k6 load tests.

@@ -88,6 +88,8 @@ public class AppUserService:IAppUserService
                 updateResult.Errors);
         }
 
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
         var accessToken = _tokenService.CreateAccessToken(user);
 
         return UsernameUpdateResult.Success(
