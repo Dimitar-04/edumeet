@@ -81,3 +81,23 @@ services:
     depends_on:
       backend:
         condition: service_started
+
+  k6:
+    image: grafana/k6:1.0.0
+    profiles:
+      - performance
+    environment:
+      K6_API_BASE_URL: http://backend:5062/api
+      EDUMEET_LOAD_VUS: "10"
+      EDUMEET_LOAD_DURATION: 60s
+      EDUMEET_WARMUP_DURATION: 10s
+    volumes:
+      - ./tests/performance:/scripts:ro
+      - ./tests/performance/results:/results
+    command:
+      - run
+      - --summary-export=/results/events-load-summary.json
+      - /scripts/events-load.js
+    depends_on:
+      backend:
+        condition: service_started

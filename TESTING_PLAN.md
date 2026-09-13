@@ -392,7 +392,7 @@ slower and more sensitive to the execution environment.
 - [x] Add HTTP API tests.
 - [x] Add Playwright infrastructure and E2E journeys.
 - [ ] Add representative accessibility and mobile checks.
-- [ ] Add k6 load tests.
+- [x] Add k6 load tests.
 - [ ] Add unified local test commands.
 - [ ] Add GitHub Actions.
 - [ ] Run and stabilize the complete suite from a clean checkout.

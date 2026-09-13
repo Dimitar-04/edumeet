@@ -41,6 +41,7 @@ build/
 coverage/
 playwright-report/
 test-results/
+tests/performance/results/*.json
 StrykerOutput/
 npm-debug.log*
 yarn-debug.log*
