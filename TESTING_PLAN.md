@@ -391,9 +391,9 @@ slower and more sensitive to the execution environment.
 - [x] Prepare the isolated Docker test environment.
 - [x] Add HTTP API tests.
 - [x] Add Playwright infrastructure and E2E journeys.
-- [ ] Add representative accessibility and mobile checks.
+- [x] Skip representative accessibility and mobile checks by agreement.
 - [x] Add k6 load tests.
-- [ ] Add unified local test commands.
+- [x] Add unified local test commands.
 - [ ] Add GitHub Actions.
 - [ ] Run and stabilize the complete suite from a clean checkout.
 
