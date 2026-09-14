@@ -103,7 +103,24 @@ public sealed class EduMeetApiFactory(
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Development");
+        builder
+            .UseEnvironment("Testing")
+            .UseSetting(
+                "ConnectionStrings:DefaultConnection",
+                connectionString)
+            .UseSetting("Jwt:SigningKey", SigningKey)
+            .UseSetting("Jwt:Issuer", Issuer)
+            .UseSetting("Jwt:Audience", Audience)
+            .UseSetting("Jwt:AccessTokenMinutes", "60")
+            .UseSetting("Jwt:RefreshTokenDays", "10")
+            .UseSetting("Email:Host", "unused.test")
+            .UseSetting("Email:Port", "25")
+            .UseSetting(
+                "Email:FromAddress",
+                "noreply@edumeet.test")
+            .UseSetting(
+                "Email:FrontendBaseUrl",
+                "https://frontend.test");
         builder.ConfigureAppConfiguration((_, configuration) =>
         {
             configuration.AddInMemoryCollection(
