@@ -1,0 +1,182 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+
+jobs:
+  backend:
+    name: Backend build and unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend/EduMeetBackend
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore backend
+        run: dotnet restore EduMeetBackend.sln
+
+      - name: Build backend
+        run: dotnet build EduMeetBackend.sln --configuration Release --no-restore
+
+      - name: Run application unit tests
+        run: >-
+          dotnet test
+          "5. Tests/Application.UnitTests/Application.UnitTests.csproj"
+          --configuration Release --no-build --no-restore
+
+      - name: Run infrastructure unit tests
+        run: >-
+          dotnet test
+          "5. Tests/Infrastructure.UnitTests/Infrastructure.UnitTests.csproj"
+          --configuration Release --no-build --no-restore
+
+      - name: Run presentation unit tests
+        run: >-
+          dotnet test
+          "5. Tests/Presentation.UnitTests/Presentation.UnitTests.csproj"
+          --configuration Release --no-build --no-restore
+
+  frontend:
+    name: Frontend build and component tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend/EduMeetFrontend
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/EduMeetFrontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Run frontend component tests
+        run: npm test
+
+  integration:
+    name: PostgreSQL integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend/EduMeetBackend
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Run PostgreSQL integration tests
+        run: >-
+          dotnet test
+          "5. Tests/Infrastructure.IntegrationTests/Infrastructure.IntegrationTests.csproj"
+          --configuration Release
+
+  api:
+    name: HTTP API tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend/EduMeetBackend
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Run HTTP API tests
+        run: >-
+          dotnet test
+          "5. Tests/Presentation.ApiTests/Presentation.ApiTests.csproj"
+          --configuration Release
+
+  e2e:
+    name: Chromium end-to-end tests
+    needs:
+      - backend
+      - frontend
+      - integration
+      - api
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: frontend/EduMeetFrontend
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/EduMeetFrontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright E2E tests
+        run: npm run test:e2e
+
+      - name: Clean Docker test stack
+        if: always()
+        working-directory: ${{ github.workspace }}
+        run: docker compose -f compose.e2e.yaml down --volumes --remove-orphans
+
+      - name: Upload Playwright failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-failure-${{ github.run_attempt }}
+          path: |
+            frontend/EduMeetFrontend/playwright-report/
+            frontend/EduMeetFrontend/test-results/
+          if-no-files-found: ignore
+          retention-days: 7

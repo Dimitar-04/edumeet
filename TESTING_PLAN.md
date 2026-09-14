@@ -394,7 +394,7 @@ slower and more sensitive to the execution environment.
 - [x] Skip representative accessibility and mobile checks by agreement.
 - [x] Add k6 load tests.
 - [x] Add unified local test commands.
-- [ ] Add GitHub Actions.
+- [x] Add GitHub Actions.
 - [ ] Run and stabilize the complete suite from a clean checkout.
 
 ## 16. Completion Criteria
